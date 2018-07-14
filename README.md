@@ -7,7 +7,7 @@ Official french translation of Think Python - How To Think Like A Computer Scien
 omegaT is a free translation tool that greatly facilitates translation. Chapters are divided into omegaT projects. Just bopen, edit, save and commit
 
 # Contributing
-use a new branch for each chapter. open an issue telling which chapter you've chosen. git push origin HEAD.
+Open main-tpy in omegaT. use a new branch for each chapter. open an issue telling which chapter you've chosen. git push origin HEAD.
 
 # Assignments
 
