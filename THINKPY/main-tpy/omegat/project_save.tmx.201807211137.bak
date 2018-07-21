@@ -34,16 +34,6 @@ dans le cadre d'une expression.</seg>
     </tu>
     <tu>
       <tuv lang="EN-US">
-        <seg>Code that appears after a return statement, or any other place the flow
-of execution can never reach, is called dead code.</seg>
-      </tuv>
-      <tuv lang="FR-FR" changeid="Dell" changedate="20180721T074402Z" creationid="Dell" creationdate="20180721T074402Z">
-        <seg>Code qui apparaît après une déclaration de retour, ou tout autre endroit que le flux
-d'exécution ne peut jamais atteindre, est appelé code mort.</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv lang="EN-US">
         <seg>Fruitful functions
 Many of the Python functions we have used, such as the math functions, produce return
 values.</seg>
