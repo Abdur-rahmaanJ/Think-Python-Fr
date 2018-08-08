@@ -88,10 +88,10 @@ Vous devriez voir quelque chose comme ceci:
 
 31
 
-salut!
-salut!
-salut!
-salut!
+Hello!
+Hello!
+Hello!
+Hello!
 C'est l'utilisation la plus simple de la déclaration for; nous verrons plus tard. Mais cela devrait être
 de quoi vous permettre de réécrire votre programme de dessin en carré. Ne continuez pas jusqu'à ce que vous fassiez.
 Voici une déclaration qui dessine un carré:
