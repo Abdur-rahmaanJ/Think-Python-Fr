@@ -14,10 +14,10 @@ just push translated file in THINKPY/translated
 | preface        | @Abdur-rahmaanj | finished |
 | chapter01      | @Abdur-rahmaanj | finished |
 | chapter02      | @Abdur-rahmaanj | finished |
-| chapter03      |                 |          |
+| chapter03      | @Abdur-rahmaanj | finished |
 | chapter04      |                 |          |
 | chapter05      |                 |          |
-| chapter06      | @Abdur-rahmaanj |          |
+| chapter06      |                 |          |
 | chapter07      |                 |          |
 | chapter08      |                 |          |
 | chapter09      |                 |          |
