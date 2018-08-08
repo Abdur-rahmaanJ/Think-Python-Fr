@@ -7,9 +7,10 @@ Open main-tpy in omegaT. use a new branch for each chapter. open an issue tellin
 just push translated file in THINKPY/translated
 
 # Assignments
+~~~
 
 | Chapter        | Translator      | Status   |
-| ---------------|:---------------:| ------- :|
+| ---------------|:---------------:| --------:|
 | preface        | @Abdur-rahmaanj | finished |
 | chapter01      | @Abdur-rahmaanj | finished |
 | chapter02      | @Abdur-rahmaanj | finished |
@@ -36,3 +37,4 @@ just push translated file in THINKPY/translated
 # Crucial terms
 
 TODO
+~~~
