@@ -1,0 +1,414 @@
+chapitre 3
+Les fonctions
+
+3.1 Appels de fonction
+
+Vous avez déjà vu un exemple d'appel de fonction:
+>>> type ("32")
+<type 'str'>
+Le nom de la fonction est type, et il affiche le type d'une valeur ou d'une variable.
+La valeur ou variable, appelée argument de la fonction, doit
+être entouré de parenthèses. Il est courant de dire qu'une fonction "prend" un
+argument et "renvoie" un résultat. Le résultat est appelé la valeur de retour.
+Au lieu d'imprimer la valeur de retour, nous pourrions l'assigner à une variable:
+>>> betty = type ("32")
+>>> print betty
+<type 'str'>
+Comme un autre exemple, la fonction id prend une valeur ou une variable et retourne un
+entier qui agit comme un identifiant unique pour la valeur:
+>>> id (3)
+134882108
+>>> betty = 3
+>>> id (betty)
+134882108
+Chaque valeur a un identifiant, qui est un nombre unique lié à l'endroit où il est stocké
+dans la mémoire de l'ordinateur. L'identifiant d'une variable est l'identifiant de la valeur à
+auquel il se réfère.
+
+3.2 Conversion de type
+
+Python fournit une collection de fonctions intégrée qui convertit les valeurs d'un
+int à un autre. La fonction int prend n'importe quelle valeur et la convertit en entier,
+si possible, ou se plaint autrement:
+>>> int ("32")
+32
+>>> int ("Bonjour")
+ValueError: invalid literal for int(): Hello
+int peut également convertir des floats en entiers, mais rappelez-vous qu'il
+tronque la partie fractionnaire:
+>>> int (3.99999)
+3
+>>> int (-2.3)
+-2
+La fonction float convertit les entiers et les chaînes en float:
+>>> float (32)
+32,0
+>>> float ("3.14159")
+3.14159
+Enfin, la fonction str convertit en chaîne de caractères:
+>>> str (32)
+'32'
+>>> str (3.14149)
+'3.14149'
+Il peut sembler étrange que Python distingue la valeur entière 1 du float 
+1,0. Ils peuvent représenter le même nombre, mais ils appartiennent à
+différents types. La raison en est qu'ils sont représentés différemment dans
+l'ordinateur.
+
+3.3 Coertion de type
+
+Maintenant que nous pouvons convertir entre les types, nous avons une autre façon de faire face à
+la division entière. En revenant à l'exemple du chapitre précédent, supposons que
+nous voulons calculer la fraction d'une heure qui s'est écoulée. Le plus évident
+expression, minute / 60, fait l'arithmétique entière, donc le résultat est toujours 0, même
+à 59 minutes après l'heure.
+
+Une solution consiste à convertir la minute en float et faire la division:
+>>> minute = 59
+>>> float (minute) / 60
+0,983333333333
+Alternativement, nous pouvons tirer parti des règles pour la conversion automatique de type,
+ce qui s'appelle la coercition de type. Pour les opérateurs mathématiques, si
+l'opérande est un float, l'autre est automatiquement converti en un float:
+>>> minute = 59
+>>> minute / 60.0
+0,983333333333
+En transformant le dénominateur en float, nous forçons Python à faire la division comme on souhaitait.
+
+3.4 Fonctions mathématiques
+
+En mathématiques, vous avez probablement vu des fonctions comme le sin et le log, et on vous
+a apprit à évaluer des expressions comme sin (pi / 2) et log (1 / x). D'abord, vous
+évaluez l'expression entre parenthèses (l'argument). Par exemple, pi / 2 est
+approximativement 1.571, et 1 / x est 0.1 (si x arrive à être 10.0).
+Ensuite, vous évaluez la fonction elle-même, soit en la recherchant dans un tableau ou en
+effectuer divers calculs. Le sin de 1.571 est 1, et le log de 0.1 est
+-1 (en supposant que log indique la base logarithmique 10).
+Ce processus peut être appliqué à plusieurs reprises pour évaluer des expressions plus complexes
+comme log (1 / sin (pi / 2)). D'abord, vous évaluez l'argument le plus profond
+puis la fonction, et ainsi de suite.
+Python a un module de mathématiques qui fournit la plupart des fonctions mathématiques courantes.
+Un module est un fichier qui contient une collection de fonctions connectées
+mis ensemble.
+Avant de pouvoir utiliser les fonctions d'un module, nous devons les importer:
+>>> import math
+Pour appeler l'une des fonctions, nous devons spécifier le nom du module et le
+nom de la fonction, séparé par un point, également appelé période. Ce format
+est appelée dot notation.
+
+>>> decibel = math.log10 (17.0)
+>>> angle = 1.5
+>>> height = math.sin (angle)
+La première déclaration définit le décibel au logarithme de 17, base 10. Il y a aussi
+une fonction appelée log qui prend logarithme base e.
+La troisième déclaration trouve le sinus de la valeur de l'angle variable.Sin et
+les autres fonctions trigonométriques (cos, tan, etc.) prennent des arguments en radian.
+Pour convertir des degrés en radians, diviser par 360 et multiplier par 2 * pi. Pour
+par exemple, pour trouver le sinus de 45 degrés, d'abord calculer l'angle en radians et
+alors prenez le sinus:
+>>> degrees = 45
+>>> angle = degrés * 2 * math.pi / 360.0
+>>> math.sin (angle)
+0,707106781187
+La constante pi fait également partie du module mathématique. Si vous connaissez votre géométrie,
+vous pouvez vérifier le résultat précédent en le comparant à la racine carrée de deux
+divisé par deux:
+>>> math.sqrt (2) / 2.0
+0,707106781187
+
+3.5 Composition
+
+Tout comme avec les fonctions mathématiques, les fonctions Python peuvent être composées, ce qui signifie
+que vous utilisez une expression dans le cadre d'une autre. Par exemple, vous pouvez utiliser
+toute expression en tant qu'argument à une fonction:
+>>> x = math.cos (angle + math.pi / 2)
+Cette instruction prend la valeur de pi, la divise par 2 et ajoute le résultat à
+;a valeur de l'angle. La somme est ensuite passée en argument à la fonction cos.
+Vous pouvez également prendre le résultat d'une fonction et le passer en argument
+un autre:
+>>> x = math.exp (math.log (10.0))
+Cette instruction trouve la base de log e de 10, puis augmente e à cette puissance. le
+le résultat est assigné à x.
+
+3.6 Ajout de nouvelles fonctions
+
+Jusqu'à présent, nous utilisons uniquement les fonctions fournies avec Python, mais
+est également possible d'ajouter de nouvelles fonctions. Créer de nouvelles fonctions pour résoudre votre
+problèmes particuliers est l'une des choses les plus utiles à propos d'un usage général
+langage de programmation.
+Dans le contexte de la programmation, une fonction est une suite de déclarations nommés
+qui effectue une opération souhaitée. Cette opération est spécifiée dans la définition du fonction.
+Les fonctions que nous avons utilisées jusqu'ici ont été définies pour nous,
+et ces définitions ont été cachées. C'est une bonne chose, car cela nous permet
+d'utiliser les fonctions sans se soucier des détails de leurs définitions.
+La syntaxe pour une définition de fonction est:
+def NOM (LISTE DES PARAMETRES):
+	DECLARATIONS
+Vous pouvez choisir les noms que vous voulez pour les fonctions que vous créez, sauf que
+vous ne pouvez pas utiliser un nom qui est un mot clé Python. La liste des paramètres spécifie
+quelles informations, le cas échéant, vous devez fournir pour utiliser la nouvella fonction.
+Il peut y avoir un certain nombre d'instructions à l'intérieur de la fonction, mais elles doivent
+être en retrait de la marge de gauche. Dans les exemples de ce livre, nous utiliserons un
+indentation de deux espaces.
+Le premier couple de fonctions que nous allons écrire n'a pas de paramètres, de sorte que le
+la syntaxe ressemble à ceci:
+def nouvelleLigne():
+	print
+Cette fonction s'appelle nouvelleLigne. Les parenthèses vides indiquent qu'il n'a
+pas de paramètres. Il contient seulement une seule instruction, qui génère une nouvelle ligne
+(C'est ce qui se passe lorsque vous utilisez une commande print sans aucun
+arguments.)
+La syntaxe d'appel de la nouvella fonction est la même que celle de la fonction intégrée
+les fonctions:
+print "Premiere ligne"
+nouvelleLigne()
+print "Deuxieme ligne"
+La sortie de ce programme est:
+Premiere ligne.
+
+Deuxieme ligne.
+Notez l'espace supplémentaire entre les deux lignes. Et si nous voulions plus d'espace
+entre les lignes? Nous pourrions appeler la même fonction à plusieurs reprises:
+print "Premiere ligne"
+nouvelleLigne()
+nouvelleLigne()
+nouvelleLigne()
+print "Deuxieme ligne"
+Nous pourrions écrire une nouvella fonction appelée trois lignes qui imprime trois nouveaux
+lignes:
+def troisLignes():
+	nouvelleLigne()
+	nouvelleLigne()
+	nouvelleLigne()
+print "Premiere ligne"
+troisLignes()
+print "Deuxieme ligne"
+Cette fonction contient trois instructions, toutes indentées par deux espaces.
+Puisque la déclaration suivante n'est pas indentée, Python sait qu'elle ne fait pas partie de
+la fonction.
+Vous devriez noter quelques choses à propos de ce programme:
+1. Vous pouvez appeler la même procédure plusieurs fois. En fait, c'est assez commun
+et utile de le faire.
+2. Vous pouvez avoir une fonction appeler une autre fonction; dans ce cas trois lignes
+appelle nouvelleLigne.
+Jusqu'à présent, il n'est peut-être pas clair pourquoi il vaut la peine de créer tous ces nouveaux
+fonctions. En fait, il y a beaucoup de raisons, mais cette exemple démontre
+deux:
+• La création d'une nouvella fonction vous donne l'opportunité de nommer un groupe de
+déclarations. Les fonctions peuvent simplifier un programme en cachant un calcul complexe
+derrière une seule commande et en utilisant des mots anglais à la place du
+codage arcane.
+
+3.7 Définitions et utilisation
+
+• Créer une nouvella fonction peut réduire la taille d'un programme en éliminant les répétitions.
+Par exemple, un court chemin pour imprimer neuf nouvelles lignes consécutives
+est d'appeler troisLignes trois fois.
+Comme un exercice, écrivez une fonction appelée neufLignes qui utilise
+troisLignes pour imprimer neuf lignes vides. Comment voulez-vous imprimer vingt-sept
+nouvelles lignes?
+En rassemblant les fragments de code de la section 3.6, l'ensemble du programme semble
+comme cela:
+def nouvelleLigne ():
+	print
+def troisLignes ():
+	nouvelle ligne()
+	nouvelle ligne()
+	nouvelle ligne()
+print "Premiere ligne"
+troisLignes ()
+print "Deuxieme ligne"
+Ce programme contient deux définitions de fonctions: nouvelleLigne et troisLignes.
+Les définitions de fonctions sont exécutées comme les autres instructions, mais l'effet est
+de créer la nouvella fonction. Les instructions à l'intérieur de la fonction ne sont pas
+exécutés jusqu'à ce que la fonction est appelée, et la définition de la fonction ne génère pas
+de output.
+Comme vous pouvez vous y attendre, vous devez créer une fonction avant de pouvoir l'exécuter.
+En d'autres termes, la définition de la fonction doit être exécutée avant la première fois
+qu'on l'appelle.
+Comme un exercice, déplacez les trois dernières lignes de ce programme vers le haut,
+donc les appels de fonction apparaissent avant les définitions. Lancer le programme
+et voyez quel message d'erreur vous obtenez.
+Comme un autre exercice, commencez avec la version de travail du programme
+et déplacer la définition de nouvelleLigne après la définition de
+trois lignes. Que se passe-t-il lorsque vous exécutez ce programme?
+
+3.8 Flux d'exécution
+
+Afin de s'assurer qu'une fonction est définie avant sa première utilisation, vous devez
+connaître l'ordre dans lequel les instructions sont exécutées, ce que l'on appelle le flux
+d'exécution.
+L'exécution commence toujours à la première déclaration du programme. Les déclarations sont
+exécutés un à la fois, dans l'ordre de haut en bas.
+Les définitions de fonctions ne modifient pas le déroulement de l'exécution du programme, mais
+rappelez-vous que les instructions à l'intérieur de la fonction ne sont pas exécutées avant que la fonction
+soit appelé. Bien que ce ne soit pas commun, vous pouvez définir une fonction dans une autre.
+Dans ce cas, la définition interne n'est pas exécutée tant que la fonction externe n'est pas appelée.
+Les appels de fonction sont comme un détour dans le flux d'exécution. Au lieu d'aller à la
+déclaration suivante, le flux saute à la première ligne de la fonction appelée, exécute
+toutes les déclarations là-bas, puis revient pour reprendre là où il s'est arrêté.
+Cela semble assez simple, jusqu'à ce que vous vous souveniez qu'une fonction peut appeler
+un autre. Alors qu'au milieu d'une fonction, le programme peut devoir exécuter
+les déclarations dans une autre fonction. Mais en exécutant cette nouvella fonction, le
+programme pourrait devoir exécuter encore une autre fonction!
+Heureusement, Python est capable de garder la trace de l'endroit où il se trouve, donc à chaque fois un
+fonction complètée, le programme reprend là où il s'est arrêté dans la fonction
+appelé. Quand il arrive à la fin du programme, il se termine.
+Quelle est la morale de ce conte sordide? Lorsque vous lisez un programme, ne lisez pas
+du haut en bas. Au lieu de cela, suivez le flux d'exécution.
+
+3.9 Paramètres et arguments
+
+Certaines des fonctions intégrées que vous avez utilisées nécessitent des arguments, les valeurs qui
+contrôlent comment la fonction fait son travail. Par exemple, si vous voulez trouver le
+sinus d'un nombre, vous devez indiquer quel est le nombre. Ainsi, sin prend un
+valeur numérique en tant qu'argument.
+Certaines fonctions prennent plus d'un argument. Par exemple, pow prend deux
+arguments, la base et l'exposant. Dans la fonction, les valeurs passées qui
+sont affectées à des variables appelées paramètres.
+Voici un exemple de fonction définie par l'utilisateur qui a un paramètre:
+def printDouble(bruce):
+	print bruce, bruce
+Cette fonction prend un seul argument et l'affecte à un paramètre nommé
+bruce. La valeur du paramètre (à ce stade, nous n'avons aucune idée de ce que cela va
+être) est imprimé deux fois, suivi d'une nouvelle ligne. Le nom bruce a été choisi pour
+suggérer que le nom que vous donnez un paramètre est à vous, mais en général, vous
+voulez choisir quelque chose de plus illustratif que Bruce.
+La fonction printDoubla fonctionne pour tous les types qui peuvent être imprimés:
+>>> printDouble ('Spam')
+Spam Spam
+>>> printDouble (5)
+5 5
+>>> printDouble (3.14159)
+3.14159 3.14159
+Dans le premier appel de fonction, l'argument est une chaîne. Dans la seconde, c'est un nombre entier.
+Dans le troisième, c'est un float.
+Les mêmes règles de composition qui s'appliquent aux fonctions intégrées s'appliquent également aux
+fonctions définies par l'utilisateur, de sorte que nous pouvons utiliser n'importe quel type d'expression comme argument de
+printDouble:
+>>> printDouble ('Spam' * 4)
+SpamSpamSpamSpam SpamSpamSpamSpam
+>>> printDouble (math.cos (math.pi))
+-1,0 -1,0
+Comme d'habitude, l'expression est évaluée avant l'exécution de la fonction, donc printDouble
+imprime SpamSpamSpamSpam SpamSpamSpamSpam au lieu de 'Spam' * 4 'Spam' * 4.
+Comme exercice, écrivez un appel à printDouble qui imprime 'Spam' * 4
+'Spam' * 4. Astuce: les cordes peuvent être enfermées en simple ou en double
+guillemets, et le type de citation non utilisé pour entourer la chaîne peut être
+utilisé à l'intérieur comme une partie de la chaîne.
+Nous pouvons également utiliser une variable comme argument:
+>>> michael = 'Eric, la demi-abeille.'
+>>> printDouble (michael)
+Eric, la demi-abeille. Eric, la demi-abeille.
+Remarquez quelque chose de très important ici. Le nom de la variable que nous transmettons
+argument (michael) n'a rien à voir avec le nom du paramètre (bruce).
+Peu importe ce que la valeur a été rappelée à la maison (dans l'appelant); ici dans
+printDouble, nous appelons tout le monde bruce.
+
+3.10 Les variables et les paramètres locaux
+
+Lorsque vous créez une variable locale à l'intérieur d'une fonction, elle n'existe que dans la
+fonction, et vous ne pouvez pas l'utiliser à l'extérieur. Par exemple:
+def chatDouble (partie1, partie2):
+	chat = partie1 + partie2
+	printDouble (chat)
+Cette fonction prend deux arguments, les concatène, puis imprime le
+résultat deux fois. Nous pouvons appeler la fonction avec deux chaînes:
+>>> chant1 = "Pie Jesu domine"
+>>> chant2 = "Dona eis requiem."
+>>> chatDouble (chant1, chant2)
+Pie Jesu domine, Dona eis requiem. Pie Jesu domine, Dona eis requiem.
+Lorsque chatDouble se termine, la variable chat est détruite. Si nous essayons de l'imprimer,
+nous avons une erreur:
+>>> print chat
+NameError: chat
+Les paramètres sont également locaux. Par exemple, en dehors de la fonction printDouble, il y n'y a
+pa une telle chose que bruce. Si vous essayez de l'utiliser, Python va se plaindre.
+
+3.11 Diagrammes de pile / stack diagram
+
+Pour garder une trace des variables qui peuvent être utilisées où, il est parfois utile de
+dessiner un diagramme de pile. Comme les diagrammes d'état, les diagrammes de pile montrent la valeur de
+chaque variable, mais ils montrent également la fonction à laquelle chaque variable appartient.
+Chaque fonction est représentée par un cadre. Un cadre est une boîte avec le nom de
+fonction à côté d'elle et les paramètres et les variables de la fonction à l'intérieur.
+Le diagramme de pile de l'exemple précédent ressemble à ceci:
+
+[DIAGRAM HERE]
+
+L'ordre de la pile montre le déroulement de l'exécution. printDouble a été appelé par
+chatDouble, et chatDouble a été appelé par main, qui est un nom spécial pour
+la fonction la plus haute. Lorsque vous créez une variable en dehors de toute fonction,
+elle appartient à main.
+Chaque paramètre fait référence à la même valeur que son argument correspondant. Alors,
+partie1 a la même valeur que chant1, partie2 a la même valeur que chant2, et
+bruce a la même valeur que le chat.
+Si une erreur survient lors d'un appel de fonction, Python imprime le nom de la fonction,
+et le nom de la fonction qui l'a appelée, ainsi que le nom de la fonction
+appelé cela, tout le chemin du retour à la principale.
+Par exemple, si nous essayons d'accéder à chat depuis printDouble, nous obtenons un
+NameError:
+Traceback (innermost last):
+	File "test.py", ligne 13, in __main__
+	chatDouble (chant1, chant2)
+	File "test.py", ligne 5, in chatDouble
+	printDouble (chat)
+	File "test.py", ligne 9, in printDouble
+	print chat
+NameError: chat
+Cette liste de fonctions est appelée traceback. Il vous indique dans quel fichier de programme
+l'erreur s'est produite, et quelle ligne, et quelles fonctions étaient en cours d'exécution à ce moment.
+Il montre également la ligne de code qui a provoqué l'erreur.
+Notez la similarité entre le traceback et le diagramme de pile. Ce n'est pas un
+coïncidence.
+
+3.12 Fonctions avec résultats
+
+Vous avez peut-être remarqué maintenant que certaines des fonctions que nous utilisons,
+comme les fonctions mathématiques, donnent des résultats. D'autres fonctions, comme nouvelleLigne, effectuent un action
+mais ne renvoie pas de valeur. Cela soulève quelques questions:
+1. Que se passe-t-il si vous appelez une fonction et que vous ne faites rien avec le
+résultat (c'est-à-dire que vous ne l'attribuez pas à une variable ou que vous ne l'utilisez pas dans le cadre d'une plus grande
+expression)?
+2. Que se passe-t-il si vous utilisez une fonction sans résultat dans le cadre d'une expression,
+comme nouvelleLigne () + 7?
+3. Pouvez-vous écrire des fonctions qui donnent des résultats, ou êtes-vous coincé avec simple
+Fonctionne comme nouvelleLigne et printDouble?
+La réponse à la dernière question est que vous pouvez écrire des fonctions qui donnent des résultats,
+et nous le ferons au chapitre 5.
+Comme exercice, répondez aux deux autres questions en les essayant.
+Lorsque vous avez une question sur ce qui est légal ou illégal en Python, un
+bon moyen de savoir est de demander à l'interprète.
+
+3.13 Glossaire
+
+function call / appel de fonction: une instruction qui exécute une fonction. Il se compose du nom
+de la fonction suivie d'une liste d'arguments entre parenthèses.
+argument: Une valeur fournie à une fonction lorsque la fonction est appelée. Ce
+La valeur est affectée au paramètre correspondant dans la fonction.
+return value: Le résultat d'une fonction. Si un appel de fonction est utilisé comme une expression,
+la valeur de retour est la valeur de l'expression.
+type conversion: Une instruction explicite qui prend une valeur d'un type et
+calcule une valeur correspondante d'un autre type.
+coercition de type: Une conversion de type qui se produit automatiquement selon
+les règles de coercition de Python.
+module: un fichier qui contient une collection de fonctions et de classes associées.
+dot notation: La syntaxe pour appeler une fonction dans un autre module, en spécifiant
+le nom du module suivi d'un point (periode) et du nom de la fonction.
+function: Une séquence nommée d'instructions qui effectue une opération utile.
+Les fonctions peuvent ou non prendre des arguments et peuvent ou non
+produire un résultat.
+définition de fonction: une instruction qui crée une nouvelle fonction, en spécifiant sa
+nom, les paramètres et les instructions qu'il exécute.
+flux d'exécution: ordre dans lequel les instructions sont exécutées pendant un programme
+courir.
+paramètre: Un nom utilisé dans une fonction pour faire référence à la valeur passée en tant que
+argument.
+variable locale: Une variable définie à l'intérieur d'une fonction. Une variable locale peut seulement
+être utilisé à l'intérieur de sa fonction.
+diagramme de pile: représentation graphique d'une pile de fonctions, leurs variables,
+et les valeurs auxquelles ils se réfèrent.
+frame: Une boîte dans un diagramme de pile qui représente un appel de fonction. Il contient
+les variables locales et les paramètres de la fonction.
+traceback: une liste des fonctions en cours d'exécution, imprimées lors d'une exécution
+erreur se produit.
