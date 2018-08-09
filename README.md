@@ -11,12 +11,12 @@ just push translated file in THINKPY/translated
 
 | Chapter        | Translator      | Status   |
 | ---------------|:---------------:| --------:|
-| preface        | @Abdur-rahmaanj | finished |
+| preface        |                 |          |
 | chapter01      | @Abdur-rahmaanj | finished |
 | chapter02      | @Abdur-rahmaanj | finished |
 | chapter03      | @Abdur-rahmaanj | finished |
-| chapter04      |                 |          |
-| chapter05      |                 |          |
+| chapter04      | @Abdur-rahmaanj | finished |
+| chapter05      | @Abdur-rahmaanj | finished |
 | chapter06      |                 |          |
 | chapter07      |                 |          |
 | chapter08      |                 |          |
