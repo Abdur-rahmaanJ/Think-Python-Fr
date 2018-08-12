@@ -18,7 +18,7 @@ just push translated file in THINKPY/translated
 | chapter04      | @Abdur-rahmaanj | finished |
 | chapter05      | @Abdur-rahmaanj | finished |
 | chapter06      | @Abdur-rahmaanj | finished |
-| chapter07      |                 |          |
+| chapter07      | @Abdur-rahmaanj | finished |
 | chapter08      |                 |          |
 | chapter09      |                 |          |
 | chapter10      |                 |          |
