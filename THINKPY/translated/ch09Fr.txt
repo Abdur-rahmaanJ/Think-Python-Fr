@@ -1,0 +1,283 @@
+Chapitre 9
+
+Cas d'étude: jeu de mots
+Ce chapitre présente la deuxième cas d'étude, qui consiste à résoudre des énigmes de mots en
+rechercher des mots qui ont certaines propriétés. Par exemple, nous trouverons les palindromes les plus longs en anglais et rechercherons des mots dont les lettres apparaissent dans l’ordre alphabétique. Et
+Je présenterai un autre plan de développement de programme: réduction à un problème déjà résolu.
+
+9.1
+
+Lecture de listes de mots
+
+Pour les exercices de ce chapitre, nous avons besoin d'une liste de mots anglais. Il y a beaucoup de mot
+listes disponibles sur le Web, mais celle qui convient le mieux à notre objectif est l'une des listes de mots
+collecté et contribué au domaine public par Grady Ward dans le cadre du projet de lexique Moby (voir http://wikipedia.org/wiki/Moby_Project). C'est une liste de 113 809 mots croisés
+officiels; c'est-à-dire des mots considérés comme valides dans les mots croisés et autres jeux de
+mots. Dans la collection Moby, le nom de fichier est 113809of.fic; vous pouvez télécharger une copie,
+avec le simple nom words.txt, de http://thinkpython2.com/code/words.txt.
+Ce fichier est en texte brut, vous pouvez donc l'ouvrir avec un éditeur de texte, mais vous pouvez également le lire à partir de
+Python. La fonction intégrée open prend le nom du fichier comme paramètre et retourne un
+objet fichier que vous pouvez utiliser pour lire le fichier.
+
+>>> fin = open('words.txt')
+fin est un nom commun pour un objet fichier utilisé pour la saisie. L'objet de fichier fournit plusieurs
+méthodes pour lire, y compris readline, qui lit les caractères du fichier jusqu'à ce qu'il soit
+à une nouvelle ligne et renvoie le résultat sous forme de chaîne:
+>>> fin.readline()
+'aa\r\n'
+Le premier mot de cette liste est "aa", qui est une sorte de lave. La séquence \ r \ n
+représente deux caractères d'espacement, un retour chariot et une nouvelle ligne, qui séparent cette
+mot du suivant.
+L’objet fichier garde une trace de son emplacement dans le fichier, donc si vous appelez à nouveau readline, vous obtenez
+le mot suivant:
+
+84
+
+Chapitre 9. Etude de cas: jeux de mots
+
+>>> fin.readline()
+'aah\r\n'
+Le mot suivant est "aah", qui est un mot parfaitement légitime, alors arrête de me regarder comme
+ça. Ou, si c'est le blanc qui vous dérange, on peut s'en débarrasser avec un string
+bande de méthode:
+>>> line = fin.readline()
+>>> word = line.strip()
+>>> word
+'aahed'
+Vous pouvez également utiliser un objet fichier dans le cadre d'une boucle for. Ce programme lit words.txt et
+imprime chaque mot, un par ligne:
+fin = open('words.txt')
+for line in fin:
+word = line.strip()
+print(word)
+
+9.2
+
+Des exercices
+
+Il y a des solutions à ces exercices dans la section suivante. Vous devriez au moins essayer chacun
+un avant de lire les solutions.
+Exercice 9.1. Ecrire un programme qui lit des mots.txt et imprime seulement les mots avec plus de 20
+caractères (sans compter les espaces).
+Exercice 9.2. En 1939, Ernest Vincent Wright a publié un roman de 50 000 mots intitulé Gadsby
+ne contient pas la lettre "e". Puisque "e" est la lettre la plus courante en anglais, ce n'est pas facile de
+faire.
+En fait, il est difficile de construire une pensée solitaire sans utiliser ce symbole le plus commun. C'est
+ralentir au début, mais avec prudence et des heures d'entraînement, vous pouvez progressivement gagner de la facilité.
+D'accord, je vais m'arrêter maintenant.
+Ecrivez une fonction appelée has_no_e qui renvoie True si le mot donné n'a pas la lettre "e" dans
+il.
+Modifiez votre programme à partir de la section précédente pour n'imprimer que les mots sans "e" et calculez le pourcentage des mots de la liste sans "e".
+Exercice 9.3. Ecrire une fonction nommée évite qui prend un mot et une chaîne de lettres interdites,
+et qui renvoie True si le mot n'utilise aucune des lettres interdites.
+Modifiez votre programme pour inviter l'utilisateur à entrer une chaîne de lettres interdites, puis imprimez le
+nombre de mots qui n'en contiennent aucun. Pouvez-vous trouver une combinaison de 5 lettres interdites
+cela exclut le plus petit nombre de mots?
+Exercice 9.4. Écrivez une fonction nommée uses_only qui prend un mot et une chaîne de lettres, et
+qui renvoie True si le mot ne contient que des lettres dans la liste. Pouvez-vous faire une phrase en utilisant seulement
+les lettres acefhlo? Autre que "Hoe alfalfa?"
+Exercice 9.5. Écrivez une fonction nommée uses_all qui prend un mot et une chaîne de lettres requises,
+et qui renvoie True si le mot utilise toutes les lettres requises au moins une fois. Combien de mots sont
+là qui utilisent toutes les voyelles aeiou? Pourquoi pas aeiouy?
+Exercice 9.6. Ecrire une fonction appelée is_abecedarian qui renvoie True si les lettres d'un mot
+apparaissent dans l'ordre alphabétique (les lettres doubles sont correctes). Combien de mots abecedarian y a-t-il?
+
+9.3. Chercher
+
+9.3
+
+85
+
+Chercher
+
+Tous les exercices de la section précédente ont quelque chose en commun. ils peuvent être résolus
+avec le modèle de recherche que nous avons vu dans la section 8.6. L'exemple le plus simple est:
+
+def has_no_e(word):
+for letter in word:
+if letter == 'e':
+return False
+return True
+La boucle for traverse les caractères du mot. Si nous trouvons la lettre "e", nous pouvons immédiatement
+retourner faux; sinon nous devons passer à la lettre suivante. Si nous quittons la boucle normalement, cela
+signifie que nous n'avons pas trouvé de "e", donc nous retournons True.
+Vous pourriez écrire cette fonction de manière plus concise en utilisant l'opérateur in, mais j'ai commencé avec cette
+version car elle démontre la logique du modèle de recherche.
+
+Avoids est une version plus générale de has_no_e mais elle a la même structure:
+def avoids(word, forbidden):
+for letter in word:
+if letter in forbidden:
+return False
+return True
+Nous pouvons retourner Faux dès que nous trouvons une lettre interdite; si nous arrivons à la fin de la boucle,
+nous retournons True.
+uses_only est similaire sauf que le sens de la condition est inversé:
+ef uses_only(word, available):
+for letter in word:
+if letter not in available:
+return False
+return True
+Au lieu d'une liste de lettres interdites, nous avons une liste de lettres disponibles. Si nous trouvons une lettre dans
+mot qui n'est pas disponible, nous pouvons retourner Faux.
+uses_all est similaire sauf que nous inversons le rôle du mot et de la chaîne de lettres:
+def uses_all (mot, requis):
+pour lettre en requis:
+si lettre pas en mot:
+retourner faux
+retourne True
+Au lieu de parcourir les lettres du mot, la boucle parcourt les lettres requises. Si l'un des
+les lettres requises n'apparaissent pas dans le mot, nous pouvons retourner Faux.
+Si vous pensiez vraiment comme un informaticien, vous auriez reconnu que
+uses_all était une instance d'un problème déjà résolu, et vous auriez écrit:
+
+def uses_all(word, required):
+return uses_only(required, word)
+Ceci est un exemple de plan de développement de programme appelé réduction à un problème déjà résolu
+problème, ce qui signifie que vous reconnaissez le problème sur lequel vous travaillez en tant qu'instance
+d'un problème résolu et appliquer une solution existante.
+
+86
+
+9.4
+
+Chapitre 9. Etude de cas: jeux de mots
+
+Boucler avec des indices
+
+J'ai écrit les fonctions dans la section précédente avec pour les boucles parce que je n'avais besoin que de la
+personnages dans les cordes; Je n'ai rien eu à faire avec les indices.
+Pour is_abecedarian nous devons comparer les lettres adjacentes, ce qui est un peu difficile avec un for
+boucle:
+
+def is_abecedarian(word):
+previous = word[0]
+for c in word:
+if c < previous:
+return False
+previous = c
+return True
+Une alternative consiste à utiliser la récursivité:
+
+def is_abecedarian(word):
+if len(word) <= 1:
+return True
+if word[0] > word[1]:
+return False
+return is_abecedarian(word[1:])
+Une autre option consiste à utiliser une boucle while:
+
+def is_abecedarian(word):
+i = 0
+while i < len(word)-1:
+if word[i+1] < word[i]:
+return False
+i = i+1
+return True
+La boucle commence à i = 0 et se termine lorsque i = len (mot) -1. A chaque fois dans la boucle, il compare le caractère i (que vous pouvez considérer comme le personnage actuel) au i + 1
+personnage (que vous pouvez penser comme le suivant).
+Si le caractère suivant est inférieur à (alphabétiquement avant) le caractère actuel, alors nous avons découvert une rupture dans la tendance abécédaire, et nous renvoyons Faux.
+Si nous arrivons à la fin de la boucle sans trouver de défaut, le mot passe le test. À
+convainquez-vous que la boucle se termine correctement, considérez un exemple comme «flossy». le
+la longueur du mot est 6, donc la dernière fois que la boucle s'exécute est quand je est 4, qui est l'index de
+le dernier caractère. Lors de la dernière itération, il compare le dernier caractère
+au dernier, qui est ce que nous voulons.
+Voici une version de is_palindrome (voir exercice 6.3) qui utilise deux index; on commence à
+le début et monte; l'autre commence à la fin et descend.
+
+def is_palindrome(word):
+i = 0
+j = len(word)-1
+while i<j:
+if word[i] != word[j]:
+
+9.5. Le débogage
+
+87
+
+return False
+i = i+1
+j = j-1
+return True
+Ou nous pourrions réduire à un problème déjà résolu et écrire:
+
+def is_palindrome (mot):
+return is_reverse (mot, mot)
+Utiliser is_reverse de la section 8.11.
+
+9,5
+
+Le débogage
+
+Les programmes de test sont difficiles. Les fonctions de ce chapitre sont relativement faciles à tester car
+vous pouvez vérifier les résultats à la main. Malgré cela, il est difficile et impossible de choisir un ensemble de mots qui teste toutes les erreurs possibles.
+En prenant has_no_e comme exemple, il y a deux cas évidents à vérifier: les mots qui ont un
+'E' devrait renvoyer False et les mots qui ne le sont pas devraient retourner True. Vous ne devriez pas avoir
+difficulté à trouver un de chacun.
+Dans chaque cas, il existe des sous-casques moins évidents. Parmi les mots qui ont un
+"E", vous devriez tester les mots avec un "e" au début, à la fin et quelque part dans le
+milieu. Vous devriez tester des mots longs, des mots courts et des mots très courts, comme le vide
+chaîne. La chaîne vide est un exemple d'un cas particulier, qui est l'un des non évidents
+cas où des erreurs se cachent souvent.
+En plus des cas de test que vous générez, vous pouvez également tester votre programme avec une liste de mots.
+comme words.txt. En scannant la sortie, vous pourrez peut-être intercepter des erreurs, mais faites attention:
+vous pourriez attraper un type d'erreur (mots qui ne devraient pas être inclus, mais sont) et non
+un autre (les mots qui devraient être inclus, mais ne le sont pas).
+En général, les tests peuvent vous aider à trouver des bogues, mais il n’est pas facile de générer un bon ensemble de
+cas de test, et même si vous le faites, vous ne pouvez pas être sûr que votre programme est correct. Selon un
+informaticien légendaire:
+Les tests de programme peuvent être utilisés pour montrer la présence de bogues, mais jamais pour montrer
+leur absence!
+- Edsger W. Dijkstra
+
+9,6
+
+Glossaire
+
+objet fichier: valeur représentant un fichier ouvert.
+réduction à un problème déjà résolu: une façon de résoudre un problème en l'exprimant
+comme exemple d'un problème déjà résolu.
+cas particulier: un cas de test atypique ou non évident (et moins susceptible d'être traité correctement).
+
+88
+
+9,7
+
+Chapitre 9. Etude de cas: jeux de mots
+
+Des exercices
+
+Exercice 9.7. Cette question est basée sur un Puzzler qui a été diffusé sur le programme radio Car
+Talk (http: // www. Cartalk. Com / content / puzzlers):
+Donnez-moi un mot avec trois lettres doubles consécutives. Je vais vous donner quelques mots
+qui se qualifient presque, mais pas. Par exemple, le mot comité, c-o-m-m-i-t-t-e-e. Il
+serait génial, sauf pour le "i" qui se glisse là-bas. Ou Mississippi: M-i-s-s-je-s-s-ip-p-i. Si vous pouviez sortir ces choses, ça marcherait. Mais il y a un mot qui a trois
+paires de lettres consécutives et, à ma connaissance, cela peut être le seul mot.
+Bien sûr, il y en a probablement 500 de plus mais je ne peux que penser à un. Quel est le mot?
+Ecrivez un programme pour le trouver. Solution: http: // thinkpython2. com / code / cartalk1. py.
+Exercice 9.8. Voici un autre Car Talk Puzzler (http: // www. Cartalk. Com / content /
+puzzlers):
+"Je conduisais sur l’autoroute l’autre jour et j’ai remarqué mon odomètre.
+Comme la plupart des odomètres, il affiche six chiffres, en miles entiers seulement. Donc, si ma voiture avait 300 000
+miles, par exemple, je verrais 3-0-0-0-0-0.
+"Maintenant, ce que j'ai vu ce jour-là était très intéressant. J'ai remarqué que les 4 derniers chiffres étaient
+palindromique; c'est-à-dire qu'ils lisent le même vers l'avant que vers l'arrière. Par exemple, 5-4-4-5 est un
+palindrome, donc mon odomètre aurait pu lire 3-1-5-4-4-5.
+"Un mile plus tard, les 5 derniers numéros étaient palindromiques. Par exemple, il aurait pu lire
+3-6-5-4-5-6. Un kilomètre après, les 4 numéros sur 6 étaient au centre. Et
+tu es prêt pour ça? Un mile plus tard, tous les 6 étaient palindromiques!
+"La question est: qu'est-ce qui était au compteur lorsque j'ai regardé pour la première fois?"
+Ecrire un programme Python qui teste tous les nombres à six chiffres et imprime les nombres qui satisfont
+ces exigences. Solution: http: // thinkpython2. com / code / cartalk2. py.
+Exercice 9.9. Voici un autre Car Talk Puzzler que vous pouvez résoudre en effectuant une recherche (http: // www.
+cartalk. com / content / puzzlers):
+"Récemment j'ai eu une visite avec ma mère et nous avons réalisé que les deux chiffres qui font
+mon âge quand inversé abouti à son âge. Par exemple, si elle a 73 ans, je suis 37. Nous
+me demandais combien de fois cela se passait au fil des ans mais nous nous sommes égarés avec d'autres
+sujets et nous n'avons jamais trouvé de réponse.
+"Quand je suis rentré à la maison, j'ai compris que les chiffres de nos âges ont été réversibles six fois
+jusque là. J'ai aussi compris que si nous avions de la chance, cela se reproduirait dans quelques années et
+Si nous avons vraiment de la chance, cela se produira encore une fois après cela. En d'autres termes, il serait
+est arrivé 8 fois au total. Donc, la question est: quel âge ai-je maintenant? "
+Ecrivez un programme Python qui recherche des solutions à ce Puzzler. Astuce: vous pourriez trouver la méthode de 
+chaîne zfill utile.

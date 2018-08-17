@@ -201,8 +201,8 @@ j = j-1
 return True
 Or we could reduce to a previously solved problem and write:
 
-def is_palindrome(word):
-return is_reverse(word, word)
+def is_palindrome (mot):
+return is_reverse (mot, mot)
 Using is_reverse from Section 8.11.
 
 9.5
