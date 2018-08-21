@@ -1,0 +1,758 @@
+Chapitre 10
+
+Lists
+Ce chapitre présente l'un des types de données les plus utiles de Python. Vous apprendrez aussi
+plus sur les objets et ce qui peut arriver quand vous avez plus d'un nom pour le même
+objet.
+
+10.1
+
+List est une séquence
+
+Comme une chaîne, une liste est une suite de valeurs. Dans une chaîne, les valeurs sont des caractères; dans une liste,
+ils peuvent être de n'importe quel type. Les valeurs d'une liste sont appelées des éléments ou parfois des items.
+Il existe plusieurs façons de créer une nouvelle liste. le plus simple est d'inclure les éléments dans le carré
+parenthèses ([ et ]):
+
+[10, 20, 30, 40]
+['crunchy frog', 'ram bladder', 'lark vomit']
+Le premier exemple est une liste de quatre nombres entiers. La seconde est une liste de trois chaînes. Les éléments
+d'une liste ne doivent pas nécessairement être du même type. La liste suivante contient une chaîne, un float, un
+entier, et (tada!) une autre liste:
+
+['spam', 2.0, 5, [10, 20]]
+Une liste dans une autre liste est imbriquée.
+Une liste ne contenant aucun élément s'appelle une liste vide; vous pouvez en créer un avec des []
+vides, [].
+Comme vous vous en doutez, vous pouvez affecter des valeurs de liste aux variables:
+
+>>> cheeses = ['Cheddar', 'Edam', 'Gouda']
+>>> numbers = [42, 123]
+>>> empty = []
+>>> print(cheeses, numbers, empty)
+['Cheddar', 'Edam', 'Gouda'] [42, 123] []
+
+90
+
+Chapitre 10. Listes
+liste
+les fromages
+
+0
+
+'Cheddar'
+
+1
+
+'Edam'
+
+2
+
+'Gouda'
+
+0
+
+42
+
+1
+
+123
+
+liste
+Nombres
+
+5
+liste
+vide
+
+Figure 10.1: Diagramme d'état.
+
+10.2
+
+Les listes sont mutables
+
+La syntaxe pour accéder aux éléments d'une liste est la même que pour accéder aux caractères
+d'un string-le symbole []. L'expression entre crochets spécifie l'index.
+Rappelez-vous que les indices commencent à 0:
+>>> cheeses[0]
+'Cheddar'
+Contrairement aux chaînes, les listes sont modifiables. Lorsque l'opérateur de la parenthèse apparaît à gauche d'un
+affectation, il identifie l'élément de la liste qui sera affecté.
+>>> numbers = [42, 123]
+>>> numbers[1] = 5
+>>> numbers
+[42, 5]
+L'élément one-eth des nombres, autrefois 123, est maintenant 5.
+La figure 10.1 montre le diagramme d'état pour les fromages, les nombres et vide:
+Les listes sont représentées par des cases contenant le mot "list" en dehors et les éléments de la liste
+à l'intérieur. les fromages se réfèrent à une liste de trois éléments indexés 0, 1 et 2. les nombres contiennent
+deux éléments; le diagramme montre que la valeur du second élément a été réaffectée
+de 123 à 5. vide fait référence à une liste sans éléments.
+Les index de liste fonctionnent de la même manière que les index de chaîne:
+• Toute expression entière peut être utilisée comme index.
+• Si vous essayez de lire ou d’écrire un élément qui n’existe pas, vous obtenez une erreur IndexError.
+• Si un index a une valeur négative, il compte à rebours depuis la fin de la liste.
+L'opérateur in fonctionne également sur les listes.
+>>> cheeses = ['Cheddar', 'Edam', 'Gouda']
+>>> 'Edam' in cheeses
+True
+>>> 'Brie' in cheeses
+False
+
+10.3. Traverser une liste
+
+10.3
+
+91
+
+Traverser une liste
+
+La manière la plus courante de parcourir les éléments d'une liste est d'utiliser une boucle for. La syntaxe est
+le même que pour les chaînes:
+
+for cheese in cheeses:
+print(cheese)
+Cela fonctionne bien si vous avez seulement besoin de lire les éléments de la liste. Mais si tu veux écrire
+ou mettre à jour les éléments, vous avez besoin des index. Une manière commune de le faire est de combiner les
+fonctions intégrées range et len:
+
+for i in range(len(numbers)):
+numbers[i] = numbers[i] * 2
+Cette boucle parcourt la liste et met à jour chaque élément. len renvoie le nombre d'éléments
+dans la liste. range renvoie une liste d'indices de 0 à n - 1, où n est la longueur de la liste.
+Chaque fois que je traverse la boucle, j'obtiens l'index de l'élément suivant. La déclaration d'affectation
+dans le corps utilise i pour lire l'ancienne valeur de l'élément et attribuer la nouvelle valeur.
+Une boucle for sur une liste vide ne lance jamais le corps:
+
+for x in []:
+print('This never happens.')
+Bien qu'une liste puisse contenir une autre liste, la liste imbriquée compte toujours comme un seul élément. le
+La longueur de cette liste est de quatre:
+
+['spam', 1, ['Brie', 'Roquefort', 'Pol le Veq'], [1, 2, 3]]
+
+10.4
+
+Opérations de liste
+
+L'opérateur + concatène les listes:
+
+>>>
+>>>
+>>>
+>>>
+[1,
+
+a = [1, 2, 3]
+b = [4, 5, 6]
+c = a + b
+c
+2, 3, 4, 5, 6]
+
+L'opérateur * répète une liste un nombre de fois donné:
+
+>>>
+[0,
+>>>
+[1,
+
+[0] * 4
+0, 0, 0]
+[1, 2, 3] * 3
+2, 3, 1, 2, 3, 1, 2, 3]
+
+Le premier exemple se répète quatre fois. Le deuxième exemple répète la liste [1, 2, 3]
+trois fois.
+
+10,5
+
+tranches de List (List slices)
+
+L'opérateur de tranche travaille également sur des listes:
+
+92
+
+Chapitre 10. Listes
+
+>>> t = ['a', 'b', 'c', 'd', 'e', 'f']
+>>> t[1:3]
+['b', 'c']
+>>> t[:4]
+['a', 'b', 'c', 'd']
+>>> t[3:]
+['d', 'e', 'f']
+Si vous omettez le premier index, la tranche commence au début. Si vous omettez le second, la tranche
+va à la fin. Donc, si vous omettez les deux, la tranche est une copie de la liste complète.
+
+>>> t[:]
+['a', 'b', 'c', 'd', 'e', 'f']
+Comme les listes sont modifiables, il est souvent utile de faire une copie avant d'effectuer des opérations
+modifier des listes.
+Un opérateur de tranche à gauche d'une affectation peut mettre à jour plusieurs éléments:
+
+>>> t = ['a', 'b', 'c', 'd', 'e', 'f']
+>>> t[1:3] = ['x', 'y']
+>>> t
+['a', 'x', 'y', 'd', 'e', 'f']
+
+10.6
+
+Méthodes de liste
+
+Python fournit des méthodes qui fonctionnent sur les listes. Par exemple, append ajoute un nouvel élément
+à la fin d'une liste:
+
+>>> t = ['a', 'b', 'c']
+>>> t.append('d')
+>>> t
+['a', 'b', 'c', 'd']
+extend prend une liste comme argument et ajoute tous les éléments:
+>>> t1 = ['a', 'b', 'c']
+>>> t2 = ['d', 'e']
+>>> t1.extend(t2)
+>>> t1
+['a', 'b', 'c', 'd', 'e']
+Cet exemple laisse t2 non modifié.
+
+trier les éléments de la liste de bas en haut:
+>>> t = ['d', 'c', 'e', 'b', 'a']
+>>> t.sort()
+>>> t
+['a', 'b', 'c', 'd', 'e']
+La plupart des méthodes de liste sont nulles; ils modifient la liste et renvoient None. Si vous écrivez accidentellement
+t = t.sort(), vous serez déçu du résultat.
+
+10.7. Map, filter et reduce
+
+10,7
+
+93
+
+Map, filter et reduce
+
+Pour additionner tous les numéros d'une liste, vous pouvez utiliser une boucle comme celle-ci:
+
+def add_all(t):
+total = 0
+for x in t:
+total += x
+return total
+total est initialisé à 0. Chaque fois que la boucle est terminée, x obtient un élément de la liste.
+L'opérateur + = fournit un moyen rapide de mettre à jour une variable. Cette affectation augmentée
+déclaration,
+total + = x
+est équivalent à
+
+total = total + x
+Au fur et à mesure que la boucle s'exécute, total cumule la somme des éléments; une variable utilisée de cette façon est
+parfois appelé un accumulateur.
+L’ajout des éléments d’une liste est une opération si courante que Python
+fonction intégrée, somme:
+
+>>> t = [1, 2, 3]
+>>> sum(t)
+6
+Une opération comme celle-ci qui combine une séquence d'éléments en une seule valeur est parfois appelée reduce.
+Parfois, vous voulez parcourir une liste tout en en construisant une autre. Par exemple, la fonction
+suivante prend une liste de chaînes et renvoie une nouvelle liste contenant des chaînes en majuscule:
+
+def capitalize_all(t):
+res = []
+for s in t:
+res.append(s.capitalize())
+return res
+res est initialisé avec une liste vide; chaque fois que nous parcourons la boucle, nous ajoutons l'élément suivant. Donc res est un autre type d'accumulateur.
+Une opération comme capitalise_all est parfois appelée map car elle "mappe" une fonction
+(dans ce cas la méthode capitalise) sur chacun des éléments d'une séquence.
+Une autre opération courante consiste à sélectionner certains des éléments d'une liste et à renvoyer une sous-liste.
+Par exemple, la fonction suivante prend une liste de chaînes et renvoie une liste contenant
+seules les chaînes majuscules:
+
+def only_upper(t):
+res = []
+for s in t:
+if s.isupper():
+res.append(s)
+return res
+
+94
+
+Chapitre 10. Lists
+
+isupper est une méthode de chaîne qui renvoie True si la chaîne ne contient que des majuscules.
+Une opération comme only_upper est appelée filtre car elle sélectionne certains éléments et
+filtre les autres.
+La plupart des opérations de liste communes peuvent être exprimées sous la forme d'une combinaison de carte, de filtre et de réduction.
+
+10.8
+
+Supprimer des éléments
+
+Il existe plusieurs façons de supprimer des éléments d’une liste. Si vous connaissez l'index de l'élément
+vous voulez, vous pouvez utiliser pop:
+>>> t = ['a', 'b', 'c']
+>>> x = t.pop (1)
+>>> t
+['a', 'c']
+>>> x
+'b'
+pop modifie la liste et renvoie l'élément qui a été supprimé. Si vous ne fournissez pas de
+index, il supprime et retourne le dernier élément.
+Si vous n'avez pas besoin de la valeur supprimée, vous pouvez utiliser l'opérateur del:
+>>> t = ['a', 'b', 'c']
+>>> del t [1]
+>>> t
+['a', 'c']
+Si vous connaissez l'élément que vous souhaitez supprimer (mais pas l'index), vous pouvez utiliser remove:
+>>> t = ['a', 'b', 'c']
+>>> t.remove ('b')
+>>> t
+['a', 'c']
+La valeur de retour de remove est None.
+Pour supprimer plusieurs éléments, vous pouvez utiliser del avec un index de tranche:
+>>> t = ['a', 'b', 'c', 'd', 'e', ​​'f']
+>>> del t [1: 5]
+>>> t
+['un F']
+Comme d'habitude, la tranche sélectionne tous les éléments jusqu'au deuxième index, mais sans l'inclure.
+
+10,9
+
+Listes et chaînes
+
+Une chaîne est une suite de caractères et une liste est une suite de valeurs, mais une liste de caractères
+n'est pas la même chose qu'une chaîne. Pour convertir une chaîne en une liste de caractères, vous pouvez utiliser list():
+
+>>> s = 'spam'
+>>> t = list(s)
+>>> t
+['s', 'p', 'a', 'm']
+
+10.10. Objets et valeurs
+
+95
+une
+
+'banane'
+
+une
+
+b
+
+'banane'
+
+b
+
+'banane'
+
+Figure 10.2: Diagramme d'état.
+Parce que list est le nom d'une fonction intégrée, évitez de l'utiliser comme une variable
+prénom. J'évite aussi l parce que ça ressemble trop à 1. Donc c'est pour ça que j'utilise t.
+La fonction de liste divise une chaîne en lettres individuelles. Si vous voulez casser une chaîne dans
+mots, vous pouvez utiliser la méthode split:
+
+>>> s = 'pining for the fjords'
+>>> t = s.split()
+>>> t
+['pining', 'for', 'the', 'fjords']
+Un argument facultatif appelé délimiteur spécifie les caractères à utiliser comme limites de mot. L'exemple suivant utilise un trait d'union comme délimiteur:
+
+>>> s = 'spam-spam-spam'
+>>> delimiter = '-'
+>>> t = s.split(delimiter)
+>>> t
+['spam', 'spam', 'spam']
+join est l'inverse de split. Il prend une liste de chaînes et concatène les éléments. rejoindre est
+une méthode de chaîne, vous devez donc l'invoquer sur le délimiteur et passer la liste en paramètre:
+>>> t = ['pining', 'for', 'the', 'fjords']
+>>> delimiter = ' '
+>>> s = delimiter.join(t)
+>>> s
+'pining for the fjords'
+Dans ce cas, le délimiteur est un caractère d'espacement, alors la jointure place un espace entre les mots. À
+concaténer des chaînes sans espaces, vous pouvez utiliser la chaîne vide '' comme délimiteur.
+
+10.10
+
+Objets et valeurs
+
+Si nous exécutons ces instructions d'affectation:
+
+a = 'banana'
+b = 'banana'
+Nous savons que a et b se réfèrent tous deux à une chaîne, mais nous ne savons pas s’ils font référence à la chaîne.
+même chaîne. Il y a deux états possibles, illustrés à la Figure 10.2.
+Dans un cas, a et b se réfèrent à deux objets différents qui ont la même valeur. Dans la seconde
+cas, ils se rapportent au même objet.
+Pour vérifier si deux variables font référence au même objet, vous pouvez utiliser l'opérateur is.
+
+96
+
+Chapitre 10. Listes
+une
+
+[1, 2, 3]
+
+b
+
+[1, 2, 3]
+
+Figure 10.3: Diagramme d'état.
+une
+b
+
+[1, 2, 3]
+
+Figure 10.4: Diagramme d'état.
+
+>>> a = 'banana'
+>>> b = 'banana'
+>>> a is b
+True
+Dans cet exemple, Python n'a créé qu'un seul objet de chaîne, et les deux a et b s'y réfèrent. Mais
+Lorsque vous créez deux listes, vous obtenez deux objets:
+
+>>> a = [1, 2, 3]
+>>> b = [1, 2, 3]
+>>> a is b
+False
+Donc, le diagramme d'état ressemble à la Figure 10.3.
+Dans ce cas, nous dirions que les deux listes sont équivalentes, car elles ont les mêmes éléments, mais pas identiques, car elles ne sont pas le même objet. Si deux objets sont identiques,
+ils sont également équivalents, mais s'ils sont équivalents, ils ne sont pas nécessairement identiques.
+Jusqu'à présent, nous avons utilisé "objet" et "valeur" de manière interchangeable, mais c'est plus précis
+dire qu'un objet a une valeur. Si vous évaluez [1, 2, 3], vous obtenez un objet liste dont
+value est une suite d'entiers. Si une autre liste comporte les mêmes éléments, nous disons qu’elle a les mêmes
+même valeur, mais ce n'est pas le même objet.
+
+10.11
+
+Aliasing
+
+Si a fait référence à un objet et que vous affectez b = a, les deux variables font référence au même objet:
+
+>>> a = [1, 2, 3]
+>>> b = a
+>>> b is a
+True
+Le diagramme d'état ressemble à la Figure 10.4.
+L'association d'une variable avec un objet s'appelle une référence. Dans cet exemple, il y a
+deux références au même objet.
+Un objet avec plus d'une référence a plus d'un nom, nous disons donc que l'objet
+est aliasé.
+Si l'objet aliasé est mutable, les modifications effectuées avec un alias affectent l'autre:
+
+10.12. Liste des arguments
+
+97
+__principale__
+delete_head
+
+des lettres
+t
+
+liste
+0
+
+'une'
+
+1
+
+'B'
+
+2
+
+'C'
+
+Figure 10.5: Diagramme de pile.
+
+>>> b [0] = 42
+>>> a
+[42, 2, 3]
+Bien que ce comportement puisse être utile, il est sujet aux erreurs. En général, il est plus prudent d'éviter
+aliasing lorsque vous travaillez avec des objets mutables.
+Pour les objets immuables tels que les chaînes de caractères, l'aliasing n'est pas un problème. Dans cet exemple:
+
+a = 'banane'
+b = 'banane'
+Il ne fait presque jamais de différence si a et b se réfèrent ou non à la même chaîne.
+
+10.12
+
+Liste des arguments
+
+Lorsque vous passez une liste à une fonction, la fonction obtient une référence à la liste. Si la fonction
+modifie la liste, l'appelant voit le changement. Par exemple, delete_head supprime le premier
+élément d'une liste:
+
+def delete_head (t):
+del t [0]
+Voici comment il est utilisé:
+
+>>> letters = ['a', 'b', 'c']
+>>> delete_head(letters)
+>>> letters
+['b', 'c']
+Le paramètre t et les lettres variables sont des alias pour le même objet. Le diagramme de la pile
+ressemble à la figure 10.5.
+Puisque la liste est partagée par deux cadres, je l’ai dessiné entre eux.
+Il est important de distinguer les opérations qui modifient les listes et les opérations qui créent de nouvelles listes. Par exemple, la méthode append modifie une liste, mais l'opérateur + crée un
+nouvelle liste.
+Voici un exemple utilisant append:
+
+>>> t1 = [1, 2]
+>>> t2 = t1.append(3)
+>>> t1
+[1, 2, 3]
+>>> t2
+None
+
+98
+
+Chapitre 10. Listes
+
+La valeur renvoyée par append est None.
+Voici un exemple d'utilisation de l'opérateur +:
+
+>>>
+>>>
+[1,
+>>>
+[1,
+
+t3 = t1 + [4]
+t1
+2, 3]
+t3
+2, 3, 4]
+
+Le résultat de l'opérateur est une nouvelle liste et la liste d'origine reste inchangée.
+Cette différence est importante lorsque vous écrivez des fonctions censées modifier des listes.
+Par exemple, cette fonction ne supprime pas la tête d'une liste:
+
+def bad_delete_head (t):
+t = t [1:]
+
+# FAUX!
+
+L'opérateur de tranche crée une nouvelle liste et l'affectation lui fait référence, mais cela ne
+affecter l'appelant (caller).
+
+>>>
+>>>
+>>>
+[1,
+
+t4 = [1, 2, 3]
+bad_delete_head (t4)
+t4
+2,3)
+
+Au début de bad_delete_head, t et t4 se réfèrent à la même liste. A la fin, on se réfère
+à une nouvelle liste, mais t4 fait toujours référence à la liste originale, non modifiée.
+Une alternative consiste à écrire une fonction qui crée et renvoie une nouvelle liste. Par exemple, la queue
+renvoie tout sauf le premier élément d'une liste:
+
+def tail(t):
+return t[1:]
+Cette fonction laisse la liste d'origine non modifiée. Voici comment il est utilisé:
+
+>>> letters = ['a', 'b', 'c']
+>>> rest = tail(letters)
+>>> rest
+['b', 'c']
+
+10.13
+
+Le débogage
+
+L'utilisation imprudente de listes (et d'autres objets mutables) peut entraîner de longues heures de débogage. Ici
+sont des pièges courants et des moyens de les éviter:
+1. La plupart des méthodes de liste modifient l'argument et renvoient None. C'est le contraire du
+méthodes de chaîne, qui renvoient une nouvelle chaîne et laissent l’original
+Si vous avez l'habitude d'écrire du code chaîne comme celui-ci:
+
+word = word.strip()
+Il est tentant d’écrire un code de liste comme celui-ci:
+
+10.13. Le débogage
+
+t = t.sort ()
+
+99
+
+# FAUX!
+
+Étant donné que sort renvoie None, la prochaine opération que vous effectuez avec t risque d'échouer.
+Avant d'utiliser les méthodes de liste et les opérateurs, vous devez lire attentivement la documentation et les tester en mode interactif.
+2. Choisissez un idiome et respectez-le.
+Une partie du problème avec les listes est qu'il y a trop de façons de faire les choses. Par exemple, pour supprimer un élément d'une liste, vous pouvez utiliser des fonctions pop, remove, del ou même une tranche.
+affectation.
+Pour ajouter un élément, vous pouvez utiliser la méthode append ou l'opérateur +. En admettant que
+t est une liste et x est un élément de liste, ceux-ci sont corrects:
+
+t.append (x)
+t = t + [x]
+t + = [x]
+Et les cancres:
+
+t.append([x])
+t = t.append(x)
+t + [x]
+t = t + x
+
+#
+#
+#
+#
+
+FAUX!
+FAUX!
+FAUX!
+FAUX!
+
+Essayez chacun de ces exemples en mode interactif pour vous assurer que vous comprenez
+ce qu'ils font. Notez que seul le dernier provoque une erreur d'exécution; les trois autres sont
+juridique, mais ils font la mauvaise chose.
+3. Faites des copies pour éviter les alias.
+Si vous voulez utiliser une méthode comme sort qui modifie l'argument, mais vous devez
+conservez également la liste originale, vous pouvez en faire une copie.
+
+>>>
+>>>
+>>>
+>>>
+[3,
+>>>
+[1,
+
+t = [3, 1, 2]
+t2 = t [:]
+t2.sort ()
+t
+1, 2]
+t2
+2, 3]
+
+Dans cet exemple, vous pouvez également utiliser la fonction intégrée triée, qui renvoie un nouveau,
+liste triée et laisse l'original seul.
+
+>>>
+>>>
+[3,
+>>>
+[1,
+
+t2 = sorted(t)
+t
+1, 2]
+t2
+2, 3]
+
+100
+
+10.14
+
+Chapitre 10. Listes
+
+Glossaire
+
+list: une séquence de valeurs.
+element: Une des valeurs d'une liste (ou d'une autre séquence), également appelée éléments.
+liste imbriquée: une liste qui est un élément d'une autre liste.
+accumulator: Une variable utilisée dans une boucle pour additionner ou accumuler un résultat.
+affectation augmentée: instruction qui met à jour la valeur d'une variable à l'aide d'un opérateur tel que + =.
+réduire: Un modèle de traitement qui traverse une séquence et accumule les éléments dans
+un seul résultat.
+map: modèle de traitement qui traverse une séquence et effectue une opération sur chaque
+élément.
+filter: Un modèle de traitement qui traverse une liste et sélectionne les éléments qui satisfait certains
+critères.
+objet: quelque chose auquel une variable peut se référer. Un objet a un type et une valeur.
+équivalent: avoir la même valeur.
+identique: Être le même objet (ce qui implique une équivalence).
+reference: Association entre une variable et sa valeur.
+aliasing: une circonstance où deux variables ou plus se rapportent au même objet.
+délimiteur: caractère ou chaîne utilisé pour indiquer où une chaîne doit être divisée.
+
+10h15
+
+Des exercices
+
+Vous pouvez télécharger des solutions à ces exercices depuis http://thinkpython2.com/code/
+list_exercises.py.
+Exercice 10.1. Ecrire une fonction appelée nested_sum qui prend une liste de listes d'entiers et additionne
+les éléments de toutes les listes imbriquées. Par exemple:
+>>> t = [[1, 2], [3], [4, 5, 6]]
+>>> nested_sum (t)
+21
+Exercice 10.2. Ecrire une fonction appelée cumsum qui prend une liste de nombres et retourne la somme cumulée; c'est-à-dire une nouvelle liste où l'élément ith est la somme des premiers i + 1 éléments de la
+liste originale. Par exemple:
+>>> t = [1, 2, 3]
+>>> cumsum (t)
+[1, 3, 6]
+Exercice 10.3. Ecrivez une fonction appelée middle qui prend une liste et retourne une nouvelle liste contenant
+tous sauf le premier et le dernier élément. Par exemple:
+>>> t = [1, 2, 3, 4]
+>>> milieu (t)
+[2, 3]
+
+10h15 Des exercices
+
+101
+
+Exercice 10.4. Ecrire une fonction appelée chop qui prend une liste, la modifie en supprimant le premier
+derniers éléments et renvoie None. Par exemple:
+
+>>> t = [1, 2, 3, 4]
+>>> chop (t)
+>>> t
+[2, 3]
+Exercice 10.5. Écrivez une fonction appelée is_sorted qui prend une liste comme paramètre et renvoie True
+si la liste est triée par ordre croissant et False sinon. Par exemple:
+>>> is_sorted ([1, 2, 2])
+Vrai
+>>> is_sorted (['b', 'a'])
+Faux
+Exercice 10.6. Deux mots sont des anagrammes si vous pouvez réorganiser les lettres de l'une pour épeler l'autre.
+Écrivez une fonction appelée is_anagram qui prend deux chaînes et renvoie True si ce sont des anagrammes.
+Exercice 10.7. Ecrire une fonction appelée has_duplicates qui prend une liste et retourne True si
+est tout élément qui apparaît plus d'une fois. Il ne doit pas modifier la liste d'origine.
+Exercice 10.8. Cet exercice concerne le soi-disant paradoxe de l'anniversaire, sur lequel vous pouvez lire
+à http: // fr. Wikipédia. org / wiki / Birthday_ paradox.
+S'il y a 23 élèves dans votre classe, quelles sont les chances que deux d'entre vous aient le même anniversaire?
+Vous pouvez estimer cette probabilité en générant des échantillons aléatoires de 23 anniversaires et en utilisant des
+allumettes. Astuce: vous pouvez générer des anniversaires aléatoires avec la fonction randint du
+module random.
+Vous pouvez télécharger ma solution à partir de http: // thinkpython2. com / code / anniversaire. py.
+Exercice 10.9. Ecrire une fonction qui lit le fichier words.txt et construit une liste avec un élément
+par mot Écrivez deux versions de cette fonction, l’une utilisant la méthode append et l’autre utilisant
+le idiome t = t + [x]. Lequel prend plus de temps à courir? Pourquoi?
+Solution: http: // thinkpython2. com / code / liste de mots. py.
+Exercice 10.10. Pour vérifier si un mot figure dans la liste de mots, vous pouvez utiliser l'opérateur in, mais
+serait lent car il recherche dans les mots dans l'ordre.
+Comme les mots sont dans l’ordre alphabétique, nous pouvons accélérer les choses avec une recherche de bissection (également
+connu sous le nom de recherche binaire), qui est similaire à ce que vous faites lorsque vous regardez un mot dans le dictionnaire.
+Vous commencez au milieu et vérifiez si le mot que vous recherchez vient avant le mot
+au milieu de la liste. Si c'est le cas, vous effectuez la même recherche dans la première moitié de la liste. Sinon vous recherchez
+la seconde moitié.
+De toute façon, vous réduisez de moitié l'espace de recherche restant. Si la liste de mots comporte 113 809 mots, elle sera
+prendre environ 17 étapes pour trouver le mot ou conclure qu'il n'est pas là.
+Ecrire une fonction appelée in_bisect qui prend une liste triée et une valeur cible et renvoie l'index
+de la valeur dans la liste si elle est là, ou aucun si ce n'est pas.
+Ou vous pouvez lire la documentation du module bisect et l'utiliser! Solution: http: //
+thinkpython2. com / code / inlist. py.
+Exercice 10.11. Deux mots sont une "paire inversée" si chacun est l'inverse de l'autre. Ecrire un programme
+qui trouve toutes les paires inverses dans la liste de mots. Solution: http: // thinkpython2. com / code /
+paire reverse_ py.
+Exercice 10.12. Deux mots "interlock" si l'on prend des lettres en alternance de chacun forme un nouveau
+mot. Par exemple, "shoe" et "cold" s'emboîtent pour former "schooled". Solution: http: //
+
+102
+
+Chapitre 10. Listes
+
+thinkpython2. com / code / interlock. py. Crédit: Cet exercice est inspiré par un exemple à
+http: // puzzlers. org.
+1. Rédigez un programme qui trouve toutes les paires de mots qui s’emboîtent. Astuce: ne pas énumérer toutes les paires!
+2. Pouvez-vous trouver des mots à trois voies imbriquées? c'est-à-dire que chaque troisième lettre forme un
+mot, à partir du premier, deuxième ou troisième?
