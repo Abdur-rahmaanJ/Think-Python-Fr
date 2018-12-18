@@ -2,8 +2,6 @@
 Official french translation of Think Python - How To Think Like A Computer Scientist
 
 # Contributing
-Open main-tpy in omegaT. use a new branch for each chapter. open an issue telling which chapter you've chosen. git push origin HEAD.
-
 just push translated file in THINKPY/translated
 
 # Assignments
@@ -21,8 +19,8 @@ just push translated file in THINKPY/translated
 | chapter07      | @Abdur-rahmaanj | finished |
 | chapter08      | @Abdur-rahmaanj | finished |
 | chapter09      | @Abdur-rahmaanj | finished |
-| chapter10      |                 |          |
-| chapter11      |                 |          |
+| chapter10      | @Abdur-rahmaanj | finished |
+| chapter11      | @Abdur-rahmaanj | finished |
 | chapter12      |                 |          |
 | chapter13      |                 |          |
 | chapter14      |                 |          |

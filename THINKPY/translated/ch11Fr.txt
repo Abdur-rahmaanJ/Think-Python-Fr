@@ -1,0 +1,611 @@
+Chapitre 11
+
+Dictionnaires
+Ce chapitre présente un autre type intégré appelé dictionnaire. Les dictionnaires sont l’un des
+meilleures fonctionnalités de Python; ils constituent la base de nombreux algorithmes efficaces et élégants.
+
+11.1
+
+Un dictionnaire est une 'mapping' - to be translated
+
+Un dictionnaire est comme une liste, mais plus générale. Dans une liste, les index doivent être des entiers. dans un
+dictionnaire, ils peuvent être (presque) n'importe quel type.
+Un dictionnaire contient un ensemble d’index, appelés clés, et un ensemble de
+valeurs. Chaque clé est associée à une valeur unique. L'association d'une clé et d'une valeur est
+appelé une paire clé-valeur ou parfois un élément.
+En langage mathématique, un dictionnaire représente un mappage de clés en valeurs, vous permettant
+peut également dire que chaque clé correspond à une valeur. Par exemple, nous allons construire un dictionnaire qui
+traduit des mots anglais en espagnol, de sorte que les clés et les valeurs sont toutes des chaînes.
+La fonction dict crée un nouveau dictionnaire sans éléments. Parce que dict est le nom d'un
+fonction intégrée, vous devriez éviter de l’utiliser comme nom de variable.
+
+>>> eng2sp = dict ()
+>>> eng2sp
+{}
+Les crochets, {}, représentent un dictionnaire vide. Pour ajouter des éléments au dictionnaire,
+vous pouvez utiliser des crochets:
+
+>>> eng2sp ['one'] = 'uno'
+Cette ligne crée un élément qui mappe la clé "one" à la valeur "uno". Si nous imprimons le
+dictionnaire, nous voyons une paire clé-valeur avec deux points entre la clé et la valeur:
+
+>>> eng2sp
+{'one': 'uno'}
+Ce format de sortie est également un format d'entrée. Par exemple, vous pouvez créer un nouveau dictionnaire
+avec trois éléments:
+
+104
+
+Chapitre 11. Dictionnaires
+
+>>> eng2sp = {'un': 'uno', 'deux': 'dos', 'trois': 'tres'}
+Mais si vous imprimez eng2sp, vous pourriez être surpris:
+
+>>> eng2sp
+{'un': 'uno', 'trois': 'tres', 'deux': 'dos'}
+L'ordre des paires clé-valeur peut ne pas être le même. Si vous tapez le même exemple
+sur votre ordinateur, vous pourriez obtenir un résultat différent. En général, l'ordre des articles dans un
+dictionnaire est imprévisible.
+Mais ce n’est pas un problème car les éléments d’un dictionnaire ne sont jamais indexés avec des index entiers. A la place, vous utilisez les touches pour rechercher les valeurs correspondantes:
+
+>>> eng2sp ['deux']
+'dos'
+La clé "deux" correspond toujours à la valeur "dos", donc l'ordre des éléments n'a pas d'importance.
+Si la clé ne figure pas dans le dictionnaire, vous obtenez une exception:
+
+>>> eng2sp ['quatre']
+KeyError: 'quatre'
+La fonction len fonctionne sur les dictionnaires; il retourne le nombre de paires clé-valeur:
+
+>>> len (eng2sp)
+3
+L'opérateur in travaille également sur les dictionnaires; il vous dit si quelque chose apparaît comme une clé
+dans le dictionnaire (apparaître sous forme de valeur ne suffit pas).
+
+>>> 'one' in eng2sp
+True
+>>> 'uno' in eng2sp
+False
+Pour voir si quelque chose apparaît comme une valeur dans un dictionnaire, vous pouvez utiliser la méthode
+values, qui retourne une collection de valeurs, puis utilise l'opérateur in:
+
+>>> vals = eng2sp.values()
+>>> 'uno' in vals
+True
+L'opérateur in utilise différents algorithmes pour les listes et les dictionnaires. Pour les listes, il cherche dans le
+éléments de la liste dans l’ordre, comme dans la section 8.6. À mesure que la liste s'allonge, le temps de recherche devient
+plus en proportion directe.
+Pour les dictionnaires, Python utilise un algorithme appelé hashtable qui a une propriété remarquable: l'opérateur in prend environ le même temps, quel que soit le nombre d'éléments.
+dans le dictionnaire. J'explique comment cela est possible dans la section B.4, mais l'explication pourrait
+ne pas faire aucun sens tant que vous n’avez pas lu quelques chapitres supplémentaires.
+
+11.2
+
+Dictionnaire comme une collection de compteurs
+
+Supposons qu'une chaîne vous soit donnée et que vous souhaitiez compter le nombre de fois que chaque lettre apparaît.
+Vous pouvez le faire de plusieurs manières:
+
+11.2 Dictionnaire comme une collection de compteurs
+
+105
+
+1. Vous pouvez créer 26 variables, une pour chaque lettre de l'alphabet. Ensuite, vous pouvez traverser la chaîne et, pour chaque caractère, incrémenter le compteur correspondant, probablement en utilisant un conditionnel chaîné.
+2. Vous pouvez créer une liste de 26 éléments. Ensuite, vous pouvez convertir chaque lettre en
+un numéro (à l'aide de la fonction intégrée ord), utilisez-le comme index dans la liste,
+et incrémenter le compteur approprié.
+3. Vous pouvez créer un dictionnaire avec des caractères comme clés et des compteurs comme valeurs correspondantes. La première fois que vous voyez un caractère, vous ajouterez un élément au dictionnaire.
+Ensuite, vous augmentez la valeur d’un élément existant.
+Chacune de ces options effectue le même calcul, mais chacune d’elles implémente
+calcul d'une manière différente.
+Une implémentation est un moyen d'effectuer un calcul. certaines implémentations sont
+mieux que d'autres. Par exemple, un avantage de la mise en œuvre du dictionnaire est que nous
+pas besoin de savoir à l’avance quelles lettres apparaissent dans la chaîne et il suffit de
+faites de la place pour les lettres qui apparaissent.
+Voici à quoi pourrait ressembler le code:
+
+def histogram(s):
+d = dict()
+for c in s:
+if c not in d:
+d[c] = 1
+else:
+d[c] += 1
+return d
+Le nom de la fonction est histogramm, terme statistique désignant une collection de compteurs.
+(ou fréquences).
+La première ligne de la fonction crée un dictionnaire vide. La boucle for traverse la chaîne.
+A chaque passage dans la boucle, si le caractère (désigné par) c ne figure pas dans le dictionnaire, nous créons un nouvel élément.
+avec pour clé c et la valeur initiale 1 (puisque nous avons vu cette lettre une fois). Si c est déjà dans le
+dictionnaire on incrémente d[c].
+Voici comment ça fonctionne:
+
+>>> h = histogram('brontosaurus')
+>>> h
+{'a': 1, 'b': 1, 'o': 2, 'n': 1, 's': 2, 'r': 2, 'u': 2, 't': 1}
+L'histogramme indique que les lettres "a" et "b" apparaissent une fois; 'o' apparaît deux fois et
+ainsi de suite.
+Les dictionnaires ont une méthode appelée get qui prend une clé et une valeur par défaut. Si la clé
+apparaît dans le dictionnaire, get renvoie la valeur correspondante; sinon il retourne le
+valeur par défaut. Par exemple:
+
+>>> h = histogramme ('a')
+>>> h
+{'a': 1}
+>>> h.get ('a', 0)
+
+106
+
+Chapitre 11. Dictionnaires
+
+1
+>>> h.get ('b', 0)
+0
+En tant qu'exercice, utilisez get pour écrire l'histogramme de manière plus concise. Vous devriez pouvoir éliminer
+la déclaration si.
+
+11.3
+
+Boucle et dictionnaires
+
+Si vous utilisez un dictionnaire dans une instruction for, il traverse les clés du dictionnaire. Par exemple, print_hist affiche chaque clé et la valeur correspondante:
+
+def print_hist(h):
+for c in h:
+print(c, h[c])
+Voici à quoi ressemble la sortie:
+>>> h = histogram('parrot')
+>>> print_hist(h)
+a 1
+p 1
+r 2
+t 1
+o 1
+Encore une fois, les clés ne sont dans aucun ordre particulier. Pour parcourir les clés dans un ordre trié, vous pouvez utiliser
+la fonction intégrée triée:
+>>> for key in sorted(h):
+...
+print(key, h[key])
+a 1
+o 1
+p 1
+r 2
+t 1
+
+11.4
+
+Recherche inversée
+
+Étant donné un dictionnaire d et une clé k, il est facile de trouver la valeur correspondante v = d[k]. Ce
+l'opération s'appelle une recherche.
+Mais que faire si vous avez v et que vous voulez trouver k? Vous avez deux problèmes: d'abord, il pourrait
+avoir plus d'une clé qui correspond à la valeur v. En fonction de l'application, vous pouvez
+être capable de choisir un, ou vous devrez peut-être une liste qui les contient tous. Seconde,
+il n'y a pas de syntaxe simple pour effectuer une recherche inversée; vous devez rechercher.
+Voici une fonction qui prend une valeur et retourne la première clé qui correspond à cette valeur:
+
+def reverse_lookup(d, v):
+for k in d:
+if d[k] == v:
+return k
+raise LookupError()
+
+11.5 Dictionnaires et listes
+
+107
+
+Cette fonction est un autre exemple du modèle de recherche, mais elle utilise une fonctionnalité que nous n’avons pas
+vu auparavant, augmenter. L'instruction de relance provoque une exception. dans ce cas, il provoque une
+LookupError, qui est une exception intégrée utilisée pour indiquer qu'une opération de recherche a échoué.
+Si nous arrivons à la fin de la boucle, cela signifie que v n’apparaît pas dans le dictionnaire sous forme de valeur.
+nous soulevons une exception.
+Voici un exemple de recherche inversée réussie:
+
+>>> h = histogram('parrot')
+>>> key = reverse_lookup(h, 2)
+>>> key
+'r'
+Et un échec:
+
+>>> key = reverse_lookup(h, 3)
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+File "<stdin>", line 5, in reverse_lookup
+LookupError
+L’effet lorsque vous déclenchez une exception est le même que lorsque Python en déclenche une: il affiche une
+traceback et un message d'erreur.
+L'instruction de relance peut prendre un message d'erreur détaillé comme argument facultatif. Par exemple:
+
+>>> raise LookupError('value does not appear in the dictionary')
+Traceback (most recent call last):
+File "<stdin>", line 1, in ?
+LookupError: value does not appear in the dictionary
+Une recherche inversée est beaucoup plus lente qu'une recherche directe; si vous devez le faire souvent, ou si le
+dictionnaire devient gros, la performance de votre programme va en souffrir.
+
+11.5
+
+Dictionnaires et listes
+
+Les listes peuvent apparaître sous forme de valeurs dans un dictionnaire. Par exemple, si vous recevez un dictionnaire qui
+mappe des lettres aux fréquences, vous voudrez peut-être l’inverser; c'est-à-dire créer un dictionnaire
+qui mappe des fréquences aux lettres. Puisqu'il pourrait y avoir plusieurs lettres avec le même
+fréquence, chaque valeur du dictionnaire inversé doit être une liste de lettres.
+Voici une fonction qui inverse un dictionnaire:
+
+def invert_dict(d):
+inverse = dict()
+for key in d:
+val = d[key]
+if val not in inverse:
+inverse[val] = [key]
+else:
+inverse[val].append(key)
+return inverse
+
+108
+
+Chapitre 11. Dictionnaires
+dict
+hist
+
+dict
+
+’a’
+
+1
+
+’p’
+
+inv
+
+list
+
+1
+
+0
+
+’a’
+
+1
+
+1
+
+’p’
+
+’r’
+
+2
+
+2
+
+’t’
+
+’t’
+
+1
+
+3
+
+’o’
+
+’o’
+
+1
+
+0
+
+’r’
+
+list
+2
+
+Figure 11.1: Diagramme d'état.
+A chaque passage dans la boucle, key obtient une clé de d et val obtient la valeur correspondante.
+Si val n’est pas inversé, cela signifie que nous ne l’avons jamais vu auparavant. Nous créons donc un nouvel élément et
+initialisez-le avec un singleton (une liste contenant un seul élément). Sinon nous avons vu
+cette valeur avant, nous ajoutons donc la clé correspondante à la liste.
+Voici un exemple:
+
+>>> hist = histogram('parrot')
+>>> hist
+{'a': 1, 'p': 1, 'r': 2, 't': 1, 'o': 1}
+>>> inverse = invert_dict(hist)
+>>> inverse
+{1: ['a', 'p', 't', 'o'], 2: ['r']}
+Le dessin 11.1 est un diagramme d'états montrant hist et inverse. Un dictionnaire est représenté comme un
+case avec le type dict dessus et les paires clé-valeur à l'intérieur. Si les valeurs sont des entiers,
+floats ou des chaînes, je les dessine à l’intérieur de la boîte, mais je dessine généralement des listes en dehors de la
+ boîte, question de garder le schéma simple.
+Les listes peuvent être des valeurs dans un dictionnaire, comme le montre cet exemple, mais elles ne peuvent pas être des clés. Voici
+Qu'est-ce qui se passe si vous essayez:
+
+>>> t = [1, 2, 3]
+>>> d = dict()
+>>> d[t] = 'oops'
+Traceback (most recent call last):
+File "<stdin>", line 1, in ?
+TypeError: list objects are unhashable
+J'ai mentionné plus tôt qu'un dictionnaire est mis en œuvre en utilisant une table de hachage et cela signifie que
+les clés doivent être hashable.
+Un hachage est une fonction qui prend une valeur (de tout type) et renvoie un entier. Dictionnaires
+utilisez ces entiers, appelés valeurs de hachage, pour stocker et rechercher des paires clé-valeur.
+Ce système fonctionne bien si les clés sont immuables. Mais si les clés sont mutables, comme des listes,
+les mauvaises choses arrivent. Par exemple, lorsque vous créez une paire clé-valeur, Python hache la clé
+et le stocke à l'emplacement correspondant. Si vous modifiez la clé puis la hachez à nouveau,
+irait à un endroit différent. Dans ce cas, vous pourriez avoir deux entrées pour la même clé,
+ou vous ne pourrez peut-être pas trouver une clé. De toute façon, le dictionnaire ne fonctionnerait pas correctement.
+C’est la raison pour laquelle les clés doivent être remplissables et pourquoi les types mutables comme les listes ne le sont pas. Le plus simple
+Pour contourner cette limitation, utilisez des n-uplets, que nous verrons dans le prochain chapitre.
+
+11.6 Mémos
+
+109
+fibonacci
+n
+4
+
+fibonacci
+n
+3
+
+fibonacci
+n
+2
+
+fibonacci
+n
+1
+
+fibonacci
+n
+1
+
+fibonacci
+n
+2
+
+fibonacci
+n
+1
+
+fibonacci
+n
+0
+
+fibonacci
+n
+0
+
+Figure 11.2: Graphe d’appel.
+Les dictionnaires étant modifiables, ils ne peuvent pas être utilisés comme clés, mais ils peuvent être utilisés comme valeurs.
+
+11.6
+
+Mémos
+
+Si vous avez joué avec la fonction fibonacci de la section 6.7, vous avez peut-être remarqué que
+plus l'argument que vous fournissez est grand, plus la fonction met longtemps à s'exécuter. En outre,
+le temps d'exécution augmente rapidement.
+Pour comprendre pourquoi, considérons la figure 11.2, qui présente le graphe d’appel de fibonacci avec
+n = 4:
+Un graphique d’appel montre un ensemble de cadres de fonctions, avec des lignes reliant chaque cadre aux cadres.
+des fonctions qu'il appelle. En haut du graphique, fibonacci avec n = 4 appelle fibonacci avec
+n = 3 et n = 2. À son tour, fibonacci avec n = 3 appelle fibonacci avec n = 2 et n = 1. Etc.
+Comptez le nombre de fois où fibonacci (0) et fibonacci (1) sont appelés. C'est un inefficace
+solution au problème, et cela s’aggrave à mesure que l’argument s’agrandit.
+Une solution consiste à garder une trace des valeurs déjà calculées en les stockant.
+dans un dictionnaire. Une valeur calculée précédemment qui est stockée pour une utilisation ultérieure est appelée un mémo.
+Voici une version «mémoisée» de fibonacci:
+
+known = {0:0, 1:1}
+def fibonacci(n):
+if n in known:
+return known[n]
+res = fibonacci(n-1) + fibonacci(n-2)
+known[n] = res
+return res
+Connu est un dictionnaire qui garde la trace des nombres de Fibonacci que nous connaissons déjà. Il commence
+avec deux items: 0 mappe à 0 et 1 mappe à 1.
+
+110
+
+Chapitre 11. Dictionnaires
+
+Chaque fois que Fibonacci est appelé, il vérifie. Si le résultat est déjà là, il peut retourner
+immédiatement. Sinon, il doit calculer la nouvelle valeur, l'ajouter au dictionnaire et
+rends le.
+Si vous utilisez cette version de fibonacci et que vous la comparez à la version originale, vous constaterez que
+est beaucoup plus rapide.
+
+11.7
+
+Variables globales
+
+Dans l'exemple précédent, not est créé en dehors de la fonction, il appartient donc à la fonction spécial
+appelé __main__. Les variables dans __main__ sont parfois appelées globales car elles
+peut être accessible depuis n'importe quelle fonction. Contrairement aux variables locales, qui disparaissent lorsque leur
+fonction se termine, les variables globales persistent d'un appel de fonction à l'autre.
+Il est courant d'utiliser des variables globales pour les indicateurs. c’est-à-dire des variables booléennes qui indiquent («drapeau»)
+si une condition est vraie. Par exemple, certains programmes utilisent un indicateur nommé verbose pour
+contrôler le niveau de détail dans la sortie:
+
+verbose = True
+def example1():
+if verbose:
+print('Running example1')
+Si vous essayez de réaffecter une variable globale, vous pourriez être surpris. L'exemple suivant est
+censé savoir si la fonction a été appelée:
+
+been_called = False
+def example2():
+been_called = True
+
+# FAUX
+
+Mais si vous l’exécutez, vous verrez que la valeur de been_called ne change pas. Le problème
+Est-ce que exemple2 crée une nouvelle variable locale appelée Been_called. La variable locale va
+loin lorsque la fonction se termine, et n'a aucun effet sur la variable globale.
+Pour réaffecter une variable globale dans une fonction, vous devez déclarer la variable globale avant que
+tu l'utilises:
+
+been_called = False
+def example2():
+global been_called
+been_called = True
+La déclaration globale dit à l'interprète quelque chose comme: «Dans cette fonction, quand je dis
+been_called, je veux dire la variable globale; ne créez pas un local. "
+Voici un exemple qui tente de mettre à jour une variable globale:
+
+count = 0
+def example3():
+count = count + 1
+Si vous l'exécutez, vous obtenez:
+
+# FAUX
+
+11.8. Débogage
+
+111
+
+UnboundLocalError: local variable 'count' referenced before assignment
+Python suppose que le compte est local et sous cette hypothèse, vous le lisez avant
+l'écrire. La solution, encore une fois, est de déclarer le compte global.
+
+def example3():
+global count
+count += 1
+Si une variable globale fait référence à une valeur mutable, vous pouvez modifier la valeur sans déclarer
+la variable:
+
+connu = {0: 0, 1: 1}
+def example4 ():
+connu [2] = 1
+Ainsi, vous pouvez ajouter, supprimer et remplacer des éléments d'une liste globale ou d'un dictionnaire, mais si vous le souhaitez
+pour réaffecter la variable, vous devez la déclarer:
+
+def example5():
+global known
+known = dict()
+Les variables globales peuvent être utiles, mais si vous en avez beaucoup et que vous les modifiez fréquemment, elles peuvent compliquer le débogage des programmes.
+
+11.8
+
+Débogage
+
+Lorsque vous travaillez avec des jeux de données plus volumineux, il peut être difficile de déboguer en imprimant et en vérifiant le résultat à la main. Voici quelques suggestions pour déboguer de grands ensembles de données:
+Réduire l'entrée: Si possible, réduisez la taille du jeu de données. Par exemple, si le programme lit un fichier texte, commencez par les 10 premières lignes ou par le plus petit exemple.
+tu peux trouver. Vous pouvez soit éditer les fichiers eux-mêmes, soit (mieux) modifier le programme
+il ne lit donc que les n premières lignes.
+S'il y a une erreur, vous pouvez réduire n à la plus petite valeur qui manifeste l'erreur, et
+augmentez-le ensuite progressivement à mesure que vous trouvez et corrigez les erreurs.
+Vérifier les résumés et les types: au lieu d’imprimer et de vérifier l’ensemble du jeu de données, considérez
+l’impression des résumés des données: par exemple, le nombre d’articles dans un dictionnaire ou
+le total d'une liste de nombres.
+Une cause fréquente d’erreurs d’exécution est une valeur qui n’est pas le bon type. Pour le débogage
+ce type d'erreur, il suffit souvent d'imprimer le type d'une valeur.
+Écrire des auto-vérifications: vous pouvez parfois écrire du code pour rechercher automatiquement les erreurs. Pour
+Par exemple, si vous calculez la moyenne d’une liste de nombres, vous pouvez vérifier que
+le résultat n'est pas supérieur au plus grand élément de la liste ni inférieur au plus petit.
+Cela s'appelle un «contrôle de cohérence», car il détecte les résultats «insensés».
+Un autre type de vérification compare les résultats de deux calculs différents pour voir si
+ils sont cohérents. Cela s'appelle un «contrôle de cohérence».
+
+112
+
+Chapitre 11. Dictionnaires
+
+Formater la sortie: le formatage de la sortie de débogage peut permettre de repérer plus facilement une erreur. nous
+J'ai vu un exemple à la section 6.9. Un autre outil qui pourrait vous être utile est le module pprint, qui fournit une fonction pprint qui affiche les types intégrés dans un format plus lisible par l’humain (pprint signifie «jolie impression»).
+Encore une fois, le temps que vous passez à construire un échafaudage peut réduire le temps que vous passez à déboguer.
+
+11.9
+
+Glossaire
+
+mappage: relation dans laquelle chaque élément d'un ensemble correspond à un élément de
+un autre ensemble.
+dictionnaire: une correspondance entre les clés et leurs valeurs correspondantes.
+paire clé-valeur: La représentation du mappage d'une clé à une valeur.
+item: dans un dictionnaire, un autre nom pour une paire clé-valeur.
+clé: objet qui apparaît dans un dictionnaire en tant que première partie d'une paire clé-valeur.
+valeur: objet qui apparaît dans un dictionnaire en tant que deuxième partie d'une paire clé-valeur. C'est
+plus spécifique que notre utilisation précédente du mot «valeur».
+implémentation: une façon de faire un calcul.
+hashtable: l'algorithme utilisé pour implémenter les dictionnaires Python.
+fonction de hachage: fonction utilisée par une table de hachage pour calculer l'emplacement d'une clé.
+hashable: type ayant une fonction de hachage. Types immuables comme les entiers, les flottants et les chaînes
+sont hashable; les types mutables tels que les listes et les dictionnaires ne le sont pas.
+lookup: Une opération de dictionnaire qui prend une clé et trouve la valeur correspondante.
+recherche inversée: opération de dictionnaire qui prend une valeur et trouve une ou plusieurs clés
+carte à elle.
+déclaration de levée: une déclaration qui (délibérément) soulève une exception.
+singleton: liste (ou autre séquence) avec un seul élément.
+graphe d'appel: un diagramme qui montre chaque image créée lors de l'exécution d'un programme,
+avec une flèche de chaque appelant à chaque appelé.
+Mémo: Une valeur calculée stockée pour éviter des calculs futurs inutiles.
+variable globale: une variable définie en dehors d'une fonction. Les variables globales peuvent être consultées
+de toute fonction.
+déclaration globale: une déclaration qui déclare un nom de variable global.
+flag: Une variable booléenne utilisée pour indiquer si une condition est vraie.
+déclaration: Une déclaration comme globale qui dit quelque chose à l'interprète à propos d'une variable.
+
+11.10. Des exercices
+
+11h10
+
+113
+
+Des exercices - to be verfied again
+
+Exercice 11.1. Ecrivez une fonction qui lit les mots dans words.txt et les stocke comme clés dans un
+dictionnaire. Peu importe les valeurs. Ensuite, vous pouvez utiliser l’opérateur in comme moyen rapide de
+vérifie si une chaîne est dans le dictionnaire.
+Si vous avez fait l’exercice 10.10, vous pouvez comparer la vitesse de cette implémentation à la liste de l’opérateur
+et la recherche de bissection.
+Exercice 11.2. Lisez la documentation de la méthode du dictionnaire setdefault et utilisez-la pour écrire un
+version plus concise de invert_dict. Solution: http: // thinkpython2. com / code / invert_
+dict. py.
+Exercice 11.3. Mémoisez la fonction Ackermann de l'exercice 6.2 et voir si la mémoization
+permet d'évaluer la fonction avec des arguments plus grands. Indice: non. Solution: http:
+// thinkpython2. com / code / mémo ackermann_. py.
+Exercice 11.4. Si vous avez fait l’exercice 10.7, vous avez déjà une fonction nommée has_duplicates qui
+prend une liste en tant que paramètre et renvoie True si un objet apparaît plusieurs fois dans la liste.
+liste.
+Utilisez un dictionnaire pour écrire une version plus rapide et plus simple de has_duplicates. Solution: http: //
+thinkpython2. com / code / has_ ​​en double. py.
+Exercice 11.5. Deux mots sont des "paires tournantes" si vous pouvez faire pivoter l’un d’eux et obtenir l’autre (voir
+rotate_word dans l'exercice 8.5).
+Ecrivez un programme qui lit une liste de mots et trouve toutes les paires de rotation. Solution: http: //
+thinkpython2. com / code / rotation_ paires. py.
+Exercice 11.6. Voici un autre Puzzler de Car Talk (http: // www. Cartalk. Com / content /
+casse-tête):
+Cela a été envoyé par un gars nommé Dan O'Leary. Il est tombé sur une syllabe commune,
+mot de cinq lettres récemment qui a la propriété unique suivante. Lorsque vous retirez le
+première lettre, les lettres restantes forment un homophone du mot original, c’est un mot
+ça sonne exactement pareil. Remplacez la première lettre, c’est-à-dire remettez-la en place et retirez-la.
+la deuxième lettre et le résultat est encore un autre homophone du mot original. Et le
+La question est: quel est le mot?
+Maintenant, je vais vous donner un exemple qui ne fonctionne pas. Regardons les cinq lettres
+W-R-A-C-K, vous savez aimer «‘ rayer avec douleur ». Si j’enlève le premier
+lettre, il me reste un mot de quatre lettres, "R-A-C-K". Comme dans "Holy cow, did you see the
+rack on that buck! It must have been a nine-pointer! ». C’est un homophone parfait. Si vous
+remettez le "w" en arrière et supprimez le "r" à la place, vous avez le mot "wack" qui est
+un vrai mot, ce n’est tout simplement pas un homophone des deux autres mots.
+Mais il y a cependant au moins un mot que Dan et nous connaissons, qui donnera deux
+homophones si vous supprimez l'une des deux premières lettres pour en faire deux nouvelles
+mots. La question est, quel est le mot?
+Vous pouvez utiliser le dictionnaire de l’exercice 11.1 pour vérifier si une chaîne est dans la liste de mots.
+Pour vérifier si deux mots sont homophones, vous pouvez utiliser le dictionnaire de prononciation CMU. Vous
+peut le télécharger à partir de http: // www. discours. cs. cmu. edu / cgi-bin / cmudict ou de http:
+// thinkpython2. com / code / c06d et vous pouvez également télécharger http: // thinkpython2.
+com / code / prononcer. py, qui fournit une fonction nommée read_dictionary qui lit le
+prononcer dictionnaire et retourne un dictionnaire Python qui mappe de chaque mot à une chaîne qui
+décrit sa prononciation principale.
+
+114
+
+Chapitre 11. Dictionnaires
+
+Ecrivez un programme qui liste tous les mots qui résolvent le Puzzler. Solution: http: // thinkpython2.
+com / code / homophone. py.
