@@ -1,0 +1,504 @@
+Chapitre 12
+
+Tuples
+Ce chapitre présente un autre type intégré, le tuple, puis explique comment les listes, les dictionnaires et les tuples fonctionnent ensemble. Je présente également une fonctionnalité utile pour les arguments listes de longueur variable
+, les opérateurs de rassemblement et de dispersion.
+Une note: il n'y a pas de consensus sur la façon de prononcer «tuple». Certaines personnes disent «tuhple», ce qui rime avec «supple». Mais dans le contexte de la programmation, la plupart des gens disent
+«Too-ple», qui rime avec «quadruple».
+
+12.1
+
+Les tuples sont immuables
+
+Un tuple est une séquence de valeurs. Les valeurs peuvent être n’importe quel type, et elles sont indexées par
+entiers, donc à cet égard, les tuples ressemblent beaucoup à des listes. La différence importante est que les tuples
+sont immuables.
+Syntaxiquement, un tuple est une liste de valeurs séparées par des virgules:
+
+>>> t = 'a', 'b', 'c', 'd', 'e'
+Bien que cela ne soit pas nécessaire, il est courant de placer les tuples entre parenthèses:
+>>> t = ('a', 'b', 'c', 'd', 'e')
+Pour créer un tuple avec un seul élément, vous devez inclure une dernière virgule:
+>>> t1 = 'a',
+>>> type (t1)
+<class 'tuple'>
+Une valeur entre parenthèses n'est pas un tuple:
+>>> t2 = ('a')
+>>> type (t2)
+<class 'str'>
+Un autre moyen de créer un tuple est le tuple à fonction intégrée. Sans argument, cela crée
+un tuple vide:
+>>> t = tuple ()
+>>> t
+()
+
+116
+
+Chapitre 12. Tuples
+
+Si l’argument est une séquence (chaîne, liste ou tuple), le résultat est un tuple avec les éléments de
+la séquence:
+
+>>> t = tuple('lupins')
+>>> t
+('l', 'u', 'p', 'i', 'n', 's')
+Comme tuple est le nom d’une fonction intégrée, vous devriez éviter de l’utiliser comme nom de
+variable.
+La plupart des opérateurs de liste travaillent également sur des tuples. L'opérateur crochet indexe un élément:
+
+>>> t = ('a', 'b', 'c', 'd', 'e')
+>>> t [0]
+'une'
+Et l'opérateur de tranche sélectionne une plage d'éléments.
+
+>>> t [1: 3]
+('avant JC')
+Mais si vous essayez de modifier l'un des éléments du tuple, vous obtenez une erreur:
+
+>>> t [0] = 'A'
+TypeError: object doesn't support item assignment
+Les tuples étant immuables, vous ne pouvez pas modifier les éléments. Mais vous pouvez en remplacer un
+tuple avec un autre:
+
+>>> t = ('A',) + t [1:]
+>>> t
+('A', 'b', 'c', 'd', 'e')
+Cette déclaration crée un nouveau tuple et y fait ensuite référence.
+Les opérateurs relationnels travaillent avec des tuples et d’autres séquences; Python commence par comparer
+le premier élément de chaque séquence. S'ils sont égaux, cela passe aux éléments suivants, et
+ainsi de suite, jusqu'à ce qu'il trouve des éléments différents. Les éléments suivants ne sont pas pris en compte (même si
+ils sont vraiment gros).
+
+>>> (0, 1, 2) <(0, 3, 4)
+Vrai
+>>> (0, 1, 2000000) <(0, 3, 4)
+Vrai
+
+12.2
+
+Affectation de tuple
+
+Il est souvent utile d’échanger les valeurs de deux variables. Avec l'usage conventionnel, vous
+devez utiliser une variable temporaire. Par exemple, pour échanger a et b:
+
+>>> temp = a
+>>> a = b
+>>> b = temp
+Cette solution est lourde; L’affectation du tuple est plus élégante:
+
+>>> a, b = b, a
+
+12.3 Tuples comme valeurs de retour
+
+117
+
+Le côté gauche est un tuple de variables; le côté droit est un tuple d'expressions. Chaque valeur
+est affecté à sa variable respective. Toutes les expressions du côté droit sont évaluées
+avant l'une des affectations.
+Le nombre de variables à gauche et le nombre de valeurs à droite doivent être les mêmes.
+même:
+
+>>> a, b = 1, 2, 3
+ValueError: too many values to unpack
+Plus généralement, le côté droit peut être n’importe quel type de séquence (chaîne, liste ou tuple). Par exemple, pour fractionner une adresse électronique en un nom d'utilisateur et un domaine, vous pouvez écrire:
+
+>>> addr = 'monty@python.org'
+>>> uname, domain = addr.split ('@')
+La valeur renvoyée par split est une liste avec deux éléments. le premier élément est affecté à
+uname, le second au domaine.
+
+>>> uname
+'monty'
+>>> domaine
+'python.org'
+
+12.3
+
+Tuples comme valeurs de retour
+
+Strictement parlant, une fonction ne peut renvoyer qu’une seule valeur, mais si la valeur est un tuple, l’effet
+équivaut à renvoyer plusieurs valeurs. Par exemple, si vous voulez diviser deux entiers
+et calculer le quotient et le reste, il est inefficace de calculer x / y puis x% y. Il
+est préférable de les calculer tous les deux en même temps.
+La fonction intégrée divmod prend deux arguments et retourne un tuple de deux valeurs, le
+quotient et reste. Vous pouvez stocker le résultat sous forme de tuple:
+
+>>> t = divmod (7, 3)
+>>> t
+(2, 1)
+Ou utilisez l’assignation de tuple pour stocker les éléments séparément:
+
+>>> quot, rem = divmod (7, 3)
+>>> quot
+2
+>>> rem
+1
+Voici un exemple de fonction qui retourne un tuple:
+
+def min_max (t):
+retour min (t), max (t)
+max et min sont des fonctions intégrées qui recherchent les éléments les plus grands et les plus petits d'une séquence.
+min_max calcule les deux et retourne un tuple de deux valeurs.
+
+118
+
+12.4
+
+Chapitre 12. Tuples
+
+Tuples d'argument de longueur variable
+
+Les fonctions peuvent prendre un nombre variable d'arguments. Un nom de paramètre qui commence par
+* rassemble des arguments dans un tuple. Par exemple, printall prend n'importe quel nombre d'arguments
+et les imprime:
+
+def printall (* args):
+print (args)
+Le paramètre rassembler peut avoir n'importe quel nom, mais args est conventionnel. Voici comment
+la fonction fonctionne:
+
+>>> printall (1, 2.0, '3')
+(1, 2.0, '3')
+Le complément de collecte est dispersé. Si vous avez une séquence de valeurs et que vous voulez passer
+Pour une fonction sous forme d'arguments multiples, vous pouvez utiliser l'opérateur *. Par exemple, divmod
+prend exactement deux arguments; ça ne marche pas avec un tuple:
+
+>>> t = (7, 3)
+>>> divmod (t)
+TypeError: divmod expected 2 arguments, got 1
+Mais si vous dispersez le tuple, cela fonctionne:
+
+>>> divmod (* t)
+(2, 1)
+La plupart des fonctions intégrées utilisent des tuples d'arguments de longueur variable. Par exemple, max et
+min peut prendre n'importe quel nombre d'arguments:
+
+>>> max (1, 2, 3)
+3
+Mais la somme ne le fait pas.
+
+>>> sum(1, 2, 3)
+TypeError: sum expected at most 2 arguments, got 3
+En tant qu’exercice, écrivez une fonction appelée sumall qui prend un nombre quelconque d’arguments et
+retourne leur somme.
+
+12.5
+
+Listes et tuples
+
+zip est une fonction intégrée qui prend deux séquences ou plus et renvoie une liste de tuples où
+chaque tuple contient un élément de chaque séquence. Le nom de la fonction fait référence à un
+fermeture à glissière, qui relie et entrelace deux rangées de dents.
+Cet exemple extrait une chaîne et une liste:
+
+>>> s = 'abc'
+>>> t = [0, 1, 2]
+>>> zip (s, t)
+<objet zip à 0x7f7d0a9e7c48>
+Le résultat est un objet zip qui sait comment parcourir les paires. Le plus commun
+l'utilisation de zip est dans une boucle for:
+
+12.5 Listes et tuples
+
+119
+
+>>> for pair in zip(s, t):
+...
+print (paire)
+...
+('a', 0)
+('b', 1)
+('c', 2)
+Un objet zip est une sorte d'itérateur, c'est-à-dire tout objet qui itère dans une séquence.
+Les itérateurs ressemblent aux listes à certains égards, mais contrairement aux listes, vous ne pouvez pas utiliser un index pour sélectionner
+un élément d'un itérateur.
+Si vous souhaitez utiliser des opérateurs et des méthodes de liste, vous pouvez utiliser un objet zip pour créer une liste:
+
+>>> liste (zip (s, t))
+[('a', 0), ('b', 1), ('c', 2)]
+Le résultat est une liste de tuples; dans cet exemple, chaque tuple contient un caractère de la chaîne
+et l'élément correspondant de la liste.
+Si les séquences ne sont pas de la même longueur, le résultat a la longueur de la plus courte.
+
+>>> liste (zip ('Anne', 'Elk'))
+[('A', 'E'), ('n', 'l'), ('n', 'k')]
+Vous pouvez utiliser l’affectation de tuples dans une boucle for pour parcourir une liste de tuples:
+t = [('a', 0), ('b', 1), ('c', 2)]
+for letter, number in t:
+print(number, letter
+À chaque passage dans la boucle, Python sélectionne le tuple suivant dans la liste et attribue les éléments à une lettre et à un chiffre. La sortie de cette boucle est:
+0 a
+1 b
+2 c
+Si vous combinez les affectations zip, for et tuple, vous obtenez un idiome utile pour parcourir deux
+(ou plus) séquences en même temps. Par exemple, has_match prend deux séquences, t1
+et t2, et renvoie True s'il existe un indice i tel que t1 [i] == t2 [i]:
+def has_match(t1, t2):
+for x, y in zip(t1, t2):
+if x == y:
+return True
+return False
+Si vous devez parcourir les éléments d’une séquence et leurs index, vous pouvez utiliser la fonction intégrée.
+fonction énumérer:
+pour index, élément dans énumération ('abc'):
+print (index, element)
+Le résultat de énumération est un objet énuméré, qui itère une séquence de paires; chaque
+La paire contient un index (à partir de 0) et un élément de la séquence donnée. Dans ce
+Par exemple, la sortie est
+0 a
+1 b
+2 c
+Encore.
+
+120
+
+12.6
+
+Chapitre 12. Tuples
+
+Dictionnaires et tuples
+
+Les dictionnaires ont une méthode appelée items qui retourne une séquence de tuples, où chaque
+tuple est une paire clé-valeur.
+
+>>> d = {'a': 0, 'b': 1, 'c': 2}
+>>> t = d.items ()
+>>> t
+dict_items ([('c', 2), ('a', 0), ('b', 1)])
+Le résultat est un objet dict_items, qui est un itérateur qui itère les paires clé-valeur. Vous
+peut l'utiliser dans une boucle comme celle-ci:
+>>> for key, value in d.items():
+...
+print(key, value)
+...
+c 2
+un 0
+b 1
+Comme vous pouvez vous attendre d'un dictionnaire, les éléments ne sont dans aucun ordre particulier.
+En allant dans l'autre sens, vous pouvez utiliser une liste de tuples pour initialiser un nouveau dictionnaire:
+
+>>> t = [('a', 0), ('c', 2), ('b', 1)]
+>>> d = dict (t)
+>>> d
+{'a': 0, 'c': 2, 'b': 1}
+En combinant dict et zip, vous créez un dictionnaire de manière concise:
+>>> d = dict (zip ('abc', range (3)))
+>>> d
+{'a': 0, 'c': 2, 'b': 1}
+La mise à jour de la méthode du dictionnaire prend également une liste de tuples et les ajoute, sous forme de paires clé-valeur,
+vers un dictionnaire existant.
+Il est courant d’utiliser des tuples comme clés dans les dictionnaires (principalement parce que vous ne pouvez pas utiliser de listes). Pour
+Par exemple, un annuaire téléphonique peut mapper des paires nom-prénom-prénom sur téléphone
+Nombres. En supposant que nous ayons défini dernier, premier et nombre, nous pourrions écrire:
+
+répertoire [dernier, premier] = numéro
+L'expression entre parenthèses est un tuple. Nous pourrions utiliser l’assignation de tuples pour parcourir ce dictionnaire.
+pour la première fois dans le répertoire:
+print (premier, dernier, répertoire [dernier, premier])
+Cette boucle traverse les clés du répertoire, qui sont des tuples. Il assigne les éléments de chaque
+tuple to last et first, puis imprime le nom et le numéro de téléphone correspondant.
+Il existe deux manières de représenter des tuples dans un diagramme d'état. La version plus détaillée
+affiche les index et les éléments tels qu’ils apparaissent dans une liste. Par exemple, le tuple
+('Cleese', 'John') apparaîtrait comme dans la figure 12.1.
+Mais dans un diagramme plus grand, vous voudrez peut-être omettre les détails. Par exemple, un diagramme de
+l'annuaire téléphonique peut apparaître comme à la figure 12.2.
+Ici, les tuples sont montrés en utilisant la syntaxe Python comme un raccourci graphique. Le téléphone
+Le numéro dans le diagramme correspond à la ligne de réclamation de la BBC. Ne l'appelez donc pas.
+
+12.7. Séquences de séquences
+
+121
+tuple
+0
+
+«Cleese»
+
+1
+
+'John'
+
+Figure 12.1: Diagramme d'état.
+dict
+(«Cleese», «John»)
+
+«08700 100 222»
+
+(«Chapman», «Graham»)
+
+«08700 100 222»
+
+("Idle", "Eric")
+
+«08700 100 222»
+
+(«Gilliam», «Terry»)
+
+«08700 100 222»
+
+("Jones", "Terry")
+
+«08700 100 222»
+
+(«Palin», «Michael»)
+
+«08700 100 222»
+
+Figure 12.2: Diagramme d'état.
+
+12.7
+
+Séquences de séquences
+
+Je me suis concentré sur les listes de tuples, mais presque tous les exemples de ce chapitre fonctionnent également.
+avec des listes de listes, des tuples de tuples et des tuples de listes. Pour éviter d’énumérer les possibles
+combinaisons, il est parfois plus facile de parler de séquences de séquences.
+Dans de nombreux contextes, les différents types de séquences (chaînes, listes et tuples) peuvent être utilisés
+de façon interchangeable. Alors, comment devriez-vous choisir un sur les autres?
+Pour commencer, les chaînes sont plus limitées que les autres séquences car les éléments doivent être des caractères. Ils sont également immuables. Si vous avez besoin de pouvoir changer le
+caractères dans une chaîne (par opposition à la création d’une nouvelle chaîne), vous pouvez utiliser une liste de
+caractères à la place.
+Les listes sont plus courantes que les tuples, principalement parce qu'elles sont mutables. Mais il y a quelques
+cas où vous pourriez préférer des tuples:
+1. Dans certains contextes, comme une instruction return, il est syntaxiquement plus simple de créer un tuple.
+qu'une liste.
+2. Si vous souhaitez utiliser une séquence comme clé de dictionnaire, vous devez utiliser un type immuable.
+comme un tuple ou une ficelle.
+3. Si vous passez une séquence en tant qu’argument à une fonction, l’utilisation de tuples réduit le
+potentiel de comportement inattendu en raison de crénelage.
+Les tuples étant immuables, ils ne fournissent pas de méthodes telles que trier et inverser,
+modifier les listes existantes. Mais Python fournit la fonction intégrée triée, qui prend n'importe quelle
+séquence et retourne une nouvelle liste avec les mêmes éléments dans l’ordre trié et inversé,
+qui prend une séquence et retourne un itérateur qui parcourt la liste dans l’ordre inverse.
+
+122
+
+12.8
+
+Chapitre 12. Tuples
+
+Débogage
+
+Les listes, les dictionnaires et les tuples sont des exemples de structures de données. dans ce chapitre, nous commençons
+pour voir les structures de données composées, comme des listes de tuples, ou des dictionnaires contenant des tuples
+clés et listes en tant que valeurs. Les structures de données composées sont utiles, mais elles sont sujettes à ce que
+J'appelle des erreurs de forme; c’est-à-dire les erreurs causées par le type, la taille ou la taille incorrecte d’une structure de données.
+Par exemple, si vous attendez une liste avec un entier et que je vous donne un simple
+entier (pas dans une liste), ça ne marchera pas.
+Pour aider à déboguer ce genre d’erreurs, j’ai écrit un module appelé structshape qui
+fournit une fonction, également appelée structshape, qui prend tout type de structure de données
+un argument et retourne une chaîne qui résume sa forme. Vous pouvez le télécharger à partir de
+http://thinkpython2.com/code/structshape.py
+Voici le résultat pour une liste simple:
+
+>>> depuis structshape import structshape
+>>> t = [1, 2, 3]
+>>> structshape (t)
+'liste de 3 int'
+Un programme plus sophistiqué pourrait écrire «liste de 3 ints», mais il était plus facile de ne pas traiter les pluriels.
+Voici une liste de listes:
+
+>>> t2 = [[1,2], [3,4], [5,6]]
+>>> structshape (t2)
+'liste de 3 liste de 2 int'
+Si les éléments de la liste ne sont pas du même type, structshape les regroupe, dans l’ordre, en
+type:
+
+>>> t3 = [1, 2, 3, 4.0, '5', '6', [7], [8], 9]
+>>> structshape (t3)
+'liste de (3 int, float, 2 str, 2 liste de int, int)'
+Voici une liste de tuples:
+
+>>> s = 'abc'
+>>> lt = list (zip (t, s))
+>>> structshape (lt)
+'liste de 3 tuple de (int, str)'
+Et voici un dictionnaire avec 3 éléments qui mappent des entiers à des chaînes.
+
+>>> d = dict (lt)
+>>> structshape (d)
+'dict of 3 int-> str'
+Si vous ne parvenez pas à suivre vos structures de données, structshape peut vous aider.
+
+12.9
+
+Glossaire
+
+tuple: séquence immuable d'éléments.
+Attribution de tuple: Une affectation avec une séquence à droite et un tuple de variables à gauche. Le côté droit est évalué, puis ses éléments sont affectés au
+variables à gauche.
+
+12.10. Des exercices
+
+123
+
+recueillir: l'opération d'assemblage d'un tuple d'argument de longueur variable.
+scatter: opération consistant à traiter une séquence comme une liste d'arguments.
+objet zip: résultat de l'appel d'une fonction intégrée zip; un objet qui itère à travers un
+séquence de tuples.
+itérateur: objet pouvant parcourir une séquence, mais ne fournissant pas de liste
+opérateurs et méthodes.
+structure de données: ensemble de valeurs associées, souvent organisées en listes, dictionnaires, tuples,
+etc.
+shape error: erreur due à la forme incorrecte d'une valeur; c'est le mauvais type
+ou la taille.
+
+12.10
+
+Des exercices
+
+Exercice 12.1. Ecrivez une fonction appelée most_frequent qui prend une chaîne et affiche les lettres par ordre décroissant de fréquence. Trouvez des échantillons de texte de plusieurs langues et voyez
+comment la fréquence des lettres varie d'une langue à l'autre. Comparez vos résultats avec les tableaux sur http:
+// en. Wikipédia. fréquences org / wiki / Letter_. Solution: http: // thinkpython2.
+com / code / le plus fréquent. py.
+Exercice 12.2. Plus d'anagrammes!
+1. Ecrivez un programme qui lit une liste de mots d’un fichier (voir Section 9.1) et imprime tous les ensembles de
+mots qui sont des anagrammes.
+Voici un exemple de ce à quoi la sortie pourrait ressembler:
+
+['deltas', 'desal', 'durés', 'salés', 'slated', 'staled']
+['conserves', 'ternaires']
+['générer', 'grandir']
+['resmelts', 'fondeurs', 'termless']
+Astuce: vous voudrez peut-être créer un dictionnaire qui mappe une collection de lettres sur une liste
+des mots qui peuvent être orthographiés avec ces lettres. La question est, comment pouvez-vous représenter le
+collection de lettres d’une manière qui puisse être utilisée comme clé?
+2. Modifiez le programme précédent de sorte qu'il imprime d'abord la liste la plus longue d'anagrammes, suivie de
+le deuxième plus long, et ainsi de suite.
+3. Au Scrabble, un «bingo» consiste à jouer les sept tuiles de votre rack, avec une lettre sur
+le conseil, pour former un mot de huit lettres. Quelle collection de 8 lettres forme le plus possible
+des bingos? Indice: il y en a sept.
+Solution: http: // thinkpython2. com / code / anagram_ ensembles. py.
+Exercice 12.3. Deux mots forment un «couple de métathèse» si vous pouvez transformer l’un en l’autre en
+échanger deux lettres; par exemple, «converser» et «conserver». Ecrivez un programme qui trouve tous
+les paires de métathèse dans le dictionnaire. Astuce: ne testez pas toutes les paires de mots, et ne testez pas tous les mots possibles
+échanges. Solution: http: // thinkpython2. com / code / métathèse. py. Crédit: Cet exercice
+est inspiré par un exemple sur http: // puzzlers. org.
+
+124
+
+Chapitre 12. Tuples
+
+Exercice 12.4. Voici un autre Car Talk Puzzler (http: // www. Cartalk. Com / content /
+casse-tête):
+Quel est le mot anglais le plus long, qui reste un mot anglais valide, car vous enlevez son
+lettres une à la fois?
+Désormais, les lettres peuvent être supprimées à l’une des extrémités ou au milieu, mais vous ne pouvez pas réorganiser les lettres.
+des lettres. Chaque fois que vous laissez tomber une lettre, vous vous retrouvez avec un autre mot anglais. Si
+vous faites cela, vous allez finir par vous retrouver avec une lettre et ça aussi va
+être un mot anglais - celui qui est trouvé dans le dictionnaire. Je veux savoir quel est le
+Le mot le plus long et combien de lettres a-t-il?
+Je vais vous donner un petit exemple modeste: Sprite. D'accord? Vous commencez avec sprite,
+vous enlevez une lettre, une de l’intérieur du mot, vous enlevez le r, et on nous laisse
+avec le mot dépit, puis on enlève le e de la fin, on nous laisse à la broche, on enlève le s,
+nous sommes partis avec pit, lui et moi
+Ecrivez un programme pour trouver tous les mots pouvant être réduits de cette façon, puis trouvez le plus long.
+Cet exercice est un peu plus difficile que la plupart des autres, alors voici quelques suggestions:
+1. Vous voudrez peut-être écrire une fonction qui prend un mot et calcule une liste de tous les mots qui
+peut être formé en enlevant une lettre. Ce sont les "enfants" de la parole.
+2. Récursivement, un mot est réductible si l'un de ses enfants est réductible. Comme base, vous pouvez
+considérez la chaîne vide réductible.
+3. La liste de mots que j'ai fournie, words.txt, ne contient pas de mots composés d'une seule lettre. Donc vous voudrez peut-être
+pour ajouter “I”, “a” et la chaîne vide.
+4. Pour améliorer les performances de votre programme, vous voudrez peut-être mémoriser les mots qui sont
+connu pour être réductible.
+Solution: http: // thinkpython2. com / code / réductible. py.
