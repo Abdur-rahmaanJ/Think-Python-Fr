@@ -159,12 +159,12 @@ To find the most common words, we can make a list of tuples, where each tuple co
 word and its frequency, and sort it.
 The following function takes a histogram and returns a list of word-frequency tuples:
 
-def most_common(hist):
+def most_common (hist):
 t = []
-for key, value in hist.items():
-t.append((value, key))
-t.sort(reverse=True)
-return t
+pour la clé, valeur dans hist.items ():
+t.append ((valeur, clé))
+t.sort (reverse = True)
+retourner t
 In each tuple, the frequency appears first, so the resulting list is sorted by frequency. Here
 is a loop that prints the ten most common words:
 

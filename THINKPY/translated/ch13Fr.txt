@@ -1,0 +1,504 @@
+Chapitre 13
+
+Etude de cas: sélection de structure de données
+
+À ce stade, vous avez découvert les structures de données de base de Python et vous avez vu
+certains des algorithmes qui les utilisent. Si vous souhaitez en savoir plus sur les algorithmes,
+C'est peut-être le bon moment pour lire le chapitre B. Mais vous n'êtes pas obligé de le lire avant de continuer
+; vous pouvez le lire quand vous êtes intéressés.
+Ce chapitre présente une étude de cas avec des exercices qui vous permettent de réfléchir au choix des structures de données
+et leur utilisation
+
+13.1
+
+Analyse de fréquence de mots
+
+Comme d'habitude, vous devriez au moins essayer les exercices avant de lire mes solutions.
+Exercice 13.1. Ecrivez un programme qui lit un fichier, divise chaque ligne en mots, supprime les espaces et
+ponctuation des mots et les convertit en minuscules.
+Astuce: le module de chaîne fournit une chaîne nommée "espace, qui contient espace, tabulation, nouvelle ligne, etc., et de ponctuation qui contient les caractères de ponctuation." Voyons si nous pouvons faire
+Python jure:
+
+>>> import string
+>>> string.punctuation
+'!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~'
+En outre, vous pouvez envisager d’utiliser les méthodes string, strip, replace et translate.
+Exercice 13.2. Allez sur Project Gutenberg (http: // gutenberg. Org) et téléchargez votre film préféré.
+livre hors copyright en format texte brut.
+Modifiez votre programme par rapport à l’exercice précédent pour lire le livre que vous avez téléchargé, sautez l'
+en-tête au début du fichier et traitez le reste des mots comme avant.
+Puis modifiez le programme pour compter le nombre total de mots du livre et le nombre de fois
+chaque mot est utilisé.
+Imprimez le nombre de mots différents utilisés dans le livre. Comparez différents livres de différents auteurs,
+écrit à différentes époques. Quel auteur utilise le vocabulaire le plus complet?
+
+126
+
+Chapitre 13. Etude de cas: sélection de la structure de données
+
+Exercice 13.3. Modifiez le programme de l’exercice précédent pour imprimer les 20 mots les plus fréquemment utilisés
+dans le livre.
+Exercice 13.4. Modifiez le programme précédent pour lire une liste de mots (voir Section 9.1), puis imprimez tous les
+les mots du livre qui ne sont pas dans la liste de mots. Combien d'entre eux sont des fautes de frappe? Combien de
+ce sont des mots courants qui devraient figurer dans la liste de mots, et combien d'entre eux sont vraiment obscurs?
+
+13.2
+
+Nombres aléatoires
+
+Avec les mêmes entrées, la plupart des programmes informatiques génèrent les mêmes sorties à chaque fois,
+alors on dit qu'ils sont déterministes. Le déterminisme est généralement une bonne chose, car nous attendons
+le même calcul pour donner le même résultat. Pour certaines applications, cependant, nous voulons que
+ordinateur pour être imprévisible. Les jeux sont un exemple évident, mais il y en a plus.
+Rendre un programme vraiment non déterministe s’avère difficile, mais il existe des moyens de
+faites-le au moins sembler non déterministe. L’un d’eux est d’utiliser des algorithmes qui génèrent
+nombres pseudo-aléatoires. Les nombres pseudo-aléatoires ne sont pas vraiment aléatoires car ils sont
+généré par un calcul déterministe, mais juste en regardant les chiffres, il est tout sauf
+impossible de les distinguer du hasard.
+Le module random fournit des fonctions générant des nombres pseudo-aléatoires (que je
+appellera simplement «aléatoire» à partir d’ici).
+La fonction random renvoie un flottant aléatoire compris entre 0.0 et 1.0 (incluant 0.0 mais pas 1.0).
+Chaque fois que vous appelez au hasard, vous obtenez le numéro suivant d'une longue série. Pour voir un exemple, lancez
+cette boucle:
+
+import random
+for i in range(10):
+x = random.random()
+print(x)
+La fonction randint prend les paramètres bas et haut et renvoie un entier entre bas
+et haut (y compris les deux).
+
+>>> random.randint (5, 10)
+5
+>>> random.randint (5, 10)
+9
+Pour choisir un élément d'une séquence au hasard, vous pouvez utiliser choix:
+
+>>> t = [1, 2, 3]
+>>> random.choice (t)
+2
+>>> random.choice (t)
+3
+Le module random fournit également des fonctions permettant de générer des valeurs aléatoires à partir des distributions  continues: 
+Gaussien, exponentielle, gamma et quelques autres.
+Exercice 13.5. Ecrivez une fonction nommée Choose_from_hist qui prend un histogramme tel que défini dans
+Section 11.2 et retourne une valeur aléatoire de l'histogramme, choisie avec une probabilité proportionnelle
+à la fréquence. Par exemple, pour cet histogramme:
+
+13.3. Histogramme de mots
+
+127
+
+>>> t = ['a', 'a', 'b']
+>>> hist = histogram(t)
+>>> hist
+{'a': 2, 'b': 1}
+votre fonction devrait renvoyer 'a' avec une probabilité de 2/3 et 'b' avec une probabilité de 1/3.
+
+13.3
+
+Histogramme de mots
+
+Vous devriez essayer les exercices précédents avant de continuer. Vous pouvez télécharger mon
+solution de http://thinkpython2.com/code/analyze_book1.py. Vous aurez aussi besoin de
+http://thinkpython2.com/code/emma.txt.
+Voici un programme qui lit un fichier et construit un histogramme des mots du fichier:
+
+import string
+def process_file(filename):
+hist = dict()
+fp = open(filename)
+for line in fp:
+process_line(line, hist)
+return hist
+def process_line(line, hist):
+line = line.replace('-', ' ')
+for word in line.split():
+word = word.strip(string.punctuation + string.whitespace)
+word = word.lower()
+hist[word] = hist.get(word, 0) + 1
+hist = process_file('emma.txt')
+Ce programme lit emma.txt, qui contient le texte d’Emma de Jane Austen.
+
+process_file parcourt les lignes du fichier et les passe un par un à
+process_line. L'histogramme est utilisé comme accumulateur.
+process_line utilise la méthode string pour remplacer les traits d'union avant l'utilisation
+split pour séparer la ligne en une liste de chaînes. Il traverse la liste des mots et utilise strip
+et plus bas pour supprimer la ponctuation et convertir en minuscules. (C'est un raccourci pour dire que
+les chaînes sont "converties"; rappelez-vous que les chaînes sont immuables, donc des méthodes comme strip et
+retour bas de nouvelles chaînes.)
+Process_line met enfin à jour l’histogramme en créant un nouvel élément ou en incrémentant un
+un existant.
+Pour compter le nombre total de mots du fichier, on peut additionner les fréquences de l'histogramme:
+
+def total_words(hist):
+return sum(hist.values())
+
+128
+
+Chapitre 13. Etude de cas: sélection de la structure de données
+
+Le nombre de mots différents est simplement le nombre d'éléments dans le dictionnaire:
+
+def different_words(hist):
+return len(hist)
+Here is some code to print the results:
+
+print('Total number of words:', total_words(hist))
+print('Number of different words:', different_words(hist))
+And the results:
+
+Total number of words: 161080
+Number of different words: 7214
+
+13.4
+
+Mots les plus communs
+
+Pour trouver les mots les plus communs, nous pouvons faire une liste de nuplets, où chaque nuplet contient un
+mot et sa fréquence, et le trier.
+La fonction suivante prend un histogramme et retourne une liste de tuples de fréquence de mots:
+
+def most_common (hist):
+t = []
+pour la clé, valeur dans hist.items ():
+t.append ((valeur, clé))
+t.sort (reverse = True)
+retourner t
+Dans chaque tuple, la fréquence apparaît en premier, ainsi la liste résultante est triée par fréquence. Ici
+est une boucle qui affiche les dix mots les plus courants:
+
+t = most_common(hist)
+print('The most common words are:')
+for freq, word in t[:10]:
+print(word, freq, sep='\t')
+J'utilise le mot clé sep pour indiquer à print d'utiliser un caractère de tabulation comme "séparateur",
+qu'un espace, donc la deuxième colonne est alignée. Voici les résultats d'Emma:
+
+The most common words are:
+to
+5242
+the
+5205
+and
+4897
+of
+4295
+i
+3191
+a
+3130
+it
+2529
+her
+2483
+was
+2400
+she
+2364
+Ce code peut être simplifié à l'aide du paramètre clé de la fonction de tri. Si vous êtes curieux, vous pouvez en savoir plus sur https://wiki.python.org/moin/HowTo/Sorting.
+
+13.5. Paramètres optionnels
+
+13.5
+
+129
+
+Paramètres optionnels
+
+Nous avons vu des fonctions et des méthodes intégrées qui prennent des arguments optionnels. C'est possible
+pour écrire aussi des fonctions définies par le programmeur avec des arguments optionnels. Par exemple, voici
+une fonction qui imprime les mots les plus communs dans un histogramme
+
+def print_most_common(hist, num=10):
+t = most_common(hist)
+print('The most common words are:')
+for freq, word in t[:num]:
+print(word, freq, sep='\t')
+Le premier paramètre est requis; la seconde est optionnelle. La valeur par défaut de num est 10.
+Si vous ne fournissez qu'un seul argument:
+
+print_most_common(hist)
+num gets the default value. If you provide two arguments:
+print_most_common(hist, 20)
+num obtient la valeur de l'argument à la place. En d'autres termes, l'argument facultatif remplace la valeur par défaut.
+Si une fonction a à la fois des paramètres obligatoires et optionnels, tous les paramètres requis ont
+à venir en premier, suivi des optionnels.
+
+13.6
+
+Dictionnaire soustraction
+
+Trouver les mots du livre qui ne figurent pas dans la liste de mots de words.txt pose un problème
+vous pourriez reconnaître comme soustraction d'ensemble; c'est-à-dire que nous voulons trouver tous les mots d'un ensemble
+(les mots dans le livre) qui ne sont pas dans l'autre (les mots dans la liste).
+
+soustraction prend les dictionnaires d1 et d2 et retourne un nouveau dictionnaire qui contient tous les
+les clés de d1 qui ne sont pas dans d2. Puisque nous ne nous soucions pas vraiment des valeurs, nous les définissons toutes
+None.
+def subtract(d1, d2):
+res = dict()
+for key in d1:
+if key not in d2:
+res[key] = None
+return res
+Pour trouver les mots du livre qui ne sont pas dans words.txt, nous pouvons utiliser process_file pour construire
+un histogramme pour words.txt, puis soustrayez:
+
+words = process_file('words.txt')
+diff = subtract(hist, words)
+print("Words in the book that aren't in the word list:")
+for word in diff:
+print(word, end=' ')
+Voici quelques résultats d'Emma:
+
+130
+
+Chapitre 13. Etude de cas: sélection de la structure de données
+
+Mots dans le livre qui ne sont pas dans la liste de mots:
+rencontre jane's blanche woodhouses disingenuousness
+friend's venice apartment ... ...
+Certains de ces mots sont des noms et des possessifs. D'autres, comme «rencontre», ne sont plus dans
+usage commun. Mais quelques-uns sont des mots courants qui devraient vraiment être dans la liste!
+Exercice 13.6. Python fournit une structure de données appelée ensemble qui fournit de nombreux ensembles communs.
+opérations. Vous pouvez en savoir plus à ce sujet à la Section 19.5 ou à la documentation sur http:
+// docs. python. org / 3 / library / stdtypes. html # types-set.
+Ecrivez un programme qui utilise la soustraction d’ensembles pour trouver des mots dans le livre qui ne figurent pas dans la liste de mots.
+Solution: http: // thinkpython2. com / code / analyse_ book2. py.
+
+13.7
+
+Mots aléatoires
+
+Pour choisir un mot au hasard dans l'histogramme, l'algorithme le plus simple consiste à construire une liste avec
+plusieurs copies de chaque mot, en fonction de la fréquence observée, puis choisissez parmi
+la liste:
+
+def random_word(h):
+t = []
+for word, freq in h.items():
+t.extend([word] * freq)
+return random.choice(t)
+L'expression [word] * freq crée une liste avec des copies freq du mot de chaîne.
+La méthode extend est similaire à append sauf que l'argument est une séquence.
+Cet algorithme fonctionne, mais il n’est pas très efficace; chaque fois que vous choisissez un mot au hasard, il
+reconstruit la liste, qui est aussi grande que le livre original. Une amélioration évidente est de construire
+la liste une fois, puis effectuez plusieurs sélections, mais la liste reste volumineuse.
+Une alternative est:
+1. Utilisez les touches pour obtenir une liste des mots du livre.
+2. Créez une liste contenant la somme cumulée des fréquences de mots (voir l'exercice 10.2). Le dernier élément de cette liste est le nombre total de mots du livre, n.
+3. Choisissez un nombre aléatoire de 1 à n. Utilisez une recherche par bissection (voir exercice 10.10) pour
+trouver l'index où le nombre aléatoire serait inséré dans la somme cumulée.
+4. Utilisez l'index pour trouver le mot correspondant dans la liste de mots.
+Exercice 13.7. Ecrivez un programme qui utilise cet algorithme pour choisir un mot aléatoire dans le livre.
+Solution: http: // thinkpython2. com / code / analyse_ book3. py.
+
+13.8
+
+Analyse de Markov
+
+Si vous choisissez des mots du livre au hasard, vous pouvez avoir une idée du vocabulaire, mais
+vous n'aurez probablement pas de phrase:
+
+13.8. Analyse de Markov
+
+131
+
+this the small regard harriet which knightley's it most things
+Une série de mots aléatoires a rarement du sens car il n’ya pas de relation entre
+mots successifs. Par exemple, dans une phrase réelle, vous vous attendriez à ce qu'un article tel que "le"
+être suivi d'un adjectif ou d'un nom, et probablement pas d'un verbe ou d'un adverbe.
+L’analyse de Markov est l’un des moyens de mesurer ces relations. Elle caractérise,
+pour une séquence de mots donnée, la probabilité que les mots viennent ensuite. Pour
+Par exemple, la chanson Eric, la demi-abeille commence:
+Half a bee, philosophically,
+Must, ipso facto, half not be.
+But half the bee has got to be
+Vis a vis, its entity. D’you see?
+But can a bee be said to be
+Or not to be an entire bee
+When half the bee is not a bee
+Due to some ancient injury?
+Dans ce texte, l’expression «moitié du» est toujours suivie du mot «abeille», mais l’expression «le
+abeille ”peut être suivi de“ a ”ou“ est ”.
+Le résultat de l'analyse de Markov est un mappage de chaque préfixe (comme «la moitié de» et «l'abeille»)
+à tous les suffixes possibles (comme «a» et «est»).
+Avec ce mappage, vous pouvez générer un texte aléatoire en commençant par n'importe quel préfixe et en choisissant au hasard parmi les suffixes possibles. Ensuite, vous pouvez combiner la fin du préfixe et
+le nouveau suffixe pour former le préfixe suivant, et répétez.
+Par exemple, si vous commencez par le préfixe "Demi-demi", alors le mot suivant doit être "abeille",
+parce que le préfixe apparaît seulement une fois dans le texte. Le préfixe suivant est "une abeille", donc le prochain
+suffixe pourrait être «philosophiquement», «être» ou «due».
+Dans cet exemple, la longueur du préfixe est toujours égale à deux, mais vous pouvez effectuer une analyse de Markov avec
+n'importe quelle longueur de préfixe.
+Exercice 13.8. Analyse de Markov:
+1. Ecrivez un programme pour lire un texte d'un fichier et effectuer une analyse de Markov. Le résultat devrait être
+un dictionnaire qui mappe des préfixes à une collection de suffixes possibles. La collection pourrait
+être une liste, un tuple ou un dictionnaire; c'est à vous de faire un choix approprié. Vous pouvez tester votre
+programme avec la longueur de préfixe deux, mais vous devez écrire le programme de manière à ce qu’il soit facile
+essayer d'autres longueurs.
+2. Ajoutez une fonction au programme précédent pour générer un texte aléatoire basé sur l'analyse de Markov.
+Voici un exemple d'Emma avec le préfixe de longueur 2:
+Il était très intelligent, que ce soit la douceur ou être en colère, honte ou seulement amusé, à tel
+un accident vasculaire cérébral. Elle n'avait jamais pensé à Hannah avant que tu ne sois jamais faite pour moi?
+ne peut pas faire de discours, Emma: "il a bientôt tout coupé lui-même.
+Pour cet exemple, j'ai laissé la ponctuation attachée aux mots. Le résultat est presque syntaxiquement correct, mais pas tout à fait. Sémantiquement, c'est presque logique, mais pas tout à fait.
+Que se passe-t-il si vous augmentez la longueur du préfixe? Le texte aléatoire a-t-il plus de sens?
+
+132
+
+Chapitre 13. Etude de cas: sélection de la structure de données
+
+3. Une fois que votre programme fonctionne, vous pouvez essayer un mash-up: si vous combinez du texte de
+deux ou plusieurs livres, le texte aléatoire que vous générez mélangera le vocabulaire et les phrases de
+les sources de manière intéressante.
+Crédit: Cette étude de cas est basée sur un exemple de Kernighan et Pike, The Practice of Programming, Addison-Wesley, 1999.
+Vous devriez essayer cet exercice avant de continuer. alors vous pouvez télécharger mon
+solution de http://thinkpython2.com/code/markov.py. Vous aurez également besoin de http:
+//thinkpython2.com/code/emma.txt.
+
+13.9
+
+Structures de données
+
+Utiliser l'analyse de Markov pour générer du texte aléatoire est amusant, mais il y a aussi un point à cela
+exercice: sélection de la structure de données. Dans votre solution aux exercices précédents, vous deviez
+choisir:
+• Comment représenter les préfixes.
+• Comment représenter la collection de suffixes possibles.
+• Comment représenter le mappage de chaque préfixe à la collection de suffixes possibles.
+Le dernier est simple: un dictionnaire est le choix évident pour un mappage des clés aux valeurs correspondantes.
+Pour les préfixes, les options les plus évidentes sont ,les chaînes, liste de chaînes ou tuple de chaînes.
+Pour les suffixes, une option est une liste; un autre est un histogramme (dictionnaire).
+Comment devriez-vous choisir? La première étape consiste à réfléchir aux opérations à entreprendre.
+mettre en œuvre pour chaque structure de données. Pour les préfixes, il faut pouvoir enlever les mots
+depuis le début et ajouter à la fin. Par exemple, si le préfixe actuel est "Demi-demi", et
+le mot suivant est “abeille”, vous devez pouvoir former le préfixe suivant, “une abeille”.
+Votre premier choix peut être une liste, car il est facile d’ajouter et de supprimer des éléments, mais nous
+devons pouvoir utiliser les préfixes comme clés dans un dictionnaire, afin d’exclure les listes. Avec des tuples,
+vous ne pouvez pas ajouter ou supprimer, mais vous pouvez utiliser l'opérateur d'addition pour former un nouveau tuple:
+
+def shift(prefix, word):
+return prefix[1:] + (word,)
+shift prend un tuple de mots, un préfixe et une chaîne, un mot, et forme un nouveau tuple qui a
+tous les mots du préfixe sauf le premier, et le mot ajouté à la fin.
+Pour la collection de suffixes, les opérations à effectuer incluent l’ajout d’un nouveau
+suffixe (ou en augmentant la fréquence d'un nom existant), et en choisissant un suffixe aléatoire.
+L'ajout d'un nouveau suffixe est également facile pour l'implémentation de liste ou l'histogramme. Choisir
+un élément aléatoire d'une liste est facile; choisir parmi un histogramme est plus difficile à faire efficacement
+(voir l'exercice 13.7).
+Jusqu'à présent, nous avons surtout parlé de facilité de mise en œuvre, mais il faut tenir compte d'autres facteurs lors du choix des structures de données. L'un est le temps d'exécution. Parfois, il existe une raison théorique de s’attendre à ce qu’une structure de données soit plus rapide que l’autre; par exemple, j'ai mentionné que
+
+13.10. Débogage
+
+133
+
+l'opérateur in est plus rapide pour les dictionnaires que pour les listes, du moins lorsque le nombre d'éléments
+est large.
+Mais souvent, vous ne savez pas à l’avance quelle mise en œuvre sera la plus rapide. Une option est
+mettre en œuvre les deux et voir lequel est le meilleur. Cette approche s'appelle l'analyse comparative.
+Une alternative pratique consiste à choisir la structure de données la plus facile à implémenter, puis
+voyez si c'est assez rapide pour l'application envisagée. Si c'est le cas, il n'est pas nécessaire de continuer. Si non,
+il existe des outils, tels que le module de profil, qui peuvent identifier les endroits dans un programme qui prennent
+le plus de temps.
+L'autre facteur à considérer est l'espace de stockage. Par exemple, l’utilisation d’un histogramme pour la collection de suffixes peut prendre moins de place car il n’est nécessaire de stocker chaque mot qu’une seule fois.
+Peu importe combien de fois il apparaît dans le texte. Dans certains cas, économiser de l’espace peut aussi rendre
+votre programme s'exécute plus rapidement et à l'extrême, votre programme pourrait ne pas fonctionner du tout si vous exécutez
+avec une mémoire insuffisante. Mais pour de nombreuses applications, l'espace est une considération secondaire après le temps d'exécution
+
+Une dernière pensée: dans cette discussion, j’ai laissé entendre que nous devrions utiliser une seule structure de données.
+pour l'analyse et la génération. Mais comme il s’agit de phases distinctes, il serait également possible d’utiliser une structure pour l’analyse, puis de la convertir en une autre pour la génération.
+Ce serait un gain net si le temps gagné pendant la génération dépassait le temps passé à
+conversion.
+
+13.10
+
+Débogage
+
+Quand vous déboguez un programme, et surtout si vous travaillez sur un bogue dur,
+il y a cinq choses à essayer:
+Lecture: examinez votre code, lisez-le pour vous-même et vérifiez qu'il dit ce que vous
+voulu dire.
+Running: Expérimentez en apportant des modifications et en exécutant différentes versions. Souvent si vous
+Si vous affichez la bonne chose au bon endroit dans le programme, le problème devient évident, mais vous devez parfois construire un échafaudage.
+Ruminant: Prenez le temps de réfléchir! De quel type d'erreur s'agit-il: syntaxe, exécution ou sémantique? Quelles informations pouvez-vous obtenir des messages d'erreur ou de la sortie du
+programme? Quel type d'erreur pourrait causer le problème que vous voyez? Qu'as-tu
+changer en dernier, avant que le problème apparaisse?
+Rubberducking: Si vous expliquez le problème à quelqu'un d'autre, vous trouvez parfois le
+répondez avant d'avoir fini de poser la question. Souvent, vous n'avez pas besoin de l'autre
+la personne; vous pouvez simplement parler à un canard en caoutchouc. Et c’est l’origine de la stratégie bien connue appelée débogage du canard en caoutchouc. Je ne l'invente pas; voir
+https://en.wikipedia.org/wiki/Rubber_duck_debugging.
+Reculer: à un moment donné, la meilleure chose à faire est de reculer, d'annuler les modifications récentes, jusqu'à ce que
+vous revenez à un programme qui fonctionne et que vous comprenez. Ensuite, vous pouvez commencer
+reconstitution.
+
+134
+
+Chapitre 13. Etude de cas: sélection de la structure de données
+
+Les programmeurs débutants restent parfois coincés dans l'une de ces activités et oublient les autres. Chaque activité est livrée avec son propre mode d'échec.
+Par exemple, la lecture de votre code peut aider si le problème est une erreur typographique, mais
+pas si le problème est un malentendu conceptuel. Si vous ne comprenez pas ce que votre
+programme fait, vous pouvez le lire 100 fois et ne jamais voir l'erreur, parce que l'erreur est en
+ta tête.
+Des expériences en cours peuvent être utiles, en particulier si vous exécutez de petits tests simples. Mais si tu cours
+expériences sans réfléchir ni lire votre code, vous pourriez tomber dans un schéma que j'appelle
+«Programmation de marche aléatoire», qui consiste à effectuer des modifications aléatoires jusqu’à la
+programme fait la bonne chose. Inutile de dire que la programmation d’une marche aléatoire peut prendre beaucoup de temps.
+temps.
+Vous devez prendre le temps de réfléchir. Le débogage est comme une science expérimentale. Tu aurais dû
+au moins une hypothèse sur le problème. S'il y a deux possibilités ou plus, essayez
+penser à un test qui éliminerait l'un d'entre eux.
+Mais même les meilleures techniques de débogage échoueront s’il ya trop d’erreurs ou si le code
+vous essayez de réparer est trop gros et compliqué. Parfois, la meilleure option est de se retirer,
+simplifier le programme jusqu'à ce que vous obteniez quelque chose qui fonctionne et que vous comprenez.
+Les programmeurs débutants sont souvent réticents à la retraite, car ils ne peuvent pas supprimer un
+ligne de code (même si elle est fausse). Si vous vous sentez mieux, copiez votre programme dans un autre
+dossier avant de commencer à le décaper. Ensuite, vous pouvez copier les morceaux un par un.
+Trouver un bogue dur nécessite de lire, de courir, de ruminer et parfois de se retirer. Si
+vous êtes coincé dans l'une de ces activités, essayez les autres.
+
+13.11
+
+Glossaire
+
+déterministe: se rapportant à un programme qui fait la même chose chaque fois qu’il est lancé, étant donné
+les mêmes entrées.
+pseudo-aléatoire: Relatif à une séquence de nombres qui semble être aléatoire, mais est
+généré par un programme déterministe.
+valeur par défaut: valeur donnée à un paramètre facultatif si aucun argument n'est fourni.
+override: Pour remplacer une valeur par défaut par un argument.
+analyse comparative: processus consistant à choisir entre des structures de données en mettant en œuvre des alternatives et en les testant sur un échantillon d'intrants possibles.
+Débogage de canard en caoutchouc: Débogage en expliquant votre problème à un objet inanimé
+comme un canard en caoutchouc. Articuler le problème peut vous aider à le résoudre, même si le
+Le canard en caoutchouc ne connaît pas Python.
+
+13.12
+
+Des exercices
+
+Exercice 13.9. Le «rang» d’un mot est sa position dans une liste de mots triés par fréquence: le plus
+mot commun a rang 1, le deuxième plus commun a rang 2, etc.
+
+13.12. Des exercices
+
+135
+
+La loi de Zipf décrit une relation entre les rangs et les fréquences des mots dans les langues naturelles
+(http: // en. wikipedia. org / wiki / loi de Zipf). Plus précisément, il prédit que la fréquence,
+f, du mot de rang r est:
+f = cr -s
+où s et c sont des paramètres qui dépendent de la langue et du texte. Si vous prenez le logarithme de
+les deux côtés de cette équation, vous obtenez:
+log f = log c - s log r
+Donc, si vous tracez log f contre log r, vous devriez obtenir une ligne droite avec pente -s et intercepter log c.
+Ecrivez un programme qui lit un texte dans un fichier, compte les fréquences de mots et affiche une ligne pour chaque
+word, par ordre décroissant de fréquence, avec log f et log r. Utilisez le programme graphique de votre
+choix de tracer les résultats et vérifier s’ils forment une ligne droite. Pouvez-vous estimer la valeur de
+s?
+Solution: http: // thinkpython2. com / code / zipf. py. Pour exécuter ma solution, vous avez besoin du module de traçage matplotlib. Si vous avez installé Anaconda, vous avez déjà matplotlib; sinon vous
+pourrait avoir à l'installer.
+
+136
+
+Chapitre 13. Etude de cas: sélection de la structure de données
