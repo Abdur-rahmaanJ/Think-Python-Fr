@@ -1,0 +1,483 @@
+Chapitre 14
+
+Des dossiers
+Ce chapitre présente l’idée des programmes «persistants» qui conservent les données dans un stockage permanent et explique comment utiliser différents types de stockage permanent, tels que les fichiers et les bases de données.
+
+14.1
+
+Persistance
+
+La plupart des programmes que nous avons vus jusqu’à présent sont transitoires en ce sens qu’ils ont une courte durée
+et produisent une sortie, mais quand ils se terminent, leurs données disparaissent. Si vous exécutez le
+programme à nouveau, il commence par une table neuve.
+D'autres programmes sont persistants: ils durent longtemps (ou tout le temps); ils gardent au moins
+certaines de leurs données en stockage permanent (un disque dur, par exemple); et s'ils fermaient
+et redémarrer, ils reprennent là où ils se sont arrêtés.
+Des exemples de programmes persistants sont les systèmes d’exploitation, qui tournent lorsequ'un
+ordinateur est allumé et les serveurs Web, qui fonctionnent tout le temps, attendent que les demandes arrivent
+sur le réseau.
+L’un des moyens les plus simples de stockage des données pour les programmes est la lecture et l’écriture 
+des fichiers texte. Nous avons déjà vu des programmes qui lisent des fichiers texte; dans ce chapitre nous verrons des
+programmes qui les écrivent.
+Une alternative consiste à stocker l'état du programme dans une base de données. Dans ce chapitre, je présenterai
+une base de données simple et un module, pickle, facilitant le stockage des données du programme.
+
+14.2
+
+Lire et écrire
+
+Un fichier texte est une séquence de caractères stockée sur un support permanent tel qu'un disque dur.
+mémoire flash ou CD-ROM. Nous avons vu comment ouvrir et lire un fichier à la section 9.1.
+Pour écrire un fichier, vous devez l'ouvrir avec le mode 'w' comme second paramètre:
+
+>>> fout = open ('output.txt', 'w')
+
+138
+
+Chapitre 14. Fichiers
+
+Si le fichier existe déjà, son ouverture en mode écriture efface les anciennes données et recommence,
+donc sois prudent! Si le fichier n’existe pas, un nouveau est créé.
+
+open renvoie un objet de fichier qui fournit des méthodes pour utiliser le fichier. L'écriture
+met les données dans le fichier.
+>>> line1 = "This here's the wattle,\n"
+>>> fout.write(line1)
+24
+La valeur de retour est le nombre de caractères écrits. L'objet fichier garde la trace
+si vous appelez à  écrire de nouveau, il ajoute les nouvelles données à la fin du fichier.
+
+>>> line2 = "the emblem of our land.\n"
+>>> fout.write(line2)
+24
+Lorsque vous avez fini d'écrire, fermez le fichier.
+
+>>> fout.close ()
+Si vous ne fermez pas le fichier, il sera fermé à la fin du programme.
+
+14.3
+
+Format opérateur
+
+L'argument d'écriture doit être une chaîne, donc si nous voulons mettre d'autres valeurs dans un fichier, nous
+avoir à les convertir en chaînes. Le moyen le plus simple de le faire est avec str:
+
+>>> x = 52
+>>> fout.write (str (x))
+Une alternative consiste à utiliser l'opérateur de formatage%. Lorsqu'il est appliqué aux entiers,% est le module
+opérateur. Mais lorsque le premier opérande est une chaîne,% est l'opérateur de format.
+Le premier opérande est la chaîne de format, qui contient une ou plusieurs séquences de format,
+qui spécifient comment le deuxième opérande est formaté. Le résultat est une chaîne.
+Par exemple, la séquence de formatage '% d' signifie que le deuxième opérande doit être formaté comme un décimal entier:
+
+>>> camels = 42
+>>> '%d' % camels
+'42'
+Le résultat est la chaîne '42', qui ne doit pas être confondue avec la valeur entière 42.
+Une séquence de format peut apparaître n'importe où dans la chaîne, vous pouvez donc incorporer une valeur dans un fichier.
+phrase:
+
+>>> 'I have spotted %d camels.' % camels
+'I have spotted 42 camels.'
+S'il y a plus d'une séquence de format dans la chaîne, le deuxième argument doit être un
+tuple. Chaque séquence de format est associée à un élément du tuple, dans l'ordre.
+L'exemple suivant utilise '% d' pour formater un entier, '% g' pour formater un nombre à virgule flottante et '% s' pour formater une chaîne:
+
+>>> 'In %d years I have spotted %g %s.' % (3, 0.1, 'camels')
+'In 3 years I have spotted 0.1 camels.'
+
+14.4. Noms de fichiers et chemins
+
+139
+
+Le nombre d’éléments dans le tuple doit correspondre au nombre de séquences de format dans la
+chaîne. En outre, les types des éléments doivent correspondre aux séquences de format:
+
+>>> '%d %d
+TypeError:
+>>> '%d' %
+TypeError:
+
+%d' % (1, 2)
+not enough arguments for format string
+'dollars'
+%d format: a number is required, not str
+
+Dans le premier exemple, il n’ya pas assez d’éléments; dans le second, l'élément est d'un type
+faux.
+Pour plus d'informations sur l'opérateur de format, voir https://docs.python.org/3/library/.
+stdtypes.html # printf-style-string-formating. Une alternative plus puissante est
+la méthode de format de chaîne, que vous pouvez lire à l'adresse https://docs.python.org/3/
+library / stdtypes.html # str.format.
+
+14.4
+
+Noms de fichiers et chemins
+
+Les fichiers sont organisés en répertoires (également appelés «dossiers»). Chaque programme en cours a un
+“Répertoire en cours”, qui est le répertoire par défaut pour la plupart des opérations. Par exemple, quand
+vous ouvrez un fichier en lecture, Python le recherche dans le répertoire en cours.
+Le module os fournit des fonctions permettant de travailler avec des fichiers et des répertoires («os» signifie
+"système opérateur"). os.getcwd renvoie le nom du répertoire actuel:
+
+>>> import os
+>>> cwd = os.getcwd()
+>>> cwd
+'/home/dinsdale'
+cwd signifie «répertoire de travail actuel». Le résultat dans cet exemple est / home / dinsdale,
+qui est le répertoire personnel d'un utilisateur nommé dinsdale.
+Une chaîne telle que '/ home / dinsdale' qui identifie un fichier ou un répertoire est appelée chemin.
+Un nom de fichier simple, tel que memo.txt, est également considéré comme un chemin, mais c’est un chemin relatif car
+il concerne le répertoire en cours. Si le répertoire actuel est / home / dinsdale, le nom du fichier
+memo.txt ferait référence à /home/dinsdale/memo.txt.
+Un chemin qui commence par / ne dépend pas du répertoire en cours; ça s'appelle un absolu
+chemin. Pour trouver le chemin absolu d'un fichier, vous pouvez utiliser os.path.abspath:
+
+>>> os.path.abspath('memo.txt')
+'/home/dinsdale/memo.txt'
+os.path fournit d'autres fonctions pour travailler avec les noms de fichiers et les chemins. Par exemple,
+os.path.exists vérifie si un fichier ou un répertoire existe:
+>>> os.path.exists ('memo.txt')
+True
+S'il existe, os.path.isdir vérifie s'il s'agit d'un répertoire:
+
+>>> os.path.isdir('memo.txt')
+False
+>>> os.path.isdir('/home/dinsdale')
+True
+
+140
+
+Chapitre 14. Fichiers
+
+De même, os.path.isfile vérifie s’il s’agit d’un fichier.
+
+os.listdir retourne une liste des fichiers (et autres répertoires) du répertoire donné:
+>>> os.listdir (cwd)
+['musique', 'photos', 'memo.txt']
+Pour illustrer ces fonctions, l’exemple suivant «parcourt» un répertoire, imprime
+les noms de tous les fichiers, et s’appelle récursivement sur tous les répertoires.
+
+def walk(dirname):
+for name in os.listdir(dirname):
+path = os.path.join(dirname, name)
+if os.path.isfile(path):
+print(path)
+else:
+walk(path)
+os.path.join prend un répertoire et un nom de fichier et les joint dans un chemin complet.
+Le module os fournit une fonction appelée walk qui est similaire à celle-ci mais plus polyvalente. En exercice, lisez la documentation et utilisez-la pour imprimer les noms des
+fichiers dans un répertoire donné et ses sous-répertoires. Vous pouvez télécharger ma solution de
+http://thinkpython2.com/code/walk.py.
+
+14.5
+
+Attraper des exceptions
+
+Beaucoup de choses peuvent mal se passer lorsque vous essayez de lire et d’écrire des fichiers. Si vous essayez d'ouvrir un fichier
+qui n’existe pas, vous obtenez une erreur IOError:
+
+>>> fin = open('bad_file')
+IOError: [Errno 2] No such file or directory: 'bad_file'
+If you don’t have permission to access a file:
+
+>>> fout = open('/etc/passwd', 'w')
+PermissionError: [Errno 13] Permission denied: '/etc/passwd'
+And if you try to open a directory for reading, you get
+
+>>> fin = open('/home')
+IsADirectoryError: [Errno 21] Is a directory: '/home'
+Pour éviter ces erreurs, vous pouvez utiliser des fonctions telles que os.path.exists et os.path.isfile,
+mais il faudrait beaucoup de temps et de code pour vérifier toutes les possibilités (si «Errno 21» est une indication quelconque
+, il y a au moins 21 choses qui peuvent aller mal).
+Il vaut mieux aller de l'avant et essayer - et régler les problèmes s'ils se produisent - ce qui est exactement
+ce que la déclaration try fait. La syntaxe est similaire à une déclaration if ... else:
+
+try:
+
+fin = open('bad_file')
+except:
+print('Something went wrong.')
+
+14.6. Bases de données
+
+141
+
+Python commence par exécuter la clause try. Si tout va bien, il saute la clause d'exception et
+continue. Si une exception se produit, il sort de la clause try et exécute la clause except.
+La gestion d'une exception avec une instruction try s'appelle attraper une exception. Dans cet exemple, la clause except imprime un message d'erreur peu utile. En général, attraper
+une exception vous donne une chance de résoudre le problème, ou d'essayer à nouveau, ou au moins de terminer le programme
+gracieusement.
+
+14.6
+
+Bases de données
+
+Une base de données est un fichier organisé pour stocker des données. De nombreuses bases de données sont organisées comme un
+dictionnaire dans le sens où ils mappent des clés aux valeurs. La plus grande différence entre
+une base de données et un dictionnaire est que la base de données est sur disque (ou autre stockage permanent), donc
+il persiste après la fin du programme.
+Le module dbm fournit une interface pour la création et la mise à jour des fichiers de base de données. En tant que
+Par exemple, je vais créer une base de données contenant des légendes pour les fichiers image.
+L'ouverture d'une base de données est similaire à l'ouverture d'autres fichiers:
+
+>>> import dbm
+>>> db = dbm.open('captions', 'c')
+Le mode 'c' signifie que la base de données doit être créée si elle n’existe pas déjà. le
+result est un objet de base de données qui peut être utilisé (pour la plupart des opérations) comme un dictionnaire.
+Lorsque vous créez un nouvel élément, dbm met à jour le fichier de base de données.
+
+>>> db ['cleese.png'] = 'Photo de John Cleese.'
+Lorsque vous accédez à l'un des éléments, dbm lit le fichier:
+
+>>> db ['cleese.png']
+Photo de John Cleese.
+Le résultat est un objet octet, c'est pourquoi il commence par b. Un objet octet est similaire à un objet
+string à bien des égards. Quand vous entrez plus loin dans Python, la différence devient importante,
+mais pour l'instant nous pouvons l'ignorer.
+Si vous faites une autre affectation à une clé existante, dbm remplace l'ancienne valeur:
+
+>>> db['cleese.png'] = 'Photo of John Cleese doing a silly walk.'
+>>> db['cleese.png']
+b'Photo of John Cleese doing a silly walk.'
+Certaines méthodes de dictionnaire, telles que les clés et les éléments, ne fonctionnent pas avec les objets de base de données. Mais
+L'itération avec une boucle for fonctionne:
+
+for key in db:
+print(key, db[key])
+Comme pour les autres fichiers, vous devez fermer la base de données lorsque vous avez terminé:
+
+>>> db.close ()
+
+142
+
+Chapitre 14. Fichiers
+
+14.7
+
+Pickling
+
+Une limitation de dbm est que les clés et les valeurs doivent être des chaînes ou des octets. Si vous essayez d'utiliser
+tout autre type, vous obtenez une erreur.
+Le module pickle peut aider. Il traduit presque tout type d'objet en une chaîne appropriée
+pour le stockage dans une base de données, puis convertit les chaînes en objets.
+
+pickle.dumps prend un objet en tant que paramètre et retourne une représentation sous forme de chaîne (dumps est
+abréviation de “dump string”):
+>>> import pickle
+>>> t = [1, 2, 3]
+>>> pickle.dumps(t)
+b'\x80\x03]q\x00(K\x01K\x02K\x03e.'
+Le format n’est pas évident pour les lecteurs humains; il est censé être facile à interpréter.
+pickle.loads («load string») reconstitue l'objet:
+
+>>>
+>>>
+>>>
+>>>
+[1,
+
+t1 = [1, 2, 3]
+s = pickle.dumps(t1)
+t2 = pickle.loads(s)
+t2
+2, 3]
+
+Bien que le nouvel objet ait la même valeur que l'ancien, il ne s'agit pas (en général) du même objet:
+
+>>> t1 == t2
+True
+>>> t1 is t2
+False
+En d'autres termes, le décapage puis la décompression ont le même effet que la copie de l'objet.
+Vous pouvez utiliser pickle pour stocker des non-chaînes dans une base de données. En fait, cette combinaison est si courante qu’elle a été encapsulée dans un module appelé shelve.
+
+14.8
+
+Les pipes
+
+La plupart des systèmes d'exploitation fournissent une interface de ligne de commande, également appelée shell. Les shells
+fournissent généralement des commandes pour naviguer dans le système de fichiers et lancer des applications. Par exemple, sous Unix, vous pouvez changer de répertoire avec cd, afficher le contenu d’un répertoire avec ls,
+et lancez un navigateur Web en tapant (par exemple) firefox.
+Tout programme que vous pouvez lancer à partir du shell peut également être lancé à partir de Python à l'aide d'un
+objet pipe, qui représente un programme en cours d'exécution.
+Par exemple, la commande Unix ls -l affiche normalement le contenu du répertoire actuel au format long. Vous pouvez lancer ls avec os.popen1:
+
+>>> cmd = 'ls -l'
+>>> fp = os.popen(cmd)
+1 popen est obsolète maintenant, ce qui signifie que nous sommes supposés arrêter de l'utiliser et commencer à utiliser le sous-processus.
+module. Mais pour des cas simples, je trouve le sous-processus plus compliqué que nécessaire. Donc je vais continuer à utiliser
+popen jusqu'à ce qu'ils l'enlèvent.
+
+14.9. Modules d'écriture
+
+143
+
+L'argument est une chaîne contenant une commande shell. La valeur de retour est un objet qui
+se comporte comme un fichier ouvert. Vous pouvez lire la sortie du processus ls une ligne à la fois.
+avec readline ou obtenir le tout à la fois avec read:
+
+>>> res = fp.read ()
+Lorsque vous avez terminé, vous fermez le tuyau comme un fichier:
+
+>>> stat = fp.close ()
+>>> print (stat)
+Aucun
+La valeur de retour est le statut final du processus ls; Aucun ne signifie qu'il s'est terminé normalement
+(sans erreurs).
+Par exemple, la plupart des systèmes Unix fournissent une commande appelée md5sum qui lit le contenu
+d'un fichier et calcule une «somme de contrôle». Vous pouvez en savoir plus sur le MD5 à l’adresse http: //en.wikipedia.
+org / wiki / Md5. Cette commande fournit un moyen efficace de vérifier si deux fichiers ont
+le même contenu. La probabilité que différents contenus produisent la même somme de contrôle est très faible.
+petit (il est peu probable qu'il se produise avant l'effondrement de l'univers).
+Vous pouvez utiliser un tube pour exécuter md5sum à partir de Python et obtenir le résultat suivant:
+
+>>> filename = 'book.tex'
+>>> cmd = 'md5sum ' + filename
+>>> fp = os.popen(cmd)
+>>> res = fp.read()
+>>> stat = fp.close()
+>>> print(res)
+1e0033f0ed0656636de0d75144ba32e0 book.tex
+>>> print(stat)
+None
+
+14.9
+
+Modules d'écriture
+
+Tout fichier contenant du code Python peut être importé en tant que module. Par exemple, supposons
+vous avez un fichier nommé wc.py avec le code suivant:
+
+def linecount(filename):
+count = 0
+for line in open(filename):
+count += 1
+return count
+print(linecount('wc.py'))
+Si vous exécutez ce programme, il se lit et imprime le nombre de lignes du fichier, qui est 7.
+Vous pouvez également l'importer comme ceci:
+
+>>> wc d'importation
+7
+Maintenant vous avez un objet de module wc:
+
+>>> wc
+<module 'wc' de 'wc.py'>
+
+144
+
+Chapitre 14. Fichiers
+
+L'objet module fournit linecount:
+
+>>> wc.linecount ('wc.py')
+7
+C’est ainsi que vous écrivez des modules en Python.
+Le seul problème avec cet exemple est que lorsque vous importez le module, il exécute le test.
+code en bas. Normalement, lorsque vous importez un module, il définit de nouvelles fonctions mais
+ne les exécute pas.
+Les programmes qui seront importés en tant que modules utilisent souvent l'idiome suivant:
+
+if __name__ == '__main__':
+print(linecount('wc.py'))
+__name__ est une variable intégrée définie au démarrage du programme. Si le programme est en cours d'exécution
+en tant que script, __name__ a la valeur '__main__'; dans ce cas, le code de test est exécuté. Autrement,
+si le module est en cours d'importation, le code de test est ignoré.
+A titre d'exercice, tapez cet exemple dans un fichier nommé wc.py et exécutez-le en tant que script. Puis courir
+l'interpréteur Python et importer wc. Quelle est la valeur de __name__ lorsque le module est
+être importé?
+Avertissement: Si vous importez un module déjà importé, Python ne fait rien. Il
+ne relit pas le fichier, même s’il a changé.
+Si vous voulez recharger un module, vous pouvez utiliser la fonction intégrée reload, mais cela peut être
+Le plus sûr est donc de redémarrer l’interprète, puis de réimporter le module.
+
+14h10
+
+Débogage
+
+Lorsque vous lisez et écrivez des fichiers, vous pouvez rencontrer des problèmes d'espace.
+Ces erreurs peuvent être difficiles à déboguer car les espaces, les tabulations et les nouvelles lignes sont normalement invisibles:
+
+>>> s = '1 2\t 3\n 4'
+>>> print(s)
+1 2 3
+4
+La fonction intégrée repr peut aider. Il prend n'importe quel objet comme argument et retourne une chaîne
+représentation de l'objet. Pour les chaînes, il représente les caractères d'espacement avec une barre oblique inverse
+séquences:
+
+>>> print(repr(s))
+'1 2\t 3\n 4'
+Cela peut être utile pour le débogage.
+Un autre problème que vous pourriez rencontrer est que différents systèmes utilisent différents caractères pour
+indique la fin d'une ligne. Certains systèmes utilisent une nouvelle ligne, représentée \ n. D'autres utilisent un retour
+personnage, représenté \ r. Certains utilisent les deux. Si vous déplacez des fichiers entre différents systèmes,
+ces incohérences peuvent causer des problèmes.
+Pour la plupart des systèmes, il existe des applications permettant de convertir un format à un autre. Vous pouvez
+les trouver (et en savoir plus sur ce problème) à http://en.wikipedia.org/wiki/Newline.
+Ou bien sûr, vous pouvez en écrire un vous-même.
+
+14.11. Glossaire
+
+14.11
+
+145
+
+Glossaire
+
+persistante: concerne un programme qui s'exécute indéfiniment et conserve au moins une partie de ses
+données en stockage permanent.
+opérateur de format: Un opérateur,%, qui prend une chaîne de format et un tuple et génère un
+chaîne qui inclut les éléments du tuple mis en forme comme spécifié par le format
+chaîne.
+chaîne de format: Une chaîne, utilisée avec l'opérateur de format, qui contient des séquences de format.
+séquence de formatage: séquence de caractères d’une chaîne de formatage, telle que% d, spécifiant
+la valeur doit être formatée.
+fichier texte: séquence de caractères stockée de manière permanente, telle qu'un disque dur.
+répertoire: ensemble de fichiers nommés, également appelé dossier.
+chemin: une chaîne qui identifie un fichier.
+chemin relatif: chemin qui part du répertoire en cours.
+chemin absolu: chemin qui commence par le répertoire le plus haut du système de fichiers.
+catch: Pour empêcher une exception de terminer un programme à l'aide des instructions try et except.
+base de données: un fichier dont le contenu est organisé comme un dictionnaire avec les clés correspondantes
+aux valeurs.
+Octets objet: Un objet similaire à une chaîne.
+shell: programme permettant aux utilisateurs de taper des commandes, puis de les exécuter en lançant
+d'autres programmes.
+objet pipe: objet représentant un programme en cours d'exécution, permettant à un programme Python de
+lancer des commandes et lire les résultats.
+
+14.12
+
+Des exercices
+
+Exercice 14.1. Ecrivez une fonction appelée sed qui prend en argument une chaîne de motif, une valeur de remplacement
+chaîne et deux noms de fichiers; il faut lire le premier fichier et écrire le contenu dans le deuxième fichier
+(en le créant si nécessaire). Si la chaîne de modèle apparaît n'importe où dans le fichier, elle doit être remplacée
+avec la chaîne de remplacement.
+Si une erreur se produit lors de l’ouverture, de la lecture, de l’écriture ou de la fermeture de fichiers, votre programme
+exception, affiche un message d'erreur et quitte. Solution: http: // thinkpython2. com / code / sed.
+py.
+Exercice 14.2. Si vous téléchargez ma solution à l’exercice 12.2 à partir de http: // thinkpython2. com /
+code / anagram_ ensembles. py, vous verrez qu’il crée un dictionnaire qui mappe à partir d’une chaîne triée de
+lettres à la liste de mots qui peuvent être orthographiés avec ces lettres. Par exemple, "opst" mappe sur le
+liste ['opts', 'post', 'pots', 'spot', 'stop', 'tops'].
+Ecrivez un module qui importe anagram_sets et fournit deux nouvelles fonctions: store_anagrams
+devrait stocker le dictionnaire anagram dans une «étagère»; read_anagrams devrait chercher un mot et retourner
+une liste de ses anagrammes. Solution: http: // thinkpython2. com / code / anagram_db. py.
+
+146
+
+Chapitre 14. Fichiers
+
+Exercice 14.3. Dans une grande collection de fichiers MP3, il peut y avoir plusieurs copies de la même chanson,
+stockés dans différents répertoires ou avec des noms de fichiers différents. Le but de cet exercice est de rechercher
+les doublons.
+1. Ecrivez un programme qui cherche récursivement un répertoire et tous ses sous-répertoires et retourne
+une liste de chemins complets pour tous les fichiers avec un suffixe donné (comme .mp3). Astuce: os.path fournit
+plusieurs fonctions utiles pour manipuler les noms de fichiers et de chemins.
+2. Pour reconnaître les doublons, vous pouvez utiliser md5sum pour calculer une «somme de contrôle» pour chaque fichier. Si deux
+les fichiers ont la même somme de contrôle, ils ont probablement le même contenu.
+3. Pour vérifier, vous pouvez utiliser la commande Unix diff.
+Solution: http: // thinkpython2. com / code / find_ duplicates. py.
