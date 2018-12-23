@@ -1,0 +1,404 @@
+Chapitre 15
+
+Classes et objets
+À ce stade, vous devez savoir utiliser des fonctions pour organiser le code et des types intégrés pour organiser
+les données. L'étape suivante consiste à apprendre la «programmation orientée objet», qui utilise des types définis par le programmeur pour organiser le code et les données. La programmation orientée objet est un sujet important.
+il faudra quelques chapitres pour y arriver.
+Des exemples de code de ce chapitre sont disponibles à l'adresse http://thinkpython2.com/code/.
+Point1.py; les solutions aux exercices sont disponibles sur http://thinkpython2.com/code/
+Point1_soln.py.
+
+15.1
+
+Types définis par le programmeur
+
+Nous avons utilisé de nombreux types intégrés de Python; maintenant nous allons définir un nouveau type. Comme
+par exemple, nous allons créer un type appelé Point qui représente un point en deux dimensions
+espace.
+En notation mathématique, les points sont souvent écrits entre parenthèses avec une virgule séparant
+les coordonnées. Par exemple, (0, 0) représente l’origine et (x, y) représente le point x
+unités à droite et y unités à partir de l'origine.
+Il y a plusieurs façons de représenter des points en Python:
+• Nous pourrions stocker les coordonnées séparément dans deux variables, x et y.
+• Nous pourrions stocker les coordonnées sous forme d'éléments dans une liste ou un tuple.
+• Nous pourrions créer un nouveau type pour représenter les points sous forme d'objets.
+La création d’un nouveau type est plus compliquée que les autres options, mais elle présente les avantages suivants qui
+seront apparents bientôt.
+Un type défini par le programmeur est également appelé une classe. Une définition de classe ressemble à ceci:
+
+class Point:
+"""Represents a point in 2-D space."""
+
+148
+
+Chapitre 15. Classes et objets
+Point
+blanc
+
+X
+
+3.0
+
+y
+
+4.0
+
+Figure 15.1: Diagramme d'objets.
+L'en-tête indique que la nouvelle classe s'appelle Point. Le corps est une docstring qui explique le rôle de la classe. Vous pouvez définir des variables et des méthodes dans une définition de classe,
+mais nous y reviendrons plus tard.
+La définition d'une classe nommée Point crée un objet de classe.
+
+>>> Point
+<class '__main__.Point'>
+Comme Point est défini au niveau supérieur, son “nom complet” est __main __.Point.
+L'objet de classe est comme une fabrique pour créer des objets. Pour créer un point, vous appelez Point comme si
+c'était une fonction.
+
+>>> blank = Point()
+>>> blank
+<__main__.Point object at 0xb7e9d3ac>
+La valeur de retour est une référence à un objet Point, que nous affectons à vide.
+La création d'un nouvel objet s'appelle instanciation et l'objet est une instance de la classe.
+Lorsque vous imprimez une instance, Python vous indique à quelle classe elle appartient et où elle est stockée.
+en mémoire (le préfixe 0x signifie que le nombre suivant est en hexadécimal).
+Chaque objet est une instance d'une classe, donc «objet» et «instance» sont interchangeables.
+Mais dans ce chapitre, j'utilise «instance» pour indiquer que je parle d'un type défini par le programmeur.
+
+15.2
+
+Les attributs
+
+Vous pouvez affecter des valeurs à une instance à l'aide de la notation par points:
+
+>>> blank.x = 3.0
+>>> blank.y = 4.0
+Cette syntaxe est similaire à celle utilisée pour sélectionner une variable dans un module, telle que math.pi.
+ou string.whitespace. Dans ce cas, cependant, nous assignons des valeurs aux éléments nommés de
+un objet. Ces éléments sont appelés attributs.
+En tant que nom, “AT-trib-ute” est prononcé en insistant sur la première syllabe, par opposition à
+“A-TRIB-ute”, qui est un verbe.
+Le diagramme suivant montre le résultat de ces affectations. Un diagramme d'état qui montre
+un objet et ses attributs s'appelle un diagramme d'objet; voir la figure 15.1.
+La variable blank fait référence à un objet Point, qui contient deux attributs. Chaque attribut
+fait référence à un nombre à virgule flottante.
+Vous pouvez lire la valeur d'un attribut en utilisant la même syntaxe:
+
+15.3 Les rectangles
+
+149
+
+>>> blank.y
+4.0
+>>> x = blank.x
+>>> x
+3.0
+L’expression blank.x signifie que «Aller à l’objet vide se réfère à et obtient la valeur de x».
+Dans l'exemple, nous attribuons cette valeur à une variable nommée x. Il n'y a pas de conflit entre le
+la variable x et l'attribut x.
+Vous pouvez utiliser la notation par points dans toute expression. Par exemple:
+
+>>> '(% g,% g)'% (blank.x, blank.y)
+'(3.0, 4.0)'
+>>> distance = math.sqrt (blank.x ** 2 + blank.y ** 2)
+>>> distance
+5.0
+Vous pouvez passer une instance comme argument de la manière habituelle. Par exemple:
+
+def print_point (p):
+print ('(% g,% g)'% (p.x, p.y))
+print_point prend un point comme argument et l'affiche en notation mathématique. Pour
+l'invoquez, vous pouvez passer blanc comme argument:
+>>> print_point(blank)
+(3.0, 4.0)
+Dans la fonction, p est un alias pour un blanc. Par conséquent, si la fonction modifie p, ce dernier change.
+En exercice, écrivez une fonction appelée distance_between_points qui prend deux points comme
+arguments et renvoie la distance entre eux.
+
+15.3
+
+Les rectangles
+
+Parfois, il est évident que les attributs d’un objet devraient être, mais d’autres fois vous avez
+prendre des décisions. Par exemple, imaginez que vous concevez une classe pour représenter des rectangles.
+Quels attributs utiliseriez-vous pour spécifier l'emplacement et la taille d'un rectangle? Vous pouvez ignorer l'angle. pour que les choses restent simples, supposons que le rectangle soit vertical ou horizontal.
+Il y a au moins deux possibilités:
+• Vous pouvez spécifier un coin du rectangle (ou le centre), la largeur et le
+la taille.
+• Vous pouvez spécifier deux coins opposés.
+À ce stade, il est difficile de dire si l’un est meilleur que l’autre, nous allons donc mettre en œuvre le
+premier, juste à titre d'exemple.
+Voici la définition de la classe:
+
+150
+
+Chapitre 15. Classes et objets
+Rectangle
+boîte
+
+largeur
+
+100.0
+
+la taille
+
+200.0
+
+coin
+
+Point
+X
+
+0.0
+
+y
+
+0.0
+
+Figure 15.2: Diagramme d'objets.
+
+class Rectangle:
+"""Represents a rectangle.
+attributes: width, height, corner.
+"""
+La docstring répertorie les attributs: width et height sont des nombres; corner est un objet Point
+qui spécifie le coin inférieur gauche.
+Pour représenter un rectangle, vous devez instancier un objet Rectangle et attribuer des valeurs à la
+les attributs:
+
+box = Rectangle()
+box.width = 100.0
+box.height = 200.0
+box.corner = Point()
+box.corner.x = 0.0
+box.corner.y = 0.0
+L’expression box.corner.x signifie «Aller à l’objet dont la boîte  se réfère à et sélectionnez l’attribut».
+nommé coin; puis allez à cet objet et sélectionnez l'attribut nommé x. ”
+La figure 15.2 montre l'état de cet objet. Un objet qui est un attribut d'un autre objet est
+intégré.
+
+15.4
+
+Instances en tant que valeurs de retour
+
+Les fonctions peuvent renvoyer des instances. Par exemple, find_center prend un rectangle comme argument et retourne un point contenant les coordonnées du centre du rectangle:
+
+def find_center(rect):
+p = Point()
+p.x = rect.corner.x + rect.width/2
+p.y = rect.corner.y + rect.height/2
+return p
+Voici un exemple qui passe case en tant qu’argument et assigne le point résultant à
+centre:
+
+>>> center = find_center(box)
+>>> print_point(center)
+(50, 100)
+
+15.5 Les objets sont mutables
+
+15.5
+
+151
+
+Les objets sont mutables
+
+Vous pouvez modifier l'état d'un objet en affectant l'un de ses attributs. Pour
+Par exemple, pour changer la taille d’un rectangle sans changer sa position, vous pouvez modifier
+les valeurs de largeur et de hauteur:
+
+box.width = box.width + 50
+box.height = box.height + 100
+Vous pouvez également écrire des fonctions qui modifient des objets. Par exemple, grow_rectangle prend une
+Objet rectangle et deux nombres, dwidth et dheight, et ajoute les nombres au
+largeur et hauteur du rectangle:
+
+def grow_rectangle(rect, dwidth, dheight):
+rect.width += dwidth
+rect.height += dheight
+Voici un exemple qui illustre l'effet:
+
+>>> box.width, box.height
+(150.0, 300.0)
+>>> grow_rectangle(box, 50, 100)
+>>> box.width, box.height
+(200.0, 400.0)
+Dans la fonction, rect est un alias pour box. Ainsi, lorsque la fonction modifie rect, box
+change.
+Comme exercice, écrivez une fonction nommée move_rectangle qui prend un rectangle et deux
+nombres nommés dx et dy. Il faut changer l’emplacement du rectangle en ajoutant dx à
+la coordonnée x du coin et l’ajout de dy à la coordonnée y du coin.
+
+15.6
+
+Copier
+
+L'aliasing peut rendre un programme difficile à lire car des modifications dans un endroit peuvent avoir
+effets inattendus dans un autre endroit. Il est difficile de garder une trace de toutes les variables qui pourraient
+se référer à un objet donné.
+Copier un objet est souvent une alternative au repliement. Le module de copie contient une fonction appelée
+Copy qui peut dupliquer n'importe quel objet:
+
+>>> p1 = Point()
+>>> p1.x = 3.0
+>>> p1.y = 4.0
+>>> import copy
+>>> p2 = copy.copy(p1)
+p1 and p2 contain the same data, but they are not the same Point.
+>>> print_point(p1)
+(3, 4)
+>>> print_point(p2)
+(3, 4)
+>>> p1 is p2
+False
+
+152
+
+Chapitre 15. Classes et objets
+boîte
+
+largeur
+
+100.0
+
+100.0
+
+largeur
+
+la taille
+
+200.0
+
+200.0
+
+la taille
+
+coin
+
+X
+
+0.0
+
+y
+
+0.0
+
+box2
+
+coin
+
+Figure 15.3: Diagramme d'objets.
+
+>>> p1 == p2
+Faux
+L'opérateur is indique que p1 et p2 ne sont pas le même objet, ce à quoi nous nous attendions. Mais vous auriez pu vous attendre == à produire True car ces points contiennent le
+mêmes données. Dans ce cas, vous serez déçu d'apprendre que, pour les instances, par défaut
+le comportement de l'opérateur == est identique à celui de l'opérateur is; il vérifie l'identité des l'objet, pas
+équivalence d'objet. C’est parce que, pour les types définis par le programmeur, Python ne sait pas
+ce qui devrait être considéré comme équivalent. Au moins pas encore.
+Si vous utilisez copy.copy pour dupliquer un rectangle, vous constaterez qu'il copie l'objet
+rectangle mais pas le point incorporé.
+
+>>> box2 = copy.copy(box)
+>>> box2 is box
+False
+>>> box2.corner is box.corner
+True
+Le dessin 15.3 montre l'aspect du diagramme d'objets. Cette opération s'appelle shallow
+copy car il copie l'objet et toutes les références qu'il contient, mais pas l'objet 
+incorporé.
+Pour la plupart des applications, ce n’est pas ce que vous voulez.
+Dans cet exemple, invoquer
+grow_rectangle sur l’un des rectangles n’affecterait pas l’autre, mais invoquerait
+move_rectangle sur l'un ou l'autre affecterait les deux! Ce comportement est source de confusion et d’erreurs.
+Heureusement, le module de copie fournit une méthode appelée deepcopy qui copie non seulement 
+l'objet, mais aussi les objets auxquels il fait référence, et les objets auxquels ils font référence, et ainsi de suite. Tu ne vas pas
+soyez surpris d'apprendre que cette opération s'appelle une copie profonde (deep copy).
+
+>>> box3 = copy.deepcopy(box)
+>>> box3 is box
+False
+>>> box3.corner is box.corner
+False
+box3 et box sont des objets complètement séparés.
+Comme exercice, écrivez une version de move_rectangle qui crée et retourne un nouveau rectangle
+au lieu de modifier l'ancien.
+
+15.7
+
+Débogage
+
+Lorsque vous commencez à utiliser des objets, vous risquez de rencontrer de nouvelles exceptions. Si
+vous essayez d’accéder à un attribut qui n’existe pas, vous obtenez un AttributeError:
+
+15.8. Glossaire
+
+153
+
+>>> p = Point()
+>>> p.x = 3
+>>> p.y = 4
+>>> p.z
+AttributeError: Point instance has no attribute 'z'
+Si vous n'êtes pas sûr du type d'un objet, vous pouvez demander:
+>>> type (p)
+<class '__main __. Point'>
+Vous pouvez également utiliser isinstance pour vérifier si un objet est une instance d'une classe:
+>>> isinstance (p, Point)
+Vrai
+Si vous n'êtes pas sûr qu'un objet possède un attribut particulier, vous pouvez utiliser la fonction intégrée.
+fonction hasattr:
+>>> hasattr (p, 'x')
+Vrai
+>>> hasattr (p, 'z')
+Faux
+Le premier argument peut être n'importe quel objet. le second argument est une chaîne contenant le nom
+de l'attribut.
+Vous pouvez également utiliser une instruction try pour voir si l'objet possède les attributs dont vous avez besoin:
+try:
+x = p.x
+except AttributeError:
+x = 0
+Cette approche peut faciliter l'écriture de fonctions qui fonctionnent avec différents types. plus
+sur ce sujet est à venir dans la section 17.9.
+
+15.8
+
+Glossaire
+
+classe: un type défini par le programmeur. Une définition de classe crée un nouvel objet de classe.
+objet de classe: objet contenant des informations sur un type défini par le programmeur. le
+Un objet de classe peut être utilisé pour créer des instances du type.
+instance: un objet qui appartient à une classe.
+instancier: pour créer un nouvel objet.
+attribut: une des valeurs nommées associées à un objet.
+objet incorporé: objet stocké en tant qu'attribut d'un autre objet.
+copie superficielle: pour copier le contenu d'un objet, y compris toute référence à
+objets; mis en œuvre par la fonction de copie dans le module de copie.
+deep copy: Pour copier le contenu d’un objet ainsi que tout objet incorporé et tout objet
+objets intégrés dans eux, et ainsi de suite; mis en œuvre par la fonction deepcopy dans le
+module de copie.
+diagramme d'objet: diagramme montrant les objets, leurs attributs et les valeurs des attributs.
+
+154
+
+15.9
+
+Chapitre 15. Classes et objets
+
+Des exercices
+
+Exercice 15.1. Ecrivez une définition pour une classe nommée Circle avec les attributs centre et rayon,
+où centre est un objet Point et rayon est un nombre.
+Instanciez un objet Circle représentant un cercle dont le centre est (150, 100) et le rayon 75.
+Ecrivez une fonction nommée point_in_circle qui prend un cercle et un point et renvoie True si le
+Le point se situe dans ou sur la limite du cercle.
+Ecrivez une fonction nommée rect_in_circle qui prend un cercle et un rectangle et renvoie True si
+le rectangle se situe entièrement dans ou sur la limite du cercle.
+Ecrivez une fonction nommée rect_circle_overlap qui prend un cercle et un rectangle et retourne
+Vrai si l’un des coins du rectangle se situe à l’intérieur du cercle. Ou comme une version plus difficile,
+renvoie True si une partie du rectangle tombe à l'intérieur du cercle.
+Solution: http: // thinkpython2. com / code / cercle. py.
+Exercice 15.2. Ecrivez une fonction appelée draw_rect qui prend un objet Turtle et un rectangle et
+utilise la tortue pour dessiner le rectangle. Voir le chapitre 4 pour des exemples utilisant des objets Tortue.
+Ecrivez une fonction appelée draw_circle qui prend une tortue et un cercle et dessine le cercle.
+Solution: http: // thinkpython2. com / code / dessiner. py.
