@@ -1,0 +1,296 @@
+Chapitre 16
+
+Classes et fonctions
+Maintenant que nous savons comment créer de nouveaux types, la prochaine étape consiste à écrire des fonctions prenant
+des objets définis par le programmeur en tant que paramètres et les renvoyer en tant que résultats. Dans ce chapitre je
+présente également le «style de programmation fonctionnelle» et deux nouveaux plans de développement de programmes.
+Des exemples de code de ce chapitre sont disponibles à l'adresse http://thinkpython2.com/code/.
+Time1.py. Les solutions aux exercices se trouvent à l'adresse http://thinkpython2.com/code/Time1_soln.
+py.
+
+16.1
+
+Temps
+
+Comme autre exemple de type défini par le programmeur, nous allons définir une classe appelée Time qui
+enregistre l'heure de la journée. La définition de la classe ressemble à ceci:
+
+
+
+
+
+
+
+
+
+
+
+Le diagramme d'état de l'objet Time ressemble à celui de la figure 16.1.
+Comme exercice, écrivez une fonction appelée print_time qui prend un objet Time et l’imprime sous
+la forme heure: minute: seconde. Astuce: la séquence de formats '% .2d' imprime un entier à l'aide de
+au moins deux chiffres, y compris un zéro si nécessaire.
+Ecrivez une fonction booléenne appelée is_after qui prend deux objets Time, t1 et t2, et renvoie True si t1 suit t2 chronologiquement et False sinon. Défi: ne pas utiliser un
+déclaration if.
+
+156
+
+Chapitre 16. Classes et fonctions
+Temps
+temps
+
+heure
+
+11
+
+minute
+
+59
+
+seconde
+
+30
+
+Figure 16.1: Diagramme d'objets.
+
+16.2
+
+Fonctions pures
+
+Dans les sections suivantes, nous écrirons deux fonctions qui ajoutent des valeurs temporaires. Ils démontrent
+deux types de fonctions: les fonctions pures et les modificateurs. Ils présentent également un plan de développement que j’appellerai prototype et patch, qui permet de résoudre un problème complexe en
+commençant par un simple prototype et en traitant progressivement les complications.
+Voici un prototype simple de add_time:
+
+
+
+
+
+
+
+La fonction crée un nouvel objet Time, initialise ses attributs et renvoie une référence au
+nouveau objet. Ceci est appelé une fonction pure car elle ne modifie aucun objet
+passé comme argument et cela n'a aucun effet, comme afficher une valeur ou obtenir une entrée d'utilisateur,
+autre que de retourner une valeur.
+Pour tester cette fonction, je vais créer deux objets Time: start contient l’heure de début d’un film,
+comme Monty Python et le Saint Graal, et la durée contient la durée du film,
+qui est une heure et 35 minutes.
+
+add_time détermine quand le film sera terminé.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Le résultat, 10:80:00, pourrait ne pas être ce que vous espériez. Le problème est que
+la fonction ne traite pas les cas où le nombre de secondes ou de minutes s’ajoute à
+plus de soixante. Lorsque cela se produit, nous devons «porter» les secondes supplémentaires dans la minute
+colonne ou les minutes supplémentaires dans la colonne des heures.
+Voici une version améliorée:
+
+16.3. Modificateurs
+
+157
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bien que cette fonction soit correcte, elle commence à devenir grande. Nous verrons une alternative plus courte
+plus tard.
+
+16.3
+
+Modificateurs
+
+Il est parfois utile qu’une fonction modifie les objets qu’elle récupère en tant que paramètres. Dans ce cas,
+les modifications sont visibles pour l'appelant. Les fonctions qui fonctionnent de cette façon sont appelées modificateurs.
+
+incrément, qui ajoute un nombre donné de secondes à un objet Time, peut être écrit naturellement
+en tant que modificateur. Voici un brouillon:
+
+
+
+
+
+
+
+
+La première ligne effectue l'opération de base; le reste traite des cas spéciaux que nous avons
+vu avant.
+Cette fonction est-elle correcte? Qu'advient-il si les sont secondes plus grandes que soixante?
+Dans ce cas, il ne suffit pas de porter une fois; nous devons continuer à le faire jusqu'à time.second est
+moins de soixante. Une solution consiste à remplacer les déclarations if par des déclarations while. Cette
+rendrait la fonction correcte, mais pas très efficace. Comme exercice, écrivez un c
+version d’incrément ne contenant pas de boucles.
+Tout ce qui peut être fait avec des modificateurs peut également être fait avec des fonctions pures. En réalité,
+certains langages de programmation n'autorisent que des fonctions pures. Il y a des preuves que
+les programmes utilisant des fonctions pures sont plus rapides à développer et moins sujets aux erreurs que les programmes
+qui utilisent des modificateurs. Mais les modificateurs sont parfois pratiques et les programmes fonctionnels ont tendance à
+être moins efficace.
+
+158
+
+Chapitre 16. Classes et fonctions
+
+En général, je vous recommande d’écrire des fonctions pures chaque fois que cela est raisonnable et
+aux modificateurs que s'il existe un avantage convaincant. Cette approche pourrait être appelée un
+style de programmation fonctionnel.
+En tant qu’exercice, écrivez une version «pure» d’incrément qui crée et retourne une nouvelle objet
+plutôt que de modifier le paramètre.
+
+16.4
+
+Prototypage versus planification
+
+Le plan de développement que je présente s'appelle «prototype et patch». Pour chaque fonction, j’ai écrit un prototype qui a effectué le calcul de base, puis je l’ai testé, en corrigeant
+cas d'erreurs en cours de route.
+Cette approche peut être efficace, surtout si vous ne comprenez pas encore très bien
+le problème. Mais les corrections incrémentielles peuvent générer du code inutilement
+compliqué - puisqu'il traite de nombreux cas particuliers - et peu fiable - puisqu'il est difficile de
+savoir si vous avez trouvé toutes les erreurs.
+Une alternative est le développement conçu, dans lequel une compréhension de haut niveau du problème peut
+rendre la programmation beaucoup plus facile. Dans ce cas, l’idée est qu’un objet Time est vraiment
+un numéro à trois chiffres en base 60 (voir http://en.wikipedia.org/wiki/Sexagesimal.)!
+deuxième attribut est la colonne «Un», l’attribut minute est la «colonne 60» et le
+l'attribut hour est la «colonne des trente-six cents».
+Quand nous avons écrit add_time et increment, nous faisions effectivement addition en base 60,
+c'est pourquoi nous avons dû passer d'une colonne à l'autre.
+Cette observation suggère une autre approche du problème: nous pouvons convertir l'objet temps
+à des entiers et tirer parti du fait que l'ordinateur sait comment faire
+arithmétique entière.
+Voici une fonction qui convertit temps en nombres entiers:
+
+
+
+
+
+Et voici une fonction qui convertit un entier en Time (rappelons que divmod divise le premier
+argument par le second et retourne le quotient et le reste sous forme de tuple).
+
+
+
+
+
+Vous devrez peut-être réfléchir un peu et exécuter des tests pour vous convaincre que ces fonctions
+sont corrects. Une façon de les tester est de vérifier que time_to_int (int_to_time (x)) == x pour
+beaucoup de valeurs de x. Ceci est un exemple de contrôle de cohérence.
+Une fois que vous êtes convaincu qu'ils sont corrects, vous pouvez les utiliser pour réécrire add_time:
+
+
+
+
+
+16.5. Débogage
+
+159
+
+Cette version est plus courte que la version originale et plus facile à vérifier. Comme exercice, réécrire
+incrément en utilisant time_to_int et int_to_time.
+À certains égards, la conversion de la base 60 à la base 10 et au-delà est plus difficile que de simplement traiter avec
+temps. La conversion de base est plus abstraite; notre intuition pour gérer les valeurs de temps est meilleure.
+Mais si nous avons la perspicacité de traiter les temps comme des nombres de base 60 et de faire l’investissement de
+écrivant les fonctions de conversion (time_to_int et int_to_time), nous obtenons un programme qui
+est plus court, plus facile à lire et à déboguer, et plus fiable.
+Il est également plus facile d'ajouter des fonctionnalités ultérieurement. Par exemple, imaginez soustraire deux fois pour trouver
+la durée entre eux. L’approche naïve consisterait à appliquer la soustraction avec
+emprunt. L'utilisation des fonctions de conversion serait plus facile et plus probable.
+Ironiquement, rendre un problème plus difficile (ou plus général) le facilite (parce qu'il
+y a moins de cas spéciaux et moins de risques d'erreur).
+
+16,5
+
+Débogage
+
+Un objet Time est bien formé si les valeurs de minute et de seconde sont comprises entre 0 et 60
+(y compris 0 mais pas 60) et si heure est positive. heure et minute doivent être des valeurs intégrales,
+mais nous pourrions permettre à la seconde d'avoir une fraction de partie.
+Des conditions telles que celles-ci sont appelées invariants car elles doivent toujours être vraies. Mettre
+c'est différent, s'ils ne sont pas vrais, quelque chose a mal tourné.
+Écrire du code pour vérifier les invariants peut aider à détecter les erreurs et à en trouver les causes. Par exemple,
+vous pourriez avoir une fonction comme valid_time qui prend un objet Time et renvoie False si elle
+viole un invariant:
+
+
+
+
+
+
+
+Au début de chaque fonction, vous pouvez vérifier les arguments pour vous assurer qu’ils sont
+valide:
+
+
+
+
+
+Vous pouvez également utiliser une instruction assert, qui vérifie un invariant donné et déclenche une exception en cas d'échec:
+
+
+
+
+
+
+Les instructions assert sont utiles car elles distinguent le code traitant des conditions normales du code vérifiant les erreurs.
+
+160
+
+16,6
+
+Chapitre 16. Classes et fonctions
+
+Glossaire
+
+prototype et correctif: plan de développement qui consiste à rédiger un brouillon d'un programme, à tester et à corriger les erreurs à mesure qu'elles sont détectées.
+développement conçu: un plan de développement qui implique un aperçu de haut niveau de la
+problème et plus de planification que le développement incrémental ou le développement du prototype.
+fonction pure: fonction qui ne modifie aucun des objets reçus en tant qu'arguments.
+La plupart des fonctions pures sont fructueuses.
+modificateur: fonction qui modifie un ou plusieurs objets qu’elle reçoit en tant qu’arguments. Plus
+de modificateurs sont nuls; c'est-à-dire qu'ils ne retournent aucun.
+style de programmation fonctionnel: style de conception de programme dans lequel la plupart des fonctions sont pures.
+invariant: une condition qui devrait toujours être vraie lors de l'exécution d'un programme.
+assert statement: déclaration qui vérifie une condition et déclenche une exception en cas d'échec.
+
+16,7
+
+Des exercices
+
+Des exemples de code de ce chapitre sont disponibles à l'adresse http://thinkpython2.com/code/.
+Time1.py; les solutions aux exercices sont disponibles sur http://thinkpython2.com/code/
+Time1_soln.py.
+Exercice 16.1. Ecrivez une fonction appelée mul_time qui prend un objet Time, un nombre et retourne
+un nouvel objet Time contenant le produit de l'heure d'origine et du nombre.
+Ensuite, utilisez mul_time pour écrire une fonction prenant un objet Time représentant l'heure de fin.
+dans une course, et un nombre qui représente la distance, et retourne un objet Time qui représente le
+allure moyenne (temps par mile).
+Exercice 16.2. Le module datetime fournit des objets time similaires aux objets time.
+dans ce chapitre, mais ils fournissent un riche ensemble de méthodes et d’opérateurs. Lisez la documentation à
+http: // docs. python. org / 3 / library / datetime. html.
+1. Utilisez le module datetime pour écrire un programme qui récupère la date du jour et imprime le jour de
+la semaine.
+2. Écrivez un programme qui prend un anniversaire en entrée et imprime l’âge de l’utilisateur et le nombre de
+jours, heures, minutes et secondes jusqu'à leur prochain anniversaire.
+3. Pour deux personnes nées des jours différents, il y a un jour où l'une est deux fois plus âgée que l'autre.
+C’est leur double jour. Ecrivez un programme qui prend deux anniversaires et calcule leur double
+jour.
+4. Pour un peu plus de défi, écrivez la version plus générale qui calcule le jour où on
+personne est n fois plus vieux que l’autre.
+Solution: http: // thinkpython2. com / code / double. py
