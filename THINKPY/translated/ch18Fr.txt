@@ -1,0 +1,569 @@
+Chapitre 18
+
+Héritage
+La fonctionnalité de langage la plus souvent associée à la programmation orientée objet est l'héritage. L'héritage est la possibilité de définir une nouvelle classe qui est une version modifiée d'une classe existante. Dans ce chapitre, je démontre l’héritage en utilisant des classes qui représentent le jeu de
+cartes et mains de poker.
+Si vous ne jouez pas au poker, vous pouvez en savoir plus sur http://en.wikipedia.org/wiki/Poker,
+mais vous n’êtes pas obligé; Je vais vous dire ce que vous devez savoir pour les exercices.
+Des exemples de code de ce chapitre sont disponibles à l'adresse http://thinkpython2.com/code/.
+Card.py.
+
+18.1
+
+Objets de carte
+
+Il y a cinquante-deux cartes dans un jeu, chacune appartenant à une des quatre couleurs et à une des
+treize rangs. Les catégories sont pique, coeurs, diamants et massues (par ordre décroissant de
+pont). Les rangs sont Ace, 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen et King. Cela dépend
+au jeu que vous jouez, un As peut être supérieur à King ou inférieur à 2.
+Si nous voulons définir un nouvel objet pour représenter une carte à jouer, il est évident que les attributs doivent être: le rang et la couleur. Le type des attributs ne doit pas être aussi évident.
+Une possibilité consiste à utiliser des chaînes contenant des mots tels que "Spade" pour les costumes et "Queen" pour
+rangs. Un problème avec cette implémentation est qu’il ne serait pas facile de comparer des cartes.
+pour voir qui avait un rang ou une couleur plus élevée.
+Une alternative consiste à utiliser des entiers pour coder les rangs et les couleurs. Dans ce contexte, "encoder"
+signifie que nous allons définir un mappage entre les nombres et les costumes, ou entre
+nombres et rangs. Ce type d’encodage n’est pas censé être un secret (ce serait
+«Cryptage»).
+Par exemple, ce tableau montre les combinaisons et les codes entiers correspondants:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+172
+
+Chapitre 18. Héritage
+
+Ce code facilite la comparaison des cartes. parce que les combinaisons les plus élevées correspondent aux nombres
+peut comparer les costumes en comparant leurs codes.
+La cartographie des grades est assez évidente; chaque rang numérique correspond à l'entier correspondant, et pour les cartes de visage:
+
+
+
+
+
+
+
+
+
+
+
+
+J'utilise le symbole 7 → pour préciser que ces mappages ne font pas partie du
+programme python. Ils font partie de la conception du programme, mais ils ne figurent pas explicitement dans le code.
+La définition de classe pour Card ressemble à ceci:
+
+
+
+
+
+
+Comme d'habitude, la méthode init prend un paramètre optionnel pour chaque attribut. La carte par défaut
+est le 2 des clubs.
+Pour créer une carte, vous appelez Card avec le costume et le rang de la carte souhaitée.
+
+
+
+18.2
+
+Attributs de classe
+
+Afin d’imprimer les objets de la carte d’une manière facile à lire, nous avons besoin d’une cartographie
+des codes entiers aux rangs et catégories correspondantes. Une façon naturelle de le faire est
+avec des listes de chaînes. Nous assignons ces listes aux attributs de classe:
+
+
+
+
+
+
+
+
+Des variables telles que suit_names et rank_names, définies à l'intérieur d'une classe mais à l'extérieur
+de toute méthode, sont appelés attributs de classe car ils sont associés à l'objet de classe
+Card.
+Ce terme les distingue des variables telles que suit et rank, appelées attributs
+d'instance car ils sont associés à une instance particulière.
+L'accès aux deux types d'attribut est effectué à l'aide d'une notation par points. Par exemple, dans __str__, self
+est un objet Card et self.rank est son rang. De même, Card est un objet de classe et
+Card.rank_names est une liste de chaînes associées à la classe.
+
+18.3. Comparer des cartes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Chaque carte a sa propre couleur et son rang, mais il n’ya qu’une copie de suit_names et
+rank_names.
+En résumé, l'expression Card.rank_names [self.rank] signifie «utiliser l'attribut rang à partir de l'objet self en tant qu'index dans la liste rank_names de la classe Card,
+et sélectionnez la chaîne appropriée. 
+Le premier élément de rank_names est None car il n'y a pas de carte de rang zéro. En incluant None en tant que 'place-keeper'(to be translated), nous obtenons un mapping avec l'index 2
+à la chaîne '2', et ainsi de suite. Pour éviter ce tweak, nous aurions pu utiliser un dictionnaire à la place
+d'une liste.
+Avec les méthodes que nous avons jusqu’à présent, nous pouvons créer et imprimer des cartes:
+
+
+
+
+
+objet; son type est type. card1 est une instance de Card, son type est donc Card. Pour économiser de l'espace, je
+n'a pas dessiné le contenu de suit_names et rank_names.
+
+18.3
+
+Comparer des cartes
+
+Pour les types intégrés, il existe des opérateurs relationnels (<,>, ==, etc.) qui comparent des valeurs et déterminent quand l'un est supérieur, inférieur ou égal à un autre. Pour programmé
+les types, nous pouvons remplacer le comportement des opérateurs intégrés en fournissant une méthode nommée
+__lt__, qui signifie «moins que».
+
+__lt__ prend deux paramètres, self et other, et renvoie True si self est strictement inférieur à
+autre.
+La commande correcte pour les cartes n'est pas évidente. Par exemple, ce qui est mieux, le 3 de clubs
+ou le 2 de diamants? L'un a un rang supérieur, mais l'autre a un costume plus élevé. Afin de
+comparer les cartes, vous devez décider si le rang ou la couleur est plus important.
+La réponse peut dépendre du jeu auquel vous jouez, mais pour garder les choses simples, nous allons
+faire le choix arbitraire que catégorie est plus important, de sorte que tous les Spades dépassent les
+Diamants, et ainsi de suite.
+
+174
+
+Chapitre 18. Héritage
+
+Avec cela décidé, nous pouvons écrire __lt__:
+
+
+
+
+
+
+
+
+Vous pouvez écrire ceci de manière plus concise en utilisant la comparaison de tuples:
+
+
+
+
+
+
+À titre d’exercice, écrivez une méthode __lt__ pour les objets Time. Vous pouvez utiliser la comparaison de tuples,
+mais vous pouvez aussi envisager de comparer des nombres entiers.
+
+18.4
+
+Les ponts
+
+Maintenant que nous avons des cartes, l'étape suivante consiste à définir les decks. Puisqu'un jeu est composé de cartes,
+il est naturel que chaque Deck contienne une liste de cartes en tant qu'attribut.
+Ce qui suit est une définition de classe pour Deck. La méthode init crée les cartes attributaires et
+génère le jeu standard de cinquante-deux cartes:
+
+
+
+
+
+
+
+
+Le moyen le plus simple de remplir le jeu consiste à utiliser une boucle imbriquée. La boucle externe énumère le
+rang de 0 à 3. La boucle interne énumère les rangs de 1 à 13. Chaque itération crée
+une nouvelle carte avec le costume actuel et le rang, et l'ajoute à self.cards.
+
+18,5
+
+Imprimer le pont
+
+Voici une méthode __str__ pour Deck:
+
+Pont de la classe interne:
+
+
+
+18.6. Ajouter, retirer, mélanger et trier
+
+175
+
+
+
+
+Cette méthode montre un moyen efficace d’accumuler une chaîne longue: construire une liste
+de chaînes, puis en utilisant la méthode de chaîne rejoindre. La fonction intégrée str appelle
+__str__ sur chaque carte et retourne la représentation sous forme de chaîne.
+Comme nous appelons rejoindre un charactère newline, les cartes sont séparées par des nouvelles lignes. Voici
+à quoi ressemble le résultat:
+
+
+
+
+
+
+
+
+
+
+
+Bien que le résultat apparaisse sur 52 lignes, il s’agit d’une longue chaîne contenant des nouvelles lignes.
+
+18,6
+
+Ajouter, retirer, mélanger et trier
+
+Pour distribuer des cartes, nous aimerions une méthode permettant de retirer une carte du paquet et de la retourner.
+La méthode de liste pop fournit un moyen pratique de le faire:
+
+
+
+
+Puisque pop enlève la dernière carte de la liste, nous traitons à partir du bas du paquet.
+Pour ajouter une carte, nous pouvons utiliser la méthode de liste append:
+
+
+
+
+Une méthode comme celle qui utilise une autre méthode sans faire beaucoup de travail est parfois appelée
+un placage. La métaphore vient du travail du bois, où un placage est une fine couche de bon
+bois de qualité collé à la surface d’une pièce de bois moins chère pour améliorer l’apparence.
+Dans ce cas, add_card est une méthode «fine» qui exprime une opération de liste en termes appropriés
+pour les ponts. Cela améliore l'apparence ou l'interface de la mise en œuvre.
+Autre exemple, nous pouvons écrire une méthode Deck nommée shuffle en utilisant la fonction
+shuffle du module random:
+
+
+
+
+
+176
+
+Chapitre 18. Héritage
+
+N’oubliez pas d’importer random.
+En exercice, écrivez une méthode Deck nommée sort qui utilise la méthode list pour trier la
+cartes dans un pont. sort utilise la méthode __lt__ que nous avons définie pour déterminer l'ordre.
+
+18,7
+
+Héritage
+
+L'héritage est la possibilité de définir une nouvelle classe qui est une version modifiée d'une classe existante.
+Par exemple, supposons que nous voulions qu’une classe représente une «main», c’est-à-dire les cartes détenues par
+un joueur. Une main est semblable à un jeu: les deux sont constitués d’une collection de cartes et les deux
+nécessitent des opérations telles que l'ajout et la suppression de cartes.
+Une main est également différente d'un jeu de cartes. il y a des opérations que nous voulons pour les mains qui n'a
+pas de sens pour un pont. Par exemple, au poker, on peut comparer deux mains pour voir laquelle
+on gagne. En bridge, nous pourrions calculer un score pour une main afin de faire une offre.
+Cette relation entre les classes - similaire, mais différente - se prête à l'héritage. À
+définir une nouvelle classe qui hérite d'une classe existante, vous mettez le nom de la classe existante
+classe entre parenthèses:
+
+
+
+Cette définition indique que Hand hérite de Deck. cela signifie que nous pouvons utiliser des méthodes comme
+pop_card et add_card pour les mains et les decks.
+Lorsqu'une nouvelle classe hérite d'une classe existante, celle-ci s'appelle le parent et
+la nouvelle classe s'appelle l'enfant.
+Dans cet exemple, Hand hérite de __init__ de Deck, mais ne fait pas vraiment ce que nous voulons:
+au lieu de remplir la main avec 52 nouvelles cartes, la méthode init pour Hands devrait initialiser les cartes avec une liste vide.
+Si nous fournissons une méthode init dans la classe Hand, elle remplace celle de la classe Deck:
+
+
+
+
+
+Lorsque vous créez une main, Python appelle cette méthode init, et non celle de Deck.
+
+
+
+
+
+
+
+
+
+
+
+
+
+18.8. Diagrammes de classe
+
+177
+
+Une étape naturelle consiste à encapsuler ce code dans une méthode appelée move_cards:
+
+
+
+
+
+move_cards prend deux arguments, un objet Hand et le nombre de cartes à traiter. Il modifie à la fois soi et la main et ne renvoie aucun.
+Dans certains jeux, les cartes sont déplacées d’une main à l’autre, ou d’une main à l’autre
+plate-forme. Vous pouvez utiliser move_cards pour n’importe laquelle de ces opérations: self peut être une Deck ou une
+Main, et main, malgré son nom, peut aussi être un Deck.
+L'héritage est une fonctionnalité utile. Quelques programmes qui seraient répétitifs sans héritage
+peut être écrit plus élégamment avec elle. L’héritage peut faciliter la réutilisation du code, puisque vous pouvez
+personnaliser le comportement des classes parentes sans avoir à les modifier. Dans certains cas,
+la structure de l'héritage reflète la structure naturelle du problème, ce qui rend le
+conception plus facile à comprendre.
+D'un autre côté, l'héritage peut rendre les programmes difficiles à lire. Quand une méthode est
+invoqué, il est parfois difficile de savoir où trouver sa définition. Le code correspondant peut être
+répartis sur plusieurs modules. En outre, beaucoup de choses qui peuvent être faites en utilisant l'héritage
+peut être fait aussi bien ou mieux sans elle.
+
+18.8
+
+Diagrammes de classe
+
+Jusqu'à présent, nous avons vu des diagrammes de pile, qui montrent l'état d'un programme, et des diagrammes d'objet, qui montrent les attributs d'un objet et leurs valeurs. Ces diagrammes représentent
+un instantané dans l'exécution d'un programme, donc, ils changent pendant l'exécution du programme.
+Ils sont également très détaillés. pour certaines utilisations, trop détaillé. Un diagramme de classes est une
+représentation plus abstraite de la structure d'un programme. Au lieu de montrer des objets individuels, il montre les classes et les relations entre elles.
+Il existe plusieurs types de relations entre les classes:
+• Les objets d'une classe peuvent contenir des références à des objets d'une autre classe. Par exemple,
+chaque rectangle contient une référence à un point et chaque Deck contient des références à
+beaucoup de cartes. Ce type de relation s’appelle HAS-A. En effet, «un rectangle a une
+Point."
+• Une classe peut hériter d'une autre. Cette relation s’appelle IS-A, comme dans «une main
+est une sorte de Deck.
+• Une classe peut dépendre d’une autre dans la mesure où les objets d’une classe prennent les objets de la deuxième classe en tant que paramètres ou utilisent des objets de la deuxième classe comme partie intégrante d’un objet.
+calcul. Ce type de relation s'appelle une dépendance.
+Un diagramme de classes est une représentation graphique de ces relations. Par exemple, la figure 18.2 montre les relations entre Card, Deck et Hand.
+
+178
+
+Chapitre 18. Héritage
+Plate-forme
+
+*
+
+Carte
+
+Main
+
+Figure 18.2: Diagramme de classe.
+La flèche avec une tête triangulaire creuse représente une relation IS-A; dans ce cas, cela indique que Hand hérite de Deck.
+La tête de flèche standard représente une relation HAS-A; dans ce cas, une Deck a des références à des objets Card.
+L'étoile (*) près de la flèche est une multiplicité; il indique combien de cartes un deck a.
+Une multiplicité peut être un simple nombre, comme 52, une plage, comme 5..7 ou une étoile, qui indique
+qu'un deck peut avoir un nombre quelconque de cartes.
+Il n'y a pas de dépendances dans ce diagramme. Ils seraient normalement montrés avec une flèche
+pointillée. Ou s'il y a beaucoup de dépendances, elles sont parfois omises.
+Un diagramme plus détaillé peut montrer qu’une Deck contient en réalité une liste de cartes, mais
+les types intégrés tels que list et dict ne sont généralement pas inclus dans les diagrammes de classes.
+
+18,9
+
+Débogage
+
+L’héritage peut rendre le débogage difficile car lorsque vous appelez une méthode sur un objet,
+il peut être difficile de déterminer quelle méthode sera invoquée.
+Supposons que vous écriviez une fonction qui fonctionne avec les objets Hand. Vous voudriez
+travailler avec toutes sortes de mains, comme PokerHands, BridgeHands, etc. Si vous invoquez une méthode
+comme shuffle, vous pouvez obtenir celui défini dans Deck, mais si l’une des sous-classes est prioritaire
+cette méthode, vous obtiendrez cette version à la place. Ce comportement est généralement une bonne chose, mais il
+peut être déroutant.
+En cas de doute sur le déroulement de l'exécution dans votre programme, la solution la plus simple consiste à ajouter des instructions d'impression au début des méthodes appropriées. Si
+Deck.shuffle imprime un message disant quelque chose comme Running Deck.shuffle, puis
+le programme l'exécute suivant le flux d'exécution.
+Vous pouvez également utiliser cette fonction, qui prend un objet et un nom de méthode.
+(sous forme de chaîne) et retourne la classe qui fournit la définition de la méthode:
+
+
+
+
+
+
+
+
+
+
+18.10. Encapsulation de données
+
+179
+
+Donc, la méthode de lecture aléatoire pour cette main est celle de Deck.
+
+find_defining_class utilise la méthode mro pour obtenir la liste des objets de classe (types) qui seront
+cherché pour repérer des méthodes. "MRO" signifie "method resolution order", qui est la séquence
+Python cherche à «résoudre» un nom de méthode.
+Voici une suggestion de conception: lorsque vous substituez une méthode, l’interface de la nouvelle méthode
+devrait être le même que l'ancien. Il devrait prendre les mêmes paramètres, retourner le même type,
+et obéissez aux mêmes conditions préalables et conditions postérieures. Si vous suivez cette règle, vous trouverez
+que toute fonction conçue pour fonctionner avec une instance d'une classe parente, comme une Deck, saura également
+travailler avec des instances de classes enfants comme une main et PokerHand.
+Si vous enfreignez cette règle, appelée «principe de substitution de Liskov», votre code
+s'effondra comme (désolé) un château de cartes.
+
+18h10
+
+Encapsulation de données
+
+Les chapitres précédents présentent un plan de développement que nous pourrions appeler conception orienté objet. Nous avons identifié les objets dont nous avions besoin - tels que Point, Rectangle et Temps - et défini les
+classes pour les représenter. Dans chaque cas, il existe une correspondance évidente entre l'objet 
+et une entité dans le monde réel (ou au moins un monde mathématique).
+Mais parfois, il est moins évident de savoir quels objets vous avez besoin et comment ils doivent interagir. Dans
+Dans ce cas, vous avez besoin d’un plan de développement différent. De la même manière que nous avons découvert
+interfaces de fonction par encapsulation et généralisation, nous pouvons découvrir des interfaces de classe
+par encapsulation de données.
+L’analyse de Markov de la section 13.8 en fournit un bon exemple. Si vous téléchargez mon
+code de http://thinkpython2.com/code/markov.py, vous verrez qu’il utilise deux fichiers globaux
+les variables - suffix_map et prefix - lues et écrites à partir de plusieurs fonctions.
+
+
+ 
+Ces variables étant globales, nous ne pouvons exécuter qu'une analyse à la fois. Si on lit deux
+textes, leurs préfixes et suffixes seraient ajoutés aux mêmes structures de données (ce qui rend
+pour du texte généré intéressant).
+Pour exécuter plusieurs analyses et les garder séparées, nous pouvons encapsuler l’état de chaque analyse.
+analyse dans un objet. Voici à quoi cela ressemble:
+
+
+
+
+
+Ensuite, nous transformons les fonctions en méthodes. Par exemple, voici le mot_processus:
+
+
+
+
+
+
+180
+
+Chapitre 18. Héritage
+
+
+
+
+
+
+
+
+Transformer un programme comme celui-ci - changer la conception sans changer le comportement - est
+un autre exemple de refactorisation (voir section 4.7).
+Cet exemple suggère un plan de développement pour la conception d'objets et de méthodes:
+1. Commencez par écrire des fonctions qui lisent et écrivent des variables globales (si nécessaire).
+2. Une fois que le programme fonctionne, recherchez les associations entre les variables globales
+et les fonctions qui les utilisent.
+3. Encapsulez les variables liées en tant qu'attributs d'un objet.
+4. Transformez les fonctions associées en méthodes de la nouvelle classe.
+À titre d’exercice, téléchargez mon code de Markov à l’adresse http://thinkpython2.com/code/
+markov.py et suivez les étapes décrites ci-dessus pour encapsuler les variables globales en tant qu'attributs d'une nouvelle classe appelée Markov. Solution: http://thinkpython2.com/code/Markov.
+py (notez la capitale M).
+
+18.11
+
+Glossaire
+
+encode: Pour représenter un ensemble de valeurs en utilisant un autre ensemble de valeurs en construisant un mappage entre eux.
+attribut de classe: attribut associé à un objet de classe. Les attributs de classe sont définis
+dans une définition de classe mais en dehors de toute méthode.
+attribut d'instance: attribut associé à une instance de classe.
+placage: Une méthode ou une fonction qui fournit une interface différente à une autre fonction sans faire beaucoup de calculs.
+héritage: possibilité de définir une nouvelle classe qui est une version modifiée d’une classe précédente.
+classe définie.
+classe parente: la classe dont une classe dont l'enfant hérite.
+classe enfant: nouvelle classe créée en héritant d'une classe existante; également appelé «sous-classe».
+Relation IS-A: relation entre une classe enfant et sa classe parente.
+Relation HAS-A: Relation entre deux classes où les instances d'une classe contiennent des références aux instances de l'autre.
+dépendance: relation entre deux classes où les instances d'une classe utilisent les instances de l'autre classe, mais ne les stockent pas en tant qu'attributs.
+
+18.12. Des exercices
+
+181
+
+diagramme de classes: diagramme montrant les classes d'un programme et leurs relations.
+multiplicité: notation dans un diagramme de classes qui montre, pour une relation HAS-A, comment
+il y a beaucoup de références à des instances d'une autre classe.
+encapsulation de données: Un plan de développement de programme qui implique un prototype utilisant global
+variables et une version finale qui transforme les variables globales en attributs d’instance.
+
+18.12
+
+Des exercices
+
+Exercice 18.1. Pour le programme suivant, dessinez un diagramme de classes UML qui montre ces classes et
+les relations entre eux.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Exercice 18.2. Ecrivez une méthode Deck appelée deal_hands qui prend deux paramètres, le nombre de
+mains et le nombre de cartes par main. Il devrait créer le nombre approprié d'objets Hand,
+distribuez le nombre approprié de cartes par main et renvoyez une liste de mains.
+Exercice 18.3. Voici les mains possibles au poker, par ordre croissant de valeur et d'
+ordre décroissant de probabilité:
+paire: deux cartes avec le même rang
+deux paires: deux paires de cartes de même rang
+brelan: trois cartes avec le même rang
+quinte: cinq cartes avec des rangs en séquence (les as peuvent être hauts ou bas, donc Ace-2-3-4-5 est une quinte
+et il en va de même pour le 10-Jack-Queen-King-Ace, mais pas pour le Queen-King-Ace-2-3.)
+couleur: cinq cartes avec la même couleur
+full house: trois cartes avec un rang, deux cartes avec un autre
+
+182
+
+Chapitre 18. Héritage
+
+quatre d'une sorte: quatre cartes avec le même rang
+quinte flush: cinq cartes en séquence (comme défini ci-dessus) et avec la même couleur
+Le but de ces exercices est d’estimer la probabilité de tirer ces différentes mains.
+1. Téléchargez les fichiers suivants à partir de http: // thinkpython2. com / code:
+
+Card.py: Une version complète des classes Card, Deck et Hand de ce chapitre.
+PokerHand.py: implémentation incomplète d’une classe représentant une main de poker, et
+du code qui le teste.
+2. Si vous utilisez PokerHand.py, il distribue sept mains de poker à 7 cartes et vérifie si
+contient une couleur. Lisez ce code attentivement avant de continuer.
+3. Ajoutez des méthodes à PokerHand.py nommées has_pair, has_twopair, etc. qui renvoient True ou
+Faux selon que la main répond ou non aux critères pertinents. Votre code devrait
+fonctionner correctement pour les "mains" contenant un nombre quelconque de cartes (bien que 5 et 7 soient les plus populaires
+ayant des tailles communes).
+4. Ecrivez une méthode nommée classify qui détermine la classification la plus élevée pour une main
+et définit l'attribut label en conséquence. Par exemple, une main de 7 cartes peut contenir une couleur.
+et une paire; il devrait être étiqueté "flush".
+5. Lorsque vous êtes convaincu que vos méthodes de classification fonctionnent, l'étape suivante consiste à estimer les probabilités des différentes mains. Écrivez une fonction dans PokerHand.py qui mélange
+un jeu de cartes, le divise en mains, classe les mains et compte le nombre de fois
+diverses classifications apparaissent.
+6. Imprimez un tableau des classifications et de leurs probabilités. Exécutez votre programme avec plus un plus
+grand nombre d’aiguilles jusqu’à ce que les valeurs de sortie convergent avec un degré de précision raisonnable. Comparez vos résultats aux valeurs de http: // en. Wikipédia. org / wiki / Hand_
+classements.
+Solution: http: // thinkpython2. com / code / PokerHandSoln. py.
