@@ -1,0 +1,486 @@
+Chapitre 19
+
+Les goodies
+Un de mes objectifs de ce livre a été de vous apprendre le moins possible de Python. Quand
+il y avait deux façons de faire quelque chose, j'ai choisi l'une et évité de mentionner l'autre. Ou
+parfois, je mets le second dans un exercice.
+Maintenant, je veux revenir sur certains des bons éléments qui ont été laissés pour compte. Python fournit un
+nombre de fonctionnalités qui ne sont pas vraiment nécessaires - vous pouvez écrire du bon code sans elles -
+mais avec eux, vous pouvez parfois écrire du code plus concis, lisible ou efficace, et
+parfois tous les trois.
+
+19.1
+
+Expressions conditionnelles
+
+Nous avons vu des déclarations conditionnelles à la section 5.4. Les instructions conditionnelles sont souvent utilisées pour
+choisissez l'une des deux valeurs; par exemple:
+
+
+
+
+
+Cette déclaration vérifie si x est positif. Si tel est le cas, il calcule math.log. Si non, math.log
+soulèverait un ValueError. Pour éviter d’arrêter le programme, nous générons un «NaN», qui est
+une valeur spéciale en virgule flottante qui représente «Pas un nombre».
+Nous pouvons écrire cette déclaration de manière plus concise en utilisant une expression conditionnelle:
+
+
+Vous pouvez presque lire cette ligne comme en anglais: «y obtient log-x si x est supérieur à 0; sinon on
+obtient NaN ”.
+Les fonctions récursives peuvent parfois être réécrites à l'aide d'expressions conditionnelles. Par exemple, voici une version récursive factorielle:
+
+
+
+
+
+184
+
+Chapitre 19. Les goodies
+
+Nous pouvons le réécrire comme ceci:
+
+
+
+Une autre utilisation des expressions conditionnelles est la gestion des arguments facultatifs. Par exemple, ici
+est la méthode init de GoodKangaroo (voir l'exercice 17.2):
+
+
+
+
+
+
+Nous pouvons réécrire celui-ci comme ceci:
+
+
+
+
+En général, vous pouvez remplacer une instruction conditionnelle par une expression conditionnelle si
+les branches contiennent des expressions simples qui sont soit renvoyées, soit attribuées à la même variable.
+
+19.2
+
+
+
+List comprehensions
+
+Dans la section 10.7, nous avons vu la carte et les modèles de filtrage. Par exemple, cette fonction prend une liste
+des chaînes, mappe la méthode des chaînes en majuscule avec les éléments et renvoie une nouvelle liste de
+string:
+
+
+
+
+
+
+Nous pouvons écrire ceci de manière plus concise en utilisant une liste de compréhension:
+
+
+
+Les opérateurs de parenthèse indiquent que nous construisons une nouvelle liste. L'expression à l'intérieur
+des crochets spécifient les éléments de la liste et la clause for indique quelle séquence
+nous traversons.
+La syntaxe d’une compréhension de liste est un peu délicate car la variable de boucle, s dans cette
+exemple, apparaît dans l'expression avant d'arriver à la définition.
+Les compréhensions de liste peuvent également être utilisées pour le filtrage. Par exemple, cette fonction ne sélectionne que
+les éléments de t qui sont en majuscule, et retourne une nouvelle liste:
+
+
+
+
+
+
+
+
+19.3. Expressions générateur
+
+185
+
+Nous pouvons le réécrire en utilisant une liste de compréhension
+
+
+
+La compréhension des listes est concise et facile à lire, du moins pour les expressions simples. Et ils
+sont généralement plus rapides que leurs équivalents pour les boucles, parfois beaucoup plus rapidement. Donc si tu es en colère
+contre moi pour ne pas les mentionner plus tôt, je comprends.
+Mais, pour ma défense, les compréhensions de liste sont plus difficiles à déboguer car vous ne pouvez pas mettre une empreinte
+de déclaration à l'intérieur de la boucle. Je suggère que vous les utilisiez seulement si le calcul est assez
+simple pour que vous réussissiez bien la première fois. Et pour les débutants, cela signifie jamais.
+
+19.3
+
+Expressions générateur
+
+Les expressions générateur sont similaires aux compréhensions de liste, mais avec des parenthèses au lieu de
+crochets:
+
+
+
+
+Le résultat est un objet générateur qui sait comment parcourir une séquence de valeurs. Mais
+contrairement à une compréhension de liste, il ne calcule pas les valeurs en une seule fois; il attend d'être demandé.
+La fonction intégrée obtient ensuite la valeur suivante du générateur:
+
+
+
+
+Lorsque vous arrivez à la fin de la séquence, déclenche ensuite une exception StopIteration. Vous pouvez
+utilisez également une boucle for pour parcourir les valeurs:
+
+
+
+
+
+
+L'objet générateur garde une trace de sa position dans la séquence, ainsi la boucle for est reprise
+
+
+
+Les expressions de générateur sont souvent utilisées avec des fonctions telles que sum, max et min:
+
+
+
+19.4 all
+Python fournit une fonction intégrée, any, qui prend une séquence de valeurs booléennes et renvoie True si l'une de ces valeurs est True. Cela fonctionne sur les listes:
+
+186
+
+Chapitre 19. Les goodies
+
+
+
+Mais il est souvent utilisé avec des expressions de générateur:
+
+
+
+Cet exemple n’est pas très utile car il fait la même chose que l’opérateur in. Mais nous
+pourrait utiliser n’importe lequel pour réécrire certaines des fonctions de recherche décrites à la section 9.3. Par exemple,
+nous pourrions écrire évite comme ceci:
+
+
+
+
+
+L’utilisation de toute expression avec un générateur est efficace car elle s’arrête immédiatement si elle trouve une
+valeur True, il n’est donc pas nécessaire d’évaluer la séquence entière.
+Python fournit une autre fonction intégrée, all, qui renvoie True si chaque élément de la
+la séquence est vraie. En guise d’exercice, utilisez all pour réécrire le fichier uses_all de la section 9.3.
+
+19,5
+
+Ensembles
+
+Dans la section 13.6, j’utilise des dictionnaires pour trouver les mots qui apparaissent dans un document mais pas dans une
+liste de mots. La fonction que j’ai écrite prend d1, qui contient les mots du document en tant que
+clés, et d2, qui contient la liste des mots. Il retourne un dictionnaire qui contient les clés
+à partir de d1 qui ne sont pas en d2.
+
+
+
+
+
+
+
+Dans tous ces dictionnaires, les valeurs sont None car nous ne les utilisons jamais. En conséquence, nous
+prenons de l'espace de stockage.
+Python fournit un autre type intégré, appelé set, qui se comporte comme une collection de clés de dictionnaire sans valeur. L'ajout d'éléments à un ensemble est rapide; il en va de vérification de l'adhésion.
+Les sets fournissent des méthodes et des opérateurs permettant de calculer des opérations d’ensemble communes.
+Par exemple, la soustraction d’ensembles est disponible sous forme de méthode appelée différence ou d’opérateur,
+- Donc, nous pouvons réécrire soustraire comme ceci:
+
+
+
+Le résultat est un ensemble à la place d'un dictionnaire, mais pour les opérations comme l'itération, le comportement est
+le même.
+Certains des exercices de ce livre peuvent être réalisés de manière concise et efficace avec des ensembles. Pour
+Par exemple, voici une solution à has_duplicates, de l’exercice 10.7, qui utilise un dictionnaire:
+
+19.6. Des compteurs
+
+187
+
+
+
+
+
+
+
+
+Lorsqu'un élément apparaît pour la première fois, il est ajouté au dictionnaire. Si le même élément
+apparaît à nouveau, la fonction retourne True.
+En utilisant des ensembles, nous pouvons écrire la même fonction comme ceci:
+
+
+
+Un élément ne peut apparaître qu'une seule fois dans un set. Ainsi, si un élément de t apparaît plus d'une fois, la
+l'ensemble sera plus petit que t. S'il n'y a pas de doublons, l'ensemble aura la même taille que t.
+Nous pouvons également utiliser des ensembles pour faire certains des exercices du chapitre 9. Par exemple, voici une version
+de uses_only avec une boucle:
+
+
+
+
+
+
+uses_only vérifie si toutes les lettres du mot sont disponibles. Nous pouvons le réécrire comme ceci:
+
+
+L’opérateur <= vérifie si un ensemble est un sous-ensemble ou un autre, y compris la possibilité que
+ils sont égaux, ce qui est vrai si toutes les lettres du mot apparaissent dans disponible.
+En tant qu’exercice, réécrire évite d’utiliser des sets.
+
+19,6
+
+Des compteurs
+
+Un compteur est comme un set, sauf que si un élément apparaît plusieurs fois, le compteur
+garde la trace de combien de fois il apparaît. Si vous connaissez l'idée mathématique
+d’un multiset, un compteur est un moyen naturel de représenter un multiset.
+Counter est défini dans un module standard appelé collections, vous devez donc l'importer. Vous
+pouvez initialiser un compteur avec une chaîne, une liste ou tout autre support prenant en charge l'itération:
+
+
+
+
+
+Les compteurs se comportent comme des dictionnaires à bien des égards; ils mappent de chaque clé au nombre de
+fois il apparaît. Comme dans les dictionnaires, les clés doivent être utilisables.
+Contrairement aux dictionnaires, les compteurs ne déclenchent pas d’exception si vous accédez à un élément qui
+apparaît pas. Au lieu de cela, ils retournent 0:
+
+188
+
+Chapitre 19. Les goodies
+
+
+
+Nous pouvons utiliser des compteurs pour réécrire is_anagram à partir de l'exercice 10.6:
+
+
+
+Si deux mots sont des anagrammes, ils contiennent les mêmes lettres avec les mêmes comptes, donc leur
+compteurs sont équivalents.
+Les compteurs fournissent des méthodes et des opérateurs pour effectuer des opérations similaires à des ensembles, telles que l'addition, la soustraction, l'union et l'intersection. Et ils fournissent une méthode souvent utile,
+most_common, qui retourne une liste de paires valeur-fréquence, triées du plus commun au
+moins:
+
+
+
+
+
+
+
+
+
+19,7
+
+defaultdict
+
+Le module collections fournit également defaultdict, qui est comme un dictionnaire, sauf que
+Si vous accédez à une clé inexistante, elle peut générer une nouvelle valeur à la volée.
+Lorsque vous créez un defaultdict, vous fournissez une fonction permettant de créer de nouvelles valeurs. Une
+fonction utilisée pour créer des objets est parfois appelée une fabrique. Les fonctions intégrées qui
+créer des listes, des ensembles et d'autres types peuvent être utilisés en tant qu'usines:
+
+
+
+Notez que l'argument est list, qui est un objet de classe, et non list (), qui est une nouvelle liste.
+La fonction que vous fournissez n’est pas appelée à moins d’accéder à une clé inexistante.
+
+
+
+
+La nouvelle liste, que nous appelons t, est également ajoutée au dictionnaire. Donc, si on modifie t, le
+le changement apparaît en d:
+
+
+
+Si vous faites un dictionnaire de listes, vous pouvez souvent écrire un code plus simple en utilisant defaultdict.
+Dans ma solution à l'exercice 12.2, que vous pouvez obtenir à l'adresse http://thinkpython2.com/code/
+anagram_sets.py, je crée un dictionnaire qui mappe une chaîne de lettres triée à la liste de
+mots qui peuvent être orthographiés avec ces lettres. Par exemple, "opst" correspond à la liste ["opts",
+'post', 'pots', 'spot', 'stop', 'tops'].
+Voici le code original:
+
+19.8. Tuples nommés
+
+189
+
+
+
+
+
+
+
+
+
+
+
+Ceci peut être simplifié en utilisant setdefault, que vous avez peut-être utilisé dans l'exercice 11.2:
+
+
+
+
+
+
+
+Cette solution a l’inconvénient de créer à chaque fois une nouvelle liste, qu’elle soit ou non
+c'est nécessaire. Pour les listes, ce n’est pas grave, mais si la fonction d’usine est compliquée, il se peut
+être.
+Nous pouvons éviter ce problème et simplifier le code en utilisant un defaultdict:
+
+
+
+
+
+
+
+
+Ma solution à l'exercice 18.3, que vous pouvez télécharger à partir de http://thinkpython2.com/
+code / PokerHandSoln.py, utilise setdefault dans la fonction has_straightflush. Cette solution a l’inconvénient de créer un objet Hand à chaque fois dans la boucle, que ce soit
+nécessaire ou pas. À titre d'exercice, réécrivez-le à l'aide d'un defaultdict.
+
+19.8
+
+Named Tuples
+
+De nombreux objets simples sont essentiellement des collections de valeurs liées. Par exemple, le point
+L'objet défini au chapitre 15 contient deux nombres, x et y. Lorsque vous définissez une classe comme
+ceci commence généralement avec une méthode init et une méthode str:
+
+
+
+
+
+
+
+
+190
+
+Chapitre 19. Les goodies
+
+C'est beaucoup de code pour transmettre une petite quantité d'informations. Python fournit un plus
+manière concise de dire la même chose:
+
+
+
+Le premier argument est le nom de la classe que vous voulez créer. La seconde est une liste des
+attributs Les objets Point doivent avoir, comme des chaînes. La valeur de retour de namedtuple est une classe
+objet:
+
+
+
+Point fournit automatiquement des méthodes telles que __init__ et __str__ afin que vous n'ayez pas à
+écris-les.
+Pour créer un objet Point, vous utilisez la classe Point en tant que fonction:
+
+>>> p = Point (1, 2)
+>>> p
+Point (x = 1, y = 2)
+La méthode init assigne les arguments aux attributs en utilisant les noms que vous avez fournis. le
+La méthode str affiche une représentation de l'objet Point et de ses attributs.
+Vous pouvez accéder aux éléments du tuple nommé par leur nom:
+
+>>> p.x, p.y
+(1, 2)
+Mais vous pouvez aussi traiter un tuple nommé comme un tuple:
+
+>>> p [0], p [1]
+(1, 2)
+>>> x, y = p
+>>> x, y
+(1, 2)
+Les n-uplets nommés offrent un moyen rapide de définir des classes simples. L'inconvénient est aussi simple
+Les cours ne restent pas toujours simples. Vous pourrez décider plus tard d’ajouter des méthodes
+à un tuple nommé. Dans ce cas, vous pouvez définir une nouvelle classe qui hérite de la classe nommée
+tuple:
+
+
+
+Ou vous pouvez passer à une définition de classe conventionnelle.
+
+19,9
+
+Rassemblement des arguments de mots clés
+
+Dans la section 12.4, nous avons vu comment écrire une fonction qui regroupe ses arguments dans un tuple:
+
+
+
+Vous pouvez appeler cette fonction avec un nombre quelconque d’arguments de position (c’est-à-dire des arguments
+n'ayant pas de mots-clés):
+
+19.10. Glossaire
+
+191
+
+
+
+Mais l’opérateur * ne collecte pas les arguments de mots clés:
+
+
+
+Pour rassembler des arguments de mots-clés, vous pouvez utiliser l'opérateur **:
+
+
+
+Vous pouvez appeler le paramètre de collecte de mots-clés comme bon vous semble, mais kwargs est une méthode courante.
+choix. Le résultat est un dictionnaire qui associe des mots-clés à des valeurs:
+
+
+
+Si vous avez un dictionnaire de mots-clés et de valeurs, vous pouvez utiliser l'opérateur scatter, ** pour
+appeler une fonction:
+
+
+
+
+Sans l’opérateur scatter, la fonction traiterait d comme un argument de position unique, donc
+il assignerait d à x et se plaindrait car il n’y avait rien à assigner à y:
+
+
+
+
+
+
+Lorsque vous travaillez avec des fonctions comportant un grand nombre de paramètres, il est souvent
+utile pour créer et faire circuler des dictionnaires qui spécifient les options fréquemment utilisées.
+
+19.10
+
+Glossaire
+
+expression conditionnelle: expression qui possède l'une des deux valeurs, en fonction d'une condition.
+liste de compréhension: Une expression avec une boucle for entre crochets qui donne une nouvelle
+liste.
+expression de générateur: Expression avec une boucle for entre parenthèses qui génère un objet générateur.
+multiset: entité mathématique représentant un mappage entre les éléments d'un ensemble
+et le nombre de fois où ils apparaissent.
+factory: Une fonction, généralement passée en paramètre, utilisée pour créer des objets.
+
+192
+
+Chapitre 19. Les goodies
+
+19.11
+
+Des exercices
+
+Exercice 19.1. Ce qui suit est une fonction qui calcule le coefficient binomial de manière récursive.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Réécrivez le corps de la fonction en utilisant des expressions conditionnelles imbriquées.
+Une remarque: cette fonction n’est pas très efficace car elle finit par calculer les mêmes valeurs et
+plus. Vous pourriez le rendre plus efficace en mémoisant (voir Section 11.6). Mais vous constaterez que c’est
+plus difficile à mémoriser si vous écrivez en utilisant des expressions conditionnelles.
