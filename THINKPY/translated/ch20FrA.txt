@@ -1,0 +1,213 @@
+Annexe A Débogage
+
+Lors du débogage, vous devez distinguer différents types d’erreurs afin de les localiser plus rapidement:
+
+Les erreurs de syntaxe sont découvertes par l'interpréteur lors de la traduction du code source en code octet. Ils indiquent qu'il y a quelque chose qui cloche dans la structure du programme. Exemple: L'omission des deux points à la fin d'une instruction def génère le message quelque peu redondant <errmessagehere>.
+Les erreurs d'exécution sont générées par l'interpréteur en cas de problème pendant l'exécution du programme. La plupart des messages d'erreur d'exécution incluent des informations sur l'emplacement de l'erreur et les fonctions exécutées. Exemple: une récursion infinie provoque éventuellement l'erreur d'exécution <recursionerrorhere>.
+Les erreurs sémantiques sont des problèmes avec un programme qui s'exécute sans produire de messages d'erreur mais ne fait pas ce qui est bien. Exemple: une expression peut ne pas être évaluée dans l'ordre prévu, ce qui donnerait un résultat incorrect.
+La première étape du débogage consiste à déterminer le type d'erreur à traiter. Bien que les sections suivantes soient organisées par type d'erreur, certaines techniques sont applicables dans plusieurs situations.
+
+A.1 Erreurs de syntaxe
+
+Les erreurs de syntaxe sont généralement faciles à corriger une fois que vous avez compris ce qu’elles sont. Malheureusement, les messages d'erreur ne sont souvent pas utiles. Les messages les plus courants sont <syntaxerrorhere> et <syntaxerrorhere>, qui ne sont ni l'un ni l'autre très informatifs.
+
+D'autre part, le message vous indique où le problème s'est produit dans le programme. En fait, cela vous indique où Python a remarqué un problème, qui ne correspond pas nécessairement à l'erreur. Parfois, l'erreur est antérieure à l'emplacement du message d'erreur, souvent sur la ligne précédente.
+
+Si vous construisez le programme progressivement, vous devriez avoir une bonne idée de l'emplacement de l'erreur. Ce sera dans la dernière ligne que vous avez ajoutée.
+
+Si vous copiez du code d’un livre, commencez par comparer votre code avec celui du livre avec le plus grand soin. Vérifiez chaque personnage. Dans le même temps, rappelez-vous que le livre est peut-être faux, donc si vous voyez quelque chose qui ressemble à une erreur de syntaxe, c'est peut-être le cas.
+
+Voici quelques moyens d'éviter les erreurs de syntaxe les plus courantes:
+
+Assurez-vous de ne pas utiliser de mot clé Python pour un nom de variable.
+Vérifiez que vous avez deux points à la fin de l'en-tête de chaque instruction composée, y compris les instructions for, while, if et def.
+Assurez-vous que toutes les chaînes du code ont des guillemets correspondants. Assurez-vous que tous les guillemets sont des «guillemets droits» et non des «guillemets bouclés».
+Si vous avez des chaînes multilignes avec des guillemets triples (simples ou doubles), assurez-vous d'avoir terminé la chaîne correctement. Une chaîne non terminée peut provoquer une erreur de jeton non valide à la fin de votre programme ou peut traiter la partie suivante du programme comme une chaîne jusqu'à la prochaine chaîne. Dans le second cas, cela pourrait ne pas produire de message d'erreur du tout!
+Un opérateur d'ouverture non fermé - (, {, ou [- fait en sorte que Python continue avec la ligne suivante dans le cadre de l'instruction en cours. Généralement, une erreur se produit presque immédiatement dans la ligne suivante.
+Recherchez le classique = au lieu de == dans un conditionnel.
+Vérifiez l’indentation pour vous assurer qu’elle s’aligne comme il se doit. Python peut gérer l'espace et les tabulations, mais si vous les mélangez, cela peut poser des problèmes. Le meilleur moyen d'éviter ce problème consiste à utiliser un éditeur de texte connaissant Python et générant une indentation cohérente.
+Si vous avez des caractères non-ASCII dans le code (y compris des chaînes et des commentaires), cela peut poser problème, bien que Python 3 gère généralement les caractères non-ASCII. Faites attention si vous collez du texte à partir d'une page Web ou d'une autre source.
+Si rien ne fonctionne, passez à la section suivante ...
+
+A.1.1 Je continue à faire des changements et cela ne fait aucune différence.
+Si l'interprète dit qu'il y a une erreur et que vous ne la voyez pas, c'est peut-être parce que l'interprète et vous-même ne regardez pas le même code. Vérifiez votre environnement de programmation pour vous assurer que le programme que vous êtes en train d’éditer est celui que Python essaie d’exécuter.
+
+Si vous n'êtes pas sûr, essayez de mettre une erreur de syntaxe évidente et délibérée au début du programme. Maintenant, lancez-le à nouveau. Si l'interprète ne trouve pas la nouvelle erreur, vous n'exécutez pas le nouveau code.
+
+Il y a quelques coupables probables:
+
+Vous avez modifié le fichier et oublié de sauvegarder les modifications avant de le réexécuter. Certains environnements de programmation le font pour vous, mais pas tous.
+Vous avez modifié le nom du fichier, mais vous utilisez toujours l'ancien nom.
+Quelque chose dans votre environnement de développement est configuré de manière incorrecte.
+Si vous écrivez un module et utilisez import, assurez-vous de ne pas attribuer à votre module le même nom que l’un des modules Python standard.
+Si vous utilisez import pour lire un module, rappelez-vous que vous devez redémarrer l'interpréteur ou utiliser reload pour lire un fichier modifié. Si vous importez à nouveau le module, il ne fait rien.
+Si vous êtes bloqué et que vous ne pouvez pas comprendre ce qui se passe, une approche consiste à recommencer avec un nouveau programme tel que «Hello, World!», Et à vous assurer de pouvoir exécuter un programme connu. Ajoutez ensuite progressivement les éléments du programme original au nouveau.
+
+A.2 Erreurs d'exécution
+Une fois que votre programme est syntaxiquement correct, Python peut le lire et au moins commencer à l'exécuter. Qu'est ce qui pourrait aller mal?
+
+A.2.1 Mon programme ne fait absolument rien.
+Ce problème est plus fréquent lorsque votre fichier est constitué de fonctions et de classes mais n’appelle pas réellement une fonction pour démarrer l’exécution. Cela peut être intentionnel si vous envisagez d'importer ce module uniquement pour fournir des classes et des fonctions.
+
+Si ce n'est pas intentionnel, assurez-vous qu'il y a un appel de fonction dans le programme et assurez-vous que le flux d'exécution le parvient (voir «Flux d'exécution» ci-dessous).
+
+A.2.2 Mon programme se bloque.
+
+Si un programme s’arrête et semble ne rien faire, il est "suspendu". Cela signifie souvent qu'il est pris dans une boucle infinie ou une récursion infinie.
+
+Si vous pensez que le problème est lié à une boucle en particulier, ajoutez une instruction print immédiatement avant la boucle indiquant «entrer dans la boucle» et une autre immédiatement après indiquant «quitter la boucle».
+Exécutez le programme. Si vous recevez le premier message et non le second, vous obtenez une boucle infinie. Allez à la section «Boucle infinie» ci-dessous.
+
+La plupart du temps, une récursion infinie entraîne l'exécution du programme pendant un certain temps, puis une erreur <runtimeerrorhere>. Si cela se produit, consultez la section «Récursion infinie» ci-dessous.
+Si vous n'obtenez pas cette erreur mais que vous suspectez un problème lié à une méthode ou à une fonction récursive, vous pouvez toujours utiliser les techniques décrites dans la section «Récursion infinie».
+
+Si aucune de ces étapes ne fonctionne, commencez à tester d'autres boucles et d'autres fonctions et méthodes récursives.
+Si cela ne fonctionne pas, il est possible que vous ne compreniez pas le déroulement de l’exécution dans votre programme. Allez à la section «Flux d’exécution» ci-dessous.
+
+Boucle infinie
+
+Si vous pensez avoir une boucle infinie et que vous savez quelle boucle est la cause du problème, ajoutez une instruction print à la fin de la boucle, qui affiche les valeurs des variables de la condition et la valeur de la condition.
+
+Par exemple:
+
+
+
+
+
+
+
+
+Maintenant, lorsque vous exécutez le programme, vous verrez trois lignes de sortie pour chaque passage dans la boucle. La dernière fois dans la boucle, la condition devrait être False. Si la boucle continue, vous pourrez voir les valeurs de x et y et vous pourrez comprendre pourquoi elles ne sont pas mises à jour correctement.
+
+Récursion infinie
+
+La plupart du temps, une récursion infinie entraîne l'exécution du programme pendant un certain temps, puis une erreur de dépassement de la profondeur de récursivité maximale.
+
+Si vous pensez qu'une fonction provoque une récursion infinie, assurez-vous qu'il existe un cas de base. Il devrait y avoir une condition qui provoque le retour de la fonction sans faire une invocation récursive. Sinon, vous devez repenser l'algorithme et identifier un cas de base.
+
+S'il existe un scénario de base mais que le programme ne semble pas l'atteindre, ajoutez une instruction print au début de la fonction permettant d'imprimer les paramètres. Maintenant, lorsque vous exécuterez le programme, vous verrez quelques lignes de sortie à chaque fois que la fonction est appelée et vous verrez les valeurs des paramètres. Si les paramètres ne se déplacent pas vers le scénario de base, vous obtiendrez des idées sur les raisons pour lesquelles elle fonctionne pas.
+
+Flux d'exécution
+
+Si vous ne savez pas comment le flux d'exécution se déplace dans votre programme, ajoutez des instructions print au début de chaque fonction avec un message du type «saisie de la fonction foo», où foo est le nom de la fonction.
+
+Maintenant, lorsque vous exécutez le programme, il imprimera une trace de chaque fonction à mesure qu’elle est appelée.
+
+A.2.3 Lorsque je lance le programme, je reçois une exception.
+
+En cas de problème au cours de l'exécution, Python imprime un message contenant le nom de l'exception, la ligne du programme où le problème s'est produit et une trace.
+
+Le suivi identifie la fonction en cours d'exécution, puis la fonction qui l'a appelée, puis la fonction qui l'a appelée, etc. En d'autres termes, il retrace la séquence des appels de fonction qui vous ont amené à l'endroit où vous vous trouvez, y compris le numéro de ligne de votre fichier où chaque appel a eu lieu.
+
+La première étape consiste à examiner le lieu dans lequel l'erreur s'est produite dans le programme et à voir si vous pouvez comprendre ce qui s'est passé. Voici quelques-unes des erreurs d'exécution les plus courantes:
+
+NameError:
+Vous essayez d’utiliser une variable qui n’existe pas dans l’environnement actuel. Vérifiez si le nom est orthographié correctement, ou au moins de manière cohérente. Et rappelez-vous que les variables locales sont locales; vous ne pouvez pas vous y référer de l'extérieur de la fonction où ils sont définis.
+TypeError:
+Il y a plusieurs causes possibles:
+Vous essayez d'utiliser une valeur de manière incorrecte. Exemple: indexer une chaîne, une liste ou un tuple avec autre chose qu'un entier.
+Il y a une discordance entre les éléments d'une chaîne de format et les éléments passés à la conversion. Cela peut se produire si le nombre d'éléments ne correspond pas ou si une conversion non valide est appelée.
+Vous transmettez un nombre incorrect d'arguments à une fonction. Pour les méthodes, regardez la définition de la méthode et vérifiez que le premier paramètre est self. Ensuite, regardez l'invocation de la méthode. assurez-vous d'appeler la méthode sur un objet avec le bon type et de fournir les autres arguments correctement.
+KeyError:
+Vous essayez d'accéder à un élément d'un dictionnaire à l'aide d'une clé qu'il ne contient pas. Si les clés sont des chaînes, rappelez-vous que la capitalisation est importante.
+AttributeError:
+Vous essayez d'accéder à un attribut ou à une méthode qui n'existe pas. Vérifier l'orthographe! Vous pouvez utiliser les vars de fonction intégrés pour répertorier les attributs existants.
+Si un AttributeError indique qu'un objet a NoneType, cela signifie qu'il est None. Le problème n'est donc pas le nom de l'attribut, mais l'objet.
+
+La raison pour laquelle l'objet est nul peut être que vous avez oublié de renvoyer une valeur à partir d'une fonction; si vous arrivez à la fin d'une fonction sans frapper une instruction return, elle ne renvoie aucun. Une autre cause courante consiste à utiliser le résultat d'une méthode de liste, telle que sort, qui renvoie Aucun.
+
+IndexError:
+L'index que vous utilisez pour accéder à une liste, une chaîne ou un tuple est supérieur à sa longueur moins un. Immédiatement avant le site de l'erreur, ajoutez une instruction print pour afficher la valeur de l'index et la longueur du tableau. Le tableau est-il à la bonne taille? Est-ce que l'indice est la bonne valeur?
+Le débogueur Python (pdb) est utile pour détecter les exceptions, car il vous permet d'examiner l'état du programme immédiatement avant l'erreur. Vous pouvez en savoir plus sur pdb à l’adresse https://docs.python.org/3/library/pdb.html.
+
+A.2.4 J'ai ajouté tellement d'instructions print que je suis inondé de résultats.
+
+L'un des problèmes liés à l'utilisation des instructions print pour le débogage est que vous pouvez vous retrouver enterré dans la sortie. Il y a deux façons de procéder: simplifier la sortie ou simplifier le programme.
+
+Pour simplifier la sortie, vous pouvez supprimer ou commenter les instructions d’impression qui ne vous aident pas, les combiner ou formater la sortie pour la rendre plus facile à comprendre.
+
+Pour simplifier le programme, vous pouvez faire plusieurs choses. Premièrement, réduisez le problème sur lequel le programme travaille. Par exemple, si vous recherchez une liste, cherchez une petite liste. Si le programme reçoit une entrée de l'utilisateur, donnez-lui l'entrée la plus simple qui cause le problème.
+
+Deuxièmement, nettoyez le programme. Supprimez le code mort et réorganisez le programme pour le rendre aussi facile à lire que possible. Par exemple, si vous soupçonnez que le problème se trouve dans une partie profondément imbriquée du programme, essayez de réécrire cette partie avec une structure plus simple. Si vous soupçonnez une grande fonction, essayez de la diviser en petites fonctions et de les tester séparément.
+
+Souvent, le processus de recherche du scénario de test minimal vous conduit au bogue. Si vous trouvez qu'un programme fonctionne dans une situation mais pas dans une autre, cela vous donne un indice sur ce qui se passe.
+
+De même, la réécriture d'un morceau de code peut vous aider à trouver des bogues subtils. Si vous apportez un changement qui, à votre avis, ne devrait pas affecter le programme, cela peut vous tromper.
+
+A.3 Erreurs sémantiques
+D'une certaine manière, les erreurs sémantiques sont les plus difficiles à déboguer, car l'interpréteur ne fournit aucune information sur ce qui ne va pas. Seulement vous savez ce que le programme est censé faire.
+
+La première étape consiste à établir une connexion entre le texte du programme et le comportement observé. Vous avez besoin d'une hypothèse sur ce que fait réellement le programme. Ce qui rend les choses plus difficiles, c’est que les ordinateurs fonctionnent très vite.
+
+Vous souhaiterez souvent que vous puissiez ralentir le programme à une vitesse humaine et avec certains débogueurs. Mais le temps nécessaire pour insérer quelques instructions print bien placées est souvent court comparé à la configuration du débogueur, à l'insertion et à la suppression de points d'arrêt et à la "progression" du programme jusqu'à l'endroit où l'erreur se produit.
+
+A.3.1 Mon programme ne fonctionne pas.
+Vous devriez vous poser ces questions:
+
+Y at-il quelque chose que le programme était censé faire mais qui ne semble pas se produire? Recherchez la section du code qui remplit cette fonction et assurez-vous qu'elle s'exécute quand vous le pensez bien.
+Est-ce qu'il se passe quelque chose qui ne devrait pas? Trouvez du code dans votre programme qui remplit cette fonction et voyez s’il s’exécute alors que ce n’est pas le cas.
+Une section de code produisant un effet qui ne correspond pas à vos attentes? Assurez-vous de bien comprendre le code en question, surtout s'il implique des fonctions ou des méthodes dans d'autres modules Python. Lisez la documentation des fonctions que vous appelez. Essayez-les en écrivant des cas de test simples et en vérifiant les résultats.
+Pour programmer, vous avez besoin d'un modèle mental du fonctionnement des programmes. Si vous écrivez un programme qui ne fait pas ce que vous attendez, souvent, le problème ne réside pas dans le programme; c’est dans votre modèle mental.
+
+La meilleure façon de corriger votre modèle mental est de diviser le programme en ses composants (généralement les fonctions et les méthodes) et de tester chaque composant de manière indépendante. Une fois que vous trouvez la divergence entre votre modèle et la réalité, vous pouvez résoudre le problème.
+
+Bien sûr, vous devriez créer et tester des composants au fur et à mesure que vous développez le programme. Si vous rencontrez un problème, il ne devrait y avoir qu'une petite quantité de nouveau code dont on ignore qu'elle est correcte.
+
+A.3.2 J’ai une grande expression poilue et il ne fait pas ce que j’attends.
+
+L'écriture d'expressions complexes est acceptable tant qu'elles sont lisibles, mais elles peuvent être difficiles à déboguer. Il est souvent judicieux de décomposer une expression complexe en une série d'assignations à des variables temporaires.
+
+Par exemple:
+
+
+Cela peut être réécrit comme:
+
+
+
+
+La version explicite est plus facile à lire car les noms de variables fournissent une documentation supplémentaire et il est plus facile de déboguer car vous pouvez vérifier les types des variables intermédiaires et afficher leurs valeurs.
+
+Un autre problème pouvant survenir avec les grandes expressions est que l'ordre d'évaluation peut ne pas correspondre à vos attentes. Par exemple, si vous traduisez l'expression x / 2 π en Python, vous pouvez écrire:
+
+y = x / 2 * math.pi
+Ce n'est pas correct car la multiplication et la division ont la même priorité et sont évaluées de gauche à droite. Donc, cette expression calcule x π / 2.
+
+Un bon moyen de déboguer des expressions consiste à ajouter des parenthèses pour rendre explicite l'ordre d'évaluation:
+
+ y = x / (2 * math.pi)
+Lorsque vous n'êtes pas sûr de l'ordre d'évaluation, utilisez des parenthèses. Non seulement le programme sera-t-il correct (en ce sens que vous ferez ce que vous vouliez), il sera également plus lisible pour les autres personnes qui n’ont pas mémorisé l’ordre des opérations.
+
+A.3.3 J'ai une fonction qui ne retourne pas ce que j'attends.
+
+Si vous avez une instruction return avec une expression complexe, vous ne pouvez pas imprimer le résultat avant de renvoyer. Encore une fois, vous pouvez utiliser une variable temporaire. Par exemple, au lieu de:
+
+
+tu pourrais écrire:
+
+
+
+Vous avez maintenant la possibilité d’afficher la valeur de count avant de revenir.
+
+A.3.4 Je suis vraiment coincé et j’ai besoin d’aide.
+Tout d’abord, essayez de vous éloigner de l’ordinateur pendant quelques minutes. Les ordinateurs émettent des ondes qui affectent le cerveau, provoquant les symptômes suivants:
+
+Frustration et rage.
+Croyances superstitieuses («l'ordinateur me déteste») et pensée magique («le programme ne fonctionne que lorsque je porte mon chapeau à l'envers»).
+Programmation aléatoire de la marche (tentative de programmer en écrivant tous les programmes possibles et en choisissant celui qui fait le bon choix).
+Si vous présentez l'un de ces symptômes, levez-vous et allez vous promener. Lorsque vous êtes calme, pensez au programme. Qu'est-ce que ça fait? Quelles sont les causes possibles de ce comportement? Quand était la dernière fois que vous aviez un programme de travail et qu'avez-vous fait ensuite?
+
+Parfois, il faut juste du temps pour trouver un bogue. Lorsque je ne suis pas à l’ordinateur, je trouve souvent des bugs et laisse mon esprit vagabonder. Certains des meilleurs endroits pour trouver des bugs sont les trains, les douches et au lit, juste avant de vous endormir.
+
+A.3.5 Non, j'ai vraiment besoin d'aide.
+Ça arrive. Même les meilleurs programmeurs sont parfois bloqués. Parfois, vous travaillez sur un programme si longtemps que vous ne pouvez pas voir l’erreur. Vous avez besoin d'une nouvelle paire d'yeux.
+
+Avant de faire venir quelqu'un d'autre, assurez-vous d'être prêt. Votre programme doit être aussi simple que possible et vous devez travailler sur la plus petite entrée à l'origine de l'erreur. Vous devez avoir des déclarations imprimées aux endroits appropriés (et le résultat qu'elles produisent doit être compréhensible). Vous devez bien comprendre le problème pour le décrire de manière concise.
+
+Lorsque vous faites venir quelqu'un pour l'aider, assurez-vous de lui donner les informations dont il a besoin:
+
+S'il y a un message d'erreur, de quoi s'agit-il et quelle partie du programme indique-t-il?
+Quelle était la dernière chose que vous avez faite avant cette erreur? Quelles sont les dernières lignes de code que vous avez écrites ou quel est le nouveau cas de test qui échoue?
+Qu'avez-vous essayé jusqu'à présent et qu'avez-vous appris?
+Lorsque vous trouvez le bogue, prenez une seconde pour réfléchir à ce que vous auriez pu faire pour le trouver plus rapidement. La prochaine fois que vous verrez quelque chose de similaire, vous pourrez trouver le bogue plus rapidement.
+
+N'oubliez pas que l'objectif n'est pas simplement de faire en sorte que le programme fonctionne. L’objectif est d’apprendre à faire fonctionner le programme.
