@@ -1,0 +1,256 @@
+Annexe B Analyse des algorithmes
+
+Cette annexe est un extrait de Think Complexity de Allen B. Downey, également publié par O’Reilly Media (2012). Lorsque vous aurez terminé avec ce livre, vous voudrez peut-être passer à celui-ci.
+L'analyse des algorithmes est une branche de l'informatique qui étudie les performances des algorithmes, en particulier leurs besoins en termes de temps d'exécution et d'espace. Voir http://en.wikipedia.org/wiki/Analysis_of_algorithms.
+L’objectif pratique de l’analyse algorithmique est de prédire les performances de différents algorithmes afin de guider les décisions de conception.
+
+Lors de la campagne présidentielle américaine de 2008, le candidat Barack Obama a été invité à effectuer une analyse impromptue lors de sa visite à Google. Le chef de la direction, Eric Schmidt, lui a demandé en plaisantant «le moyen le plus efficace de trier un million d'entiers 32 bits». Obama avait apparemment été prévenu, car il avait rapidement répondu: «Je pense que bubble sort serait le mauvais choix." Voir http://www.youtube.com/watch?v=k4RRi_ntQc8.
+
+Cela est vrai: bubble sort est conceptuellement simple mais lent pour les grands ensembles de données. La réponse que Schmidt recherchait probablement est “radix sort” (http://en.wikipedia.org/wiki/Radix_sort)1.
+
+L’analyse algorithmique a pour but de faire des comparaisons significatives entre algorithmes, mais certains problèmes subsistent:
+
+Les performances relatives des algorithmes peuvent dépendre des caractéristiques du matériel. Ainsi, un algorithme peut être plus rapide sur la machine A, un autre sur la machine B. La solution générale à ce problème consiste à spécifier un modèle de machine et à analyser le nombre d'étapes ou d'opérations, qu'un algorithme nécessite sous un modèle donné.
+Les performances relatives peuvent dépendre des détails de l'ensemble de données. Par exemple, certains algorithmes de tri fonctionnent plus rapidement si les données sont déjà partiellement triées; d'autres algorithmes fonctionnent plus lentement dans ce cas. Un moyen courant d'éviter ce problème consiste à analyser le pire des scénarios. Il est parfois utile d’analyser le rendement au moyen d’un dossier, mais c’est généralement plus difficile et il n’est peut-être pas évident de savoir quel ensemble de cas fera la moyenne.
+Les performances relatives dépendent également de la taille du problème. Un algorithme de tri rapide pour les petites listes peut être lent pour les longues listes. La solution habituelle à ce problème consiste à exprimer le temps d’exécution (ou le nombre d’opérations) en fonction de la taille du problème et à regrouper les fonctions en catégories en fonction de la vitesse à laquelle elles croissent à mesure que la taille du problème augmente.
+L'avantage de ce type de comparaison est qu'il se prête à une simple classification d'algorithmes. Par exemple, si je sais que le temps d'exécution de l'algorithme A a tendance à être proportionnel à la taille de l'entrée, n et que l'algorithme B a tendance à être proportionnel à n2, alors je m'attends à ce que A soit plus rapide que B, du moins pour les grands valeurs de n.
+Ce type d’analyse comporte quelques réserves, mais nous y reviendrons plus tard.
+
+B.1 Ordre de croissance
+
+Supposons que vous avez analysé deux algorithmes et exprimé leur temps d'exécution en termes de taille de l'entrée: l'algorithme A nécessite 100n + 1 étapes pour résoudre un problème de taille n; L'algorithme B prend n2 + n + 1 étapes.
+Le tableau suivant montre la durée d'exécution de ces algorithmes pour différentes tailles de problèmes:
+
+Temps d'exécution d'entrée du temps d'exécution de
+taille Algorithme A Algorithme B
+10 1 001 111
+100 10 001 10 101
+1 000 100 001 1 001 001
+10 000 1 000 001> 1010
+À n = 10, l'algorithme A semble très mauvais; cela prend presque 10 fois plus de temps que l'algorithme B. Mais pour n = 100, elles sont à peu près les mêmes et pour des valeurs plus grandes, mieux vaut.
+La raison fondamentale est que, pour les grandes valeurs de n, toute fonction contenant un terme n2 croîtra plus rapidement qu'une fonction dont le terme principal est n. Le terme principal est le terme avec l'exposant le plus élevé.
+
+Pour l'algorithme A, le terme principal a un grand coefficient, 100, raison pour laquelle B fait mieux que A pour les petits n. Mais quels que soient les coefficients, il y aura toujours une valeur de n où a n2> b n, pour toutes les valeurs de a et b.
+
+Le même argument s'applique aux termes non-principaux. Même si le temps d'exécution de l'algorithme A était de n + 1000000, il serait toujours meilleur que l'algorithme B pour un n suffisamment grand.
+
+En général, nous nous attendons à ce qu'un algorithme avec un terme principal plus petit soit un meilleur algorithme pour les gros problèmes, mais pour les problèmes plus petits, il peut y avoir un point de croisement où un autre algorithme est meilleur. L'emplacement du point de croisement dépend des détails des algorithmes, des entrées et du matériel. Il est donc généralement ignoré aux fins de l'analyse algorithmique. Mais cela ne signifie pas que vous pouvez l’oublier.
+
+Si deux algorithmes ont le même terme d'ordre principal, il est difficile de dire lequel est le meilleur. encore une fois, la réponse dépend des détails. Donc, pour l'analyse algorithmique, les fonctions avec le même terme principal sont considérées comme équivalentes, même si elles ont des coefficients différents.
+
+Un ordre de croissance est un ensemble de fonctions dont le comportement de croissance est considéré comme équivalent. Par exemple, 2n, 100n et n + 1 appartiennent au même ordre de croissance, écrit O (n) en notation Big-Oh et souvent appelé linéaire car chaque fonction de l'ensemble croît de manière linéaire avec n.
+
+Toutes les fonctions avec le terme principal n2 appartiennent à O (n2); on les appelle quadratiques.
+
+Le tableau suivant montre certains des ordres de croissance qui apparaissent le plus souvent dans l'analyse algorithmique, par ordre croissant de mal.
+
+Ordre du nom
+croissance
+O (1) constante
+O (logb n) logarithmique (pour tout b)
+O (n) linéaire
+Linéithmique O (n logb n)
+O (n2) quadratique
+O (n3) cubique
+O (cn) exponentielle (pour tout c)
+Pour les termes logarithmiques, la base du logarithme n’a pas d’importance; Changer de base équivaut à multiplier par une constante, ce qui ne change pas l’ordre de croissance. De même, toutes les fonctions exponentielles appartiennent au même ordre de croissance quelle que soit la base de l'exposant. Les fonctions exponentielles grandissent très rapidement, les algorithmes exponentiels ne sont utiles que pour les petits problèmes.
+Exercice 1
+Lisez la page Wikipedia sur la notation Big-Oh à l’adresse http://en.wikipedia.org/wiki/Big_O_notation et répondez aux questions suivantes:
+Quel est l'ordre de croissance de n3 + n2? Qu'en est-il de 1000000 n3 + n2? Qu'en est-il n3 + 1000000 n2?
+Quel est l'ordre de croissance de (n2 + n) · (n + 1)? Avant de commencer à vous multiplier, rappelez-vous que vous n’avez besoin que du terme principal.
+Si f est dans O (g), pour une fonction non spécifiée g, que pouvons-nous dire à propos de af + b?
+Si f1 et f2 sont dans O (g), que pouvons-nous dire de f1 + f2?
+Si f1 est dans O (g) et f2 est dans O (h), que pouvons-nous dire à propos de f1 + f2?
+Si f1 est dans O (g) et que f2 est O (h), que pouvons-nous dire de f1 · f2?
+Les programmeurs soucieux de la performance ont souvent du mal à accepter ce type d'analyse. Ils ont un point: parfois, les coefficients et les termes non-principaux font une réelle différence. Parfois, les détails du matériel, du langage de programmation et des caractéristiques de l’entrée font toute la différence. Et pour les petits problèmes, le comportement asymptotique n’est pas pertinent.
+Mais si vous tenez compte de ces avertissements, l'analyse algorithmique est un outil utile. Au moins pour les gros problèmes, le «meilleur» algorithme est généralement meilleur et parfois beaucoup mieux. La différence entre deux algorithmes avec le même ordre de croissance est généralement un facteur constant, mais la différence entre un bon algorithme et un mauvais algorithme est sans limite!
+
+B.2 Analyse des opérations de base de Python
+
+En Python, la plupart des opérations arithmétiques sont à temps constant; la multiplication prend généralement plus de temps que l’addition et la soustraction, et la division, encore plus, mais ces temps d’exécution ne dépendent pas de la magnitude des opérandes. Les très grands entiers sont une exception; dans ce cas, le temps d'exécution augmente avec le nombre de chiffres.
+Les opérations d'indexation (lecture ou écriture d'éléments dans une séquence ou un dictionnaire) sont également constantes, quelle que soit la taille de la structure de données.
+
+Une boucle for qui parcourt une séquence ou un dictionnaire est généralement linéaire, tant que toutes les opérations du corps de la boucle sont à temps constant. Par exemple, l’ajout des éléments d’une liste est linéaire:
+
+
+
+
+La somme des fonctions intégrées est également linéaire car elle fait la même chose, mais elle a tendance à être plus rapide car sa mise en œuvre est plus efficace. dans le langage de l'analyse algorithmique, il a un coefficient directeur plus petit.
+En règle générale, si le corps d'une boucle est en O (na), alors toute la boucle est en O (na + 1). L'exception est si vous pouvez montrer que la boucle se termine après un nombre constant d'itérations. Si une boucle exécute k fois indépendamment de n, alors la boucle est dans O (na), même pour le grand k.
+
+Multiplier par k ne change pas l’ordre de croissance, pas plus que la division. Donc, si le corps d'une boucle est en O (na) et qu'elle court n / k fois, la boucle est en O (na + 1), même pour un grand k.
+
+La plupart des opérations sur les chaînes et les tuples sont linéaires, à l'exception de l'indexation et de la longueur qui sont constantes. Les fonctions intégrées min et max sont linéaires. Le temps d'exécution d'une opération de tranche est proportionnel à la longueur de la sortie, mais indépendant de la taille de l'entrée.
+
+La concaténation de chaîne est linéaire; le temps d'exécution dépend de la somme des longueurs des opérandes.
+
+Toutes les méthodes de chaîne sont linéaires, mais si les longueurs des chaînes sont délimitées par une constante (par exemple, des opérations sur des caractères uniques), elles sont considérées comme une durée constante. La méthode de chaîne de jointure est linéaire; le temps d'exécution dépend de la longueur totale des chaînes.
+
+La plupart des méthodes de liste sont linéaires, à quelques exceptions près:
+
+L'ajout d'un élément à la fin d'une liste est un temps constant en moyenne; lorsqu'il manque de place, il est parfois copié dans un emplacement plus grand, mais le temps total pour n opérations est de O (n); le temps moyen pour chaque opération est donc de O (1).
+Supprimer un élément de la fin d'une liste est un temps constant.
+Le tri est O (n logn).
+La plupart des opérations et méthodes du dictionnaire sont constantes dans le temps, à quelques exceptions près:
+Le temps d'exécution de la mise à jour est proportionnel à la taille du dictionnaire passé en paramètre, pas à la mise à jour du dictionnaire.
+les clés, les valeurs et les éléments sont constants dans le temps car ils renvoient des itérateurs. Mais si vous parcourez les itérateurs, la boucle sera linéaire.
+L’utilisation de dictionnaires est l’un des petits miracles de l’informatique. Nous verrons comment ils fonctionnent dans la section B.4.
+Exercice 2
+Lisez la page Wikipedia sur les algorithmes de tri à l'adresse http://en.wikipedia.org/wiki/Sorting_algorithm et répondez aux questions suivantes:
+Qu'est-ce qu'un «type de comparaison?» Quel est le meilleur ordre de croissance dans le pire des cas pour un type de comparaison? Quel est le meilleur ordre de croissance dans le pire des cas pour un algorithme de tri?
+Quel est l'ordre de croissance des sortes de bulles et pourquoi Barack Obama pense-t-il que c'est «la mauvaise façon de faire?»
+Quel est l'ordre de croissance de la sorte radix? Quelles conditions préalables avons-nous besoin de l'utiliser?
+Qu'est-ce qu'un type stable et pourquoi pourrait-il avoir de l'importance dans la pratique?
+Quel est le pire algorithme de tri (qui a un nom)?
+Quel algorithme de tri la bibliothèque C utilise-t-elle? Quel algorithme de tri utilise Python? Ces algorithmes sont-ils stables? Vous devrez peut-être Google pour trouver ces réponses.
+La plupart des tris sans comparaison sont linéaires, alors pourquoi Python utilise-t-il un tri par comparaison O (n logn)?
+B.3 Analyse des algorithmes de recherche
+
+Une recherche est un algorithme qui prend une collection et un élément cible et détermine si la cible est dans la collection, renvoyant souvent l'index de la cible.
+L'algorithme de recherche le plus simple est une «recherche linéaire», qui parcourt les éléments de la collection dans l'ordre, s'arrêtant s'il trouve la cible. Dans le pire des cas, il doit parcourir l'intégralité de la collection, de sorte que le temps d'exécution est linéaire.
+
+L'opérateur in pour les séquences utilise une recherche linéaire; Il en va de même pour les méthodes de chaîne telles que find et count.
+
+Si les éléments de la séquence sont en ordre, vous pouvez utiliser une recherche de bissection, qui est O (logn). La recherche par bisection est similaire à l'algorithme que vous pouvez utiliser pour rechercher un mot dans un dictionnaire (un dictionnaire papier, pas la structure de données). Au lieu de commencer au début et de vérifier chaque élément dans l'ordre, commencez par l'élément situé au milieu et vérifiez si le mot que vous recherchez vient avant ou après. Si cela se produit avant, alors vous effectuez une recherche dans la première moitié de la séquence. Sinon, vous recherchez la seconde moitié. De toute façon, vous réduisez de moitié le nombre d'articles restants.
+
+Si la séquence contient 1 000 000 éléments, il faudra environ 20 étapes pour trouver le mot ou conclure qu’il n’est pas là. C’est donc environ 50 000 fois plus rapide qu’une recherche linéaire.
+
+La recherche en bisection peut être beaucoup plus rapide que la recherche linéaire, mais elle nécessite que la séquence soit en ordre, ce qui peut nécessiter un travail supplémentaire.
+
+Il existe une autre structure de données, appelée table de hachage, qui est encore plus rapide - elle peut effectuer une recherche en temps constant - et elle n’exige pas que les éléments soient triés. Les dictionnaires Python sont implémentés à l'aide de tables de hachage. C'est pourquoi la plupart des opérations de dictionnaire, y compris l'opérateur in, sont à temps constant.
+
+B.4 Hashtables
+
+Pour expliquer le fonctionnement des tables de hachage et pourquoi leurs performances sont si bonnes, je commence par une simple implémentation d’une carte et l’améliore progressivement jusqu’à ce qu’il s’agisse d’une table de hachage.
+
+J’utilise Python pour illustrer ces implémentations, mais dans la vie réelle, vous n’écririez pas un code comme celui-ci en Python; vous utiliseriez simplement un dictionnaire! Pour la suite de ce chapitre, vous devez donc imaginer que les dictionnaires n’existent pas et que vous souhaitez implémenter une structure de données mappant des clés aux valeurs. Les opérations que vous devez implémenter sont:
+
+ajouter (k, v):
+Ajoutez un nouvel élément mappant de la clé k à la valeur v. Avec un dictionnaire Python, d, cette opération s’écrit d [k] = v.
+prenez (k):
+Recherchez et renvoyez la valeur qui correspond à la clé k. Avec un dictionnaire Python, d, cette opération s’écrit d [k] ou d.get (k).
+Pour l'instant, je suppose que chaque touche n'apparaît qu'une seule fois. L'implémentation la plus simple de cette interface utilise une liste de nuplets, chaque nuplet étant une paire clé-valeur.
+classe LinearMap:
+
+
+
+
+
+
+
+
+
+
+
+
+add ajoute un tuple valeur-clé à la liste des éléments, ce qui prend un temps constant.
+get utilise une boucle for pour rechercher dans la liste: s'il trouve la clé cible, il renvoie la valeur correspondante; sinon, il soulève une KeyError. Donc get est linéaire.
+
+Une alternative consiste à conserver la liste triée par clé. Ensuite, get pourrait utiliser une recherche de bissection, qui est O (logn). Toutefois, l'insertion d'un nouvel élément au milieu d'une liste est linéaire, ce qui pourrait ne pas être la meilleure option. Il existe d’autres structures de données pouvant implémenter des ajouts et des entrées dans le temps de journalisation, mais ce n’est toujours pas aussi satisfaisant que le temps constant, alors poursuivons.
+
+Une façon d'améliorer LinearMap consiste à diviser la liste des paires clé-valeur en listes plus petites. Voici une implémentation appelée BetterMap, qui est une liste de 100 LinearMaps. Comme nous le verrons dans une seconde, l’ordre de croissance pour get est toujours linéaire, mais BetterMap est une étape sur la voie des hashtables:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__init__ dresse une liste de n LinearMaps.
+find_map est utilisé par add et permet de déterminer la carte dans laquelle placer le nouvel élément ou la carte à rechercher.
+
+find_map utilise la fonction hash intégrée, qui prend presque tous les objets Python et renvoie un entier. Une limitation de cette implémentation réside dans le fait qu’elle ne fonctionne qu'avec des clés hashable. Les types mutables tels que les listes et les dictionnaires sont insupportables.
+
+Les objets pouvant être convertis qui sont considérés comme équivalents renvoient la même valeur de hachage, mais l'inverse n'est pas nécessairement vrai: deux objets ayant des valeurs différentes peuvent renvoyer la même valeur de hachage.
+
+find_map utilise l'opérateur de module pour envelopper les valeurs de hachage dans la plage de 0 à len (self.maps). Le résultat est donc un index légal dans la liste. Bien entendu, cela signifie que de nombreuses valeurs de hachage différentes seront intégrées au même index. Mais si la fonction de hachage étale les choses de manière assez uniforme (ce à quoi servent les fonctions de hachage), nous nous attendons à n / 100 éléments par LinearMap.
+
+Étant donné que le temps d'exécution de LinearMap.get est proportionnel au nombre d'éléments, nous prévoyons que BetterMap sera environ 100 fois plus rapide que LinearMap. L'ordre de croissance est toujours linéaire, mais le coefficient initial est plus petit. C’est bien, mais pas aussi bon qu’un hashtable.
+
+Voici (enfin) l’idée cruciale qui accélère les tables de hachage: si vous pouvez conserver la longueur maximale des cartes LinearMaps liées, LinearMap.get a une durée constante. Tout ce que vous avez à faire est de garder une trace du nombre d'éléments et lorsque le nombre d'éléments par LinearMap dépasse un seuil, redimensionnez la table de hachage en ajoutant davantage de LinearMaps.
+
+Voici une implémentation d'une table de hachage:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Chaque HashMap contient un BetterMap; __init__ commence avec seulement 2 LinearMaps et initialise num, ce qui permet de suivre le nombre d'éléments.
+obtenir juste des dépêches à BetterMap. Le travail réel se produit dans add, qui vérifie le nombre d'éléments et la taille du BetterMap: s'ils sont égaux, le nombre moyen d'éléments par LinearMap est égal à 1, il est donc appelé redimensionner.
+
+resize crée une nouvelle carte BetterMap, deux fois plus grande que la précédente, puis «rehase» les éléments de l'ancienne carte à la nouvelle.
+
+Le rehachage est nécessaire car la modification du nombre de LinearMaps modifie le dénominateur de l'opérateur de module dans find_map. Cela signifie que certains objets qui étaient auparavant utilisés dans la même LinearMap seront scindés (c'est ce que nous voulions, n'est-ce pas?).
+
+Le rehachage est linéaire, le redimensionnement est donc linéaire, ce qui peut paraître mauvais, car j'avais promis d'ajouter le temps constant. Mais rappelez-vous que nous n’avons pas besoin de redimensionner à chaque fois, donc add est généralement un temps constant et n’est que rarement linéaire. La quantité totale de travail à exécuter pour ajouter n fois est proportionnelle à n, le temps moyen de chaque ajout est donc constant!
+
+Pour voir comment cela fonctionne, pensez à commencer avec un HashTable vide et à ajouter une séquence d'éléments. Nous commençons avec 2 LinearMaps, donc les 2 premiers ajouts sont rapides (aucun redimensionnement requis). Disons qu’ils prennent chacun une unité de travail. L’ajout suivant nécessite un redimensionnement, nous devons donc réorganiser les deux premiers éléments (appelons cela 2 unités de travail supplémentaires), puis ajouter le troisième élément (une unité supplémentaire). L'ajout du prochain élément coûte 1 unité, donc le total jusqu'à présent est de 6 unités de travail pour 4 éléments.
+
+L'ajout suivant coûte 5 unités, mais les trois suivants ne représentent qu'une unité chacun. Le total est donc de 14 unités pour les 8 premiers ajouts.
+
+L'ajout suivant coûte 9 unités, mais nous pouvons ensuite en ajouter 7 avant le prochain redimensionnement, de sorte que le total est de 30 unités pour les 16 premiers ajouts.
+
+Après 32 ajouts, le coût total est de 62 unités et j'espère que vous commencez à voir une tendance. Après n ajoute, où n est une puissance de deux, le coût total est de 2n − 2 unités, de sorte que le travail moyen par addition est un peu inférieur à 2 unités. Quand n est une puissance de deux, c’est le meilleur des cas; Pour les autres valeurs de n, le travail moyen est un peu plus élevé, mais ce n’est pas important. La chose importante est que c'est O (1).
+
+La figure B.1 montre comment cela fonctionne graphiquement. Chaque bloc représente une unité de travail. Les colonnes indiquent le travail total pour chaque ajout dans l'ordre de gauche à droite: les deux premiers ajoutent un coût de 1 unité, la troisième un coût de 3 unités, etc.
+
+
+Figure B.1: Le coût d'une hashtable add.
+Le travail supplémentaire de reprise se présente comme une séquence de tours de plus en plus hautes avec un espace croissant entre elles. Maintenant, si vous renversez les tours, en répartissant le coût du redimensionnement sur toutes les annonces, vous pouvez voir graphiquement que le coût total après n ajoute est 2n - 2.
+Une caractéristique importante de cet algorithme est que, lorsque nous redimensionnons la table de hachage, elle se développe géométriquement. c'est-à-dire que nous multiplions la taille par une constante. Si vous augmentez la taille de manière arithmétique (en ajoutant un nombre fixe à chaque fois), le temps moyen par addition est linéaire.
+
+Vous pouvez télécharger mon implémentation de HashMap à l'adresse http://thinkpython2.com/code/Map.py, mais souvenez-vous qu'il n'y a aucune raison de l'utiliser. si vous voulez une carte, utilisez simplement un dictionnaire Python.
+
+B.5 Glossaire
+
+analyse d'algorithmes:
+Une façon de comparer les algorithmes en termes de temps d'exécution et / ou d'espace requis.
+modèle de machine:
+Une représentation simplifiée d'un ordinateur utilisé pour décrire des algorithmes.
+pire cas:
+L'entrée qui fait qu'un algorithme donné s'exécute le plus lentement (ou requiert le plus d'espace.
+terme principal:
+Dans un polynôme, le terme avec l'exposant le plus élevé.
+point de croisement:
+La taille du problème où deux algorithmes nécessitent le même temps d’exécution ou le même espace.
+ordre de croissance:
+Un ensemble de fonctions qui se développent toutes d’une manière considérée comme équivalente aux fins de l’analyse des algorithmes. Par exemple, toutes les fonctions à croissance linéaire appartiennent au même ordre de croissance.
+Notation Big-Oh:
+Notation pour représenter un ordre de croissance; par exemple, O (n) représente l'ensemble des fonctions à croissance linéaire.
+linéaire:
+Un algorithme dont le temps d'exécution est proportionnel à la taille du problème, du moins pour les problèmes de grande taille.
+quadratique:
+Un algorithme dont le temps d'exécution est proportionnel à n2, où n est une mesure de la taille du problème.
+chercher:
+Le problème de la localisation d'un élément d'une collection (comme une liste ou un dictionnaire) ou de la détermination de son absence.
+hashtable:
+Une structure de données qui représente un ensemble de paires clé-valeur et effectue une recherche en temps constant.
