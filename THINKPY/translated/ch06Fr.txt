@@ -6,9 +6,7 @@ retour. Mais les fonctions que nous avons écrites sont toutes vides: elles ont 
 valeur ou le déplacement d'une tortue, mais ils n'ont pas de valeur de retour. Dans ce chapitre, vous apprendrez à
 écrire des fonctions fructueuses.
 
-6.1
-
-Valeurs de retour
+6.1 Valeurs de retour
 
 L'appel de la fonction génère une valeur de retour, que nous l'affectons généralement à une variable ou à une utilisation.
 dans le cadre d'une expression.

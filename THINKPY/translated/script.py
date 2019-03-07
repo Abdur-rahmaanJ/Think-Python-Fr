@@ -56,16 +56,16 @@ def main(args=None):
 
 def main(args=None):
     print('[x] reading md file ...')
-    with open('all_in_one.md', 'r') as f:
+    with open('all_in_one.md', 'r', encoding='utf8') as f:
         md = f.read()
     print('[x] fetching extentions ...')
     extensions = ['extra', 'smarty']
     print('[x] converting to html ...')
     html = markdown.markdown(md, extensions=extensions, output_format='html5')
-    print('[x] rendering with jinja ...')
+    print('[x] rendering template ...')
     doc = jinja2.Template(TEMPLATE).render(content=html)
     print('[x] writing ...')
-    with open('ttt.html', 'w+') as f:
+    with open('ttt.html', 'w+', encoding='utf8') as f:
         f.write(doc)
     print('Terminated')
 
