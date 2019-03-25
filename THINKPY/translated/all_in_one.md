@@ -4,6 +4,8 @@ traduction du livre: Think Python, How To Think Like A Computer Scientist d'Alla
 
 par Abdur-Rahmaan Janhangeer de l'Ile Maurice
 
+<hr>
+
 # Indexe
 
 - [Chapitre 1: le chemin de la programmation](#ch1)
@@ -449,7 +451,8 @@ Je ne travaille pas très dur pour me souvenir de la préséance des opérateurs
 
 En général, vous ne pouvez pas effectuer d’opérations mathématiques sur des chaînes, même si elles ressemblent à des nombres, les opérations suivantes sont donc illégales:
 
-```'2' - '1' 
+```
+'2' - '1' 
 'oeufs' / 'facile' 
 'troisième' * 'un charme'
 ```
@@ -514,228 +517,244 @@ Les erreurs d'exécution sont rares dans les programmes simples que vous verrez 
 - **Erreur sémantique:** Le troisième type d'erreur est «sémantique», ce qui signifie lié au sens. S'il y a une erreur sémantique dans votre programme, celui-ci s'exécutera sans générer de message d'erreur, mais cela ne fonctionnera pas correctement. Cela fera autre chose. Plus précisément, il fera ce que vous lui avez dit de faire.
 Identifier les erreurs sémantiques peut être délicat, car cela nécessite de travailler en arrière en examinant les résultats du programme et en essayant de comprendre ce qu'il fait.
 
-### 2.9 Composition
+### 2.9 Glossaire
 
-Jusqu'à présent, nous avons examiné les éléments d'un programme-variables, expressions,et déclarations - isolément, sans parler de la façon de les combiner.
-L'une des caractéristiques les plus utiles des langages de programmation est leur capacité à prendre de petits blocs de construction et de les composer. Par exemple, nous savons comment ajouter des chiffres et nous savons comment imprimer; il se trouve que nous pouvons faire les deux à la fois :
->>> print 17 + 3
-20
-En réalité, l'ajout doit se produire avant l'impression, de sorte que les actions ne sont pas
-se passe réellement en même temps. Le fait est que toute expression impliquant les nombres, les chaînes et les variables peuvent être utilisés dans une instruction print. Vous avez
-déjà vu un exemple de ceci:
-print "Nombre de minutes écoulées depuis minuit:", heure * 60 + minute
-Vous pouvez également placer des expressions arbitraires sur le côté droit d'une affectation :
-pourcentage = (minute * 100) / 60
-Cette capacité peut ne pas sembler impressionnante maintenant, mais vous verrez d'autres exemples
-où la composition permet d'exprimer des calculs complexes
-et concise.
-Attention: Il y a des limites sur l'endroit où vous pouvez utiliser certaines expressions. Par exemple,
-le côté gauche d'une instruction d'affectation doit être un nom de variable,
-pas une expression. Donc, ce qui suit est illégal: minute + 1 = heure.
+- **variable:** Un nom qui fait référence à une valeur.
 
-### 2.10 Commentaires
+- **affectation:** Une déclaration qui assigne une valeur à une variable.
 
-À mesure que les programmes deviennent plus gros et plus compliqués, ils deviennent plus difficiles à lire.
-Les langages formels sont denses, et il est souvent difficile de regarder un morceau de code
-et comprendre ce qu'il fait, ou pourquoi.
+- **diagramme d'état:** Représentation graphique d'un ensemble de variables et des valeurs auxquelles elles se rapportent.
 
-Pour cette raison, c'est une bonne idée d'ajouter des notes à vos programmes pour expliquer dans
-langage naturel ce que le programme fait. Ces notes sont appelées commentaires,
-et ils sont marqués du symbole #:
-# calcule le pourcentage de l'heure qui s'est écoulée
-pourcentage = (minute * 100) / 60
-Dans ce cas, le commentaire apparaît sur une ligne par lui-même. Vous pouvez également mettre des commentaires
-à la fin d'une ligne:
-pourcentage = (minute * 100) / 60 # attention: division entière
-Tout du # à la fin de la ligne est ignoré - il n'a aucun effet sur le
-programme. Le message est destiné au programmeur ou aux futurs programmeurs
-qui pourrait utiliser ce code. Dans ce cas, il rappelle au lecteur le
-comportement toujours surprenant de la division entière.
-Ce genre de commentaire est moins nécessaire si vous utilisez l'opération de division entière,
-//. Il a le même effet que l'opérateur de division1
-, mais cela indique que l'effet est délibéré.
-pourcentage = (minute * 100) // 60
-L'opérateur de division entier est comme un commentaire qui dit: "Je sais que c'est un nombre entier
-division, et je l'aime comme ça! "
+- **mot-clé:** Mot réservé utilisé pour analyser un programme. vous ne pouvez pas utiliser de mots-clés tels que if, def et while comme noms de variable.
 
-### 2.11 Glossaire
+- **opérande:** Une des valeurs sur lesquelles opère un opérateur.
 
-value: Un nombre ou une chaîne (ou une autre chose à nommer plus tard) qui peut être stockée dans une variable ou calculé dans une expression.
-type: un ensemble de valeurs. Le type d'une valeur détermine comment elle peut être utilisée dans les expressions. Jusqu'à présent, les types que vous avez vus sont des entiers (type int), nombres flottants (type float) et chaînes (type string).
-floating-point: Un format pour représenter des nombres avec des parties fractionnaires.
-variable: un nom qui fait référence à une valeur.
-statement: Une section de code représentant une commande ou une action. Jusqu'à présent, les déclarations que vous avez vues sont des affectations et des déclarations print.
-affectation: une instruction qui affecte une valeur à une variable.
-1Pour maintenant. Le comportement de l'opérateur de division peut changer dans les futures versions de Python.
-20 Variables, expressions et déclarations
-state diagrams: Représentation graphique d'un ensemble de variables et des valeurs
-auquel ils se réfèrent.
-keyword : mot réservé utilisé par le compilateur pour analyser un programme;
-vous ne pouvez pas utiliser des mots-clés comme if, def et while comme noms de variables.
-operator: Un symbole spécial qui représente un calcul simple comme l'addition,
-multiplication, ou concaténation de chaîne.
-Opérande: Une des valeurs sur lesquelles un opérateur opère.
-expression: une combinaison de variables, d'opérateurs et de valeurs représentant
-une seule valeur de résultat.
-évaluer: Pour simplifier une expression en effectuant les opérations afin de
-donner une seule valeur.
-division entière: Opération qui divise un entier par un autre et donne
-un nombre entier. La division entière ne donne que le nombre entier de fois que
-Le numérateur est divisible par le dénominateur et rejette tout ce qui reste.
-règles de précédance: Ensemble de règles régissant l'ordre dans lequel les expressions impliquant plusieurs opérateurs et opérandes sont évalués.
-concaténer: Pour combiner deux opérandes.
-composition: La capacité de combiner des expressions simples et des déclarations dans
-expressions et expressions composées afin de représenter des calculs complexes
-avec concision.
-commentaire : Information dans un programme destiné à d'autres programmeurs (ou quiconque lit le code source) et n'a aucun effet sur l'exécution du programme.
+- **expression:** Combinaison de variables, d'opérateurs et de valeurs représentant un seul résultat.
+
+- **évaluer:** Simplifier une expression en effectuant les opérations afin de générer une valeur unique.
+
+- **déclaration:** Une section de code qui représente une commande ou une action. Jusqu'à présent, les déclarations que nous avons vues sont des assignations et des déclarations imprimées.
+
+- **exécuter:** Pour exécuter une déclaration et faire ce qu'elle dit.
+
+- **mode interactif:** Une façon d'utiliser l'interpréteur Python en tapant du code à l'invite.
+
+- **mode script:** Une façon d'utiliser l'interpréteur Python pour lire le code d'un script et l'exécuter.
+
+- **scénario:** Un programme stocké dans un fichier.
+
+- **ordre des opérations:** Règles régissant l'ordre dans lequel les expressions impliquant plusieurs opérateurs et opérandes sont évaluées.
+
+- **enchaîner:** Pour joindre deux opérandes de bout en bout.
+
+- **commentaire:** Informations contenues dans un programme destiné à d'autres programmeurs (ou à toute personne lisant le code source) et n'ayant aucun effet sur l'exécution du programme.
+
+- **erreur de syntaxe:** Une erreur dans un programme qui rend impossible l'analyse (et donc impossible à interpréter).
+
+- **exception:** Une erreur détectée pendant l'exécution du programme.
+
+- **sémantique:** Le sens d'un programme.
+
+- **erreur sémantique:** Une erreur dans un programme qui lui fait faire autre chose que ce que le programmeur avait prévu.
+
+### 2.10 Exercices
+
+** Exercice 1 **
+
+_Répétant les conseils du chapitre précédent, chaque fois que vous apprenez une nouvelle fonctionnalité, vous devriez l'essayer en mode interactif et faire des erreurs exprès pour voir ce qui ne va pas._
+
+- _Nous avons vu que ```n = 42``` est légal. Qu'en est-il de ```42 = n``` ?_
+
+- _Comment à propos de ```x = y = 1```?_
+
+- _Dans certaines langues, chaque instruction se termine par un point-virgule,;. Que se passe-t-il si vous mettez un point-virgule à la fin d'une instruction Python?_
+
+- _Que se passe-t-il si vous mettez un point à la fin d'une déclaration?_
+
+- _En notation mathématique, vous pouvez multiplier x et y comme ceci: ```x y```. Que se passe-t-il si vous essayez cela en Python?_
+
+** Exercice 2 **
+
+_Pratique utilisant l'interpréteur Python comme calculatrice:_
+
+1. _Le volume d'une sphère de rayon r est 4/3 π r<sup>3</sup>. Quel est le volume d'une sphère de rayon 5?_
+
+2. _Supposez que le prix de vente d'un livre est de $24,95 , mais les librairies bénéficient d'une réduction de 40%. La livraison coûte $3 pour le premier exemplaire et 75 cents pour chaque exemplaire supplémentaire. Quel est le prix en gros total pour 60 exemplaires?_
+
+3. _Si je quitte ma maison à 6h52 du matin et que je cours 1 mile à un rythme lent (8:15 par mile), puis 3 miles au tempo (7:12 par mile) et à un mile à nouveau, quelle heure puis-je rentrer à la maison pour le petit déjeuner?_ 
 
 # Chapitre 3 <a name="ch3"></a>
 
-
-### Les fonctions
-
+## Les fonctions
+Dans le contexte de la programmation, une fonction est une séquence d'instructions nommée qui effectue un calcul. Lorsque vous définissez une fonction, vous spécifiez le nom et la séquence d'instructions. Plus tard, vous pourrez “appeler” la fonction par son nom.
+<br><br>
 
 ### 3.1 Appels de fonction
 
 
 Vous avez déjà vu un exemple d'appel de fonction:
+
 ```python
->>> type ("32")
+>>> type ("42")
 <type 'str'>
 ```
-Le nom de la fonction est type, et il affiche le type d'une valeur ou d'une variable.
-La valeur ou variable, appelée argument de la fonction, doit
-être entouré de parenthèses. Il est courant de dire qu'une fonction "prend" un
-argument et "renvoie" un résultat. Le résultat est appelé la valeur de retour.
-Au lieu d'imprimer la valeur de retour, nous pourrions l'assigner à une variable:
-```python
->>> betty = type ("32")
->>> print betty
-<type 'str'>
-```
-Comme un autre exemple, la fonction id prend une valeur ou une variable et retourne un
-entier qui agit comme un identifiant unique pour la valeur:
+Le nom de la fonction est ```type```. L'expression entre parenthèses est appelée l'argument de la fonction. Le résultat, pour cette fonction, est le type de l'argument.
 
-```python
->>> id (3)
-134882108
->>> betty = 3
->>> id (betty)
-134882108
-```
-Chaque valeur a un identifiant, qui est un nombre unique lié à l'endroit où il est stocké
-dans la mémoire de l'ordinateur. L'identifiant d'une variable est l'identifiant de la valeur à
-auquel il se réfère.
+Il est courant de dire qu'une fonction "prend" un argument et "renvoie" un résultat. Le résultat s'appelle également la valeur de retour.
 
-### 3.2 Conversion de type
-
-Python fournit une collection de fonctions intégrée qui convertit les valeurs d'un
-int à un autre. La fonction int prend n'importe quelle valeur et la convertit en entier,
-si possible, ou se plaint autrement:
+Python fournit des fonctions qui convertissent les valeurs d'un type à un autre. La fonction int prend n'importe quelle valeur et la convertit en un entier, si elle le peut, ou se plaint sinon:
 ```python
->>> int ("32")
+>>> int('32')
 32
->>> int ("Bonjour")
+>>> int('Hello')
 ValueError: invalid literal for int(): Hello
 ```
-int peut également convertir des floats en entiers, mais rappelez-vous qu'il
-tronque la partie fractionnaire:
+int peut convertir les valeurs en virgule flottante en nombres entiers, mais cela n’arrondit pas; il coupe la partie fraction:
 ```python
 >>> int (3.99999)
 3
 >>> int (-2.3)
 -2
 ```
-La fonction float convertit les entiers et les chaînes en float:
-
+float convertit les entiers et les chaînes en nombres à virgule flottante:
 ```python
->>> float (32)
-32,0
->>> float ("3.14159")
+>>> float(32)
+32.0
+>>> float('3.14159')
 3.14159
-Enfin, la fonction str convertit en chaîne de caractères:
+```
+Enfin, str convertit son argument en chaîne:
+```python
 >>> str (32)
 '32'
->>> str (3.14149)
-'3.14149'
+>>> str (3.14159)
+'3.14159'
 ```
-Il peut sembler étrange que Python distingue la valeur entière 1 du float
-1,0. Ils peuvent représenter le même nombre, mais ils appartiennent à
-différents types. La raison en est qu'ils sont représentés différemment dans
-l'ordinateur.
+### 3.2 Fonctions mathématiques
 
-### 3.3 Coertion de type
+Python a un module mathématique qui fournit la plupart des fonctions mathématiques habituelles. Un module est un fichier contenant une collection de fonctions connexes.
 
-Maintenant que nous pouvons convertir entre les types, nous avons une autre façon de faire face à
-la division entière. En revenant à l'exemple du chapitre précédent, supposons que
-nous voulons calculer la fraction d'une heure qui s'est écoulée. Le plus évident
-expression, minute / 60, fait l'arithmétique entière, donc le résultat est toujours 0, même
-à 59 minutes après l'heure.
-
-Une solution consiste à convertir la minute en float et faire la division:
-```python
->>> minute = 59
->>> float (minute) / 60
-0,983333333333
-```
-Alternativement, nous pouvons tirer parti des règles pour la conversion automatique de type,
-ce qui s'appelle la coercition de type. Pour les opérateurs mathématiques, si
-l'opérande est un float, l'autre est automatiquement converti en un float:
-```python
->>> minute = 59
->>> minute / 60.0
-0,983333333333
-```
-
-En transformant le dénominateur en float, nous forçons Python à faire la division comme on souhaitait.
-
-### 3.4 Fonctions mathématiques
-
-En mathématiques, vous avez probablement vu des fonctions comme le sin et le log, et on vous
-a apprit à évaluer des expressions comme sin (pi / 2) et log (1 / x). D'abord, vous
-évaluez l'expression entre parenthèses (l'argument). Par exemple, pi / 2 est
-approximativement 1.571, et 1 / x est 0.1 (si x arrive à être 10.0).
-Ensuite, vous évaluez la fonction elle-même, soit en la recherchant dans un tableau ou en
-effectuer divers calculs. Le sin de 1.571 est 1, et le log de 0.1 est
--1 (en supposant que log indique la base logarithmique 10).
-Ce processus peut être appliqué à plusieurs reprises pour évaluer des expressions plus complexes
-comme log (1 / sin (pi / 2)). D'abord, vous évaluez l'argument le plus profond
-puis la fonction, et ainsi de suite.
-Python a un module de mathématiques qui fournit la plupart des fonctions mathématiques courantes.
-Un module est un fichier qui contient une collection de fonctions connectées
-mis ensemble.
-Avant de pouvoir utiliser les fonctions d'un module, nous devons les importer:
-```python
->>> import math
-```
-Pour appeler l'une des fonctions, nous devons spécifier le nom du module et le
-nom de la fonction, séparé par un point, également appelé période. Ce format
-est appelée dot notation.
+Avant de pouvoir utiliser les fonctions d'un module, nous devons l'importer avec une instruction import:
 
 ```python
->>> decibel = math.log10 (17.0)
->>> angle = 1.5
->>> height = math.sin (angle)
+>>> maths d'importation
 ```
-La première déclaration définit le décibel au logarithme de 17, base 10. Il y a aussi
-une fonction appelée log qui prend logarithme base e.
-La troisième déclaration trouve le sinus de la valeur de l'angle variable.Sin et
-les autres fonctions trigonométriques (cos, tan, etc.) prennent des arguments en radian.
-Pour convertir des degrés en radians, diviser par 360 et multiplier par 2 * pi. Pour
-par exemple, pour trouver le sinus de 45 degrés, d'abord calculer l'angle en radians et
-alors prenez le sinus:
+
+Cette instruction crée un objet module nommé math. Si vous affichez l'objet module, vous obtenez des informations à ce sujet:
+
+```python
+>>> maths
+<module 'math' (built-in)>
+```
+L'objet module contient les fonctions et les variables définies dans le module. Pour accéder à l'une des fonctions, vous devez spécifier le nom du module et le nom de la fonction, séparés par un point (également appelé période). Ce format s'appelle la notation par points.
+```python
+>>> ratio = signal_power / noise_power
+>>> décibels = 10 * math.log10 (ratio)
+
+>>> radians = 0,7
+>>> height = math.sin (radians)
+```
+Le premier exemple utilise ```math.log10``` pour calculer un rapport signal sur bruit en décibels (en supposant que signal_power et noise_power soient définis). Le module mathématique fournit également un journal, qui calcule les logarithmes de base e.
+
+Le deuxième exemple trouve le sinus de radians. Le nom de la variable est un indice que péché et les autres fonctions trigonométriques (cos, tan, etc.) prennent des arguments en radians. Pour convertir des degrés en radians, divisez par 180 et multipliez par π:
 ```python
 >>> degrees = 45
->>> angle = degrés * 2 * math.pi / 360.0
->>> math.sin (angle)
+>>> radians = degrees / 180.0 * math.pi
+>>> math.sin(radians)
 0,707106781187
 ```
-La constante pi fait également partie du module mathématique. Si vous connaissez votre géométrie,
-vous pouvez vérifier le résultat précédent en le comparant à la racine carrée de deux
-divisé par deux:
+L'expression ```math.pi``` obtient la variable pi du module mathématique. Sa valeur est une approximation à virgule flottante de π, précise à environ 15 chiffres.
+
+Si vous connaissez la trigonométrie, vous pouvez vérifier le résultat précédent en le comparant à la racine carrée de deux divisée par deux:
 ```python
->>> math.sqrt (2) / 2.0
+>>> math.sqrt(2) / 2.0
 0,707106781187
+```
+### 3.3 Composition
+
+Jusqu'à présent, nous avons examiné les éléments d'un programme - variables, expressions et déclarations - de manière isolée, sans parler de la façon de les combiner.
+
+Une des caractéristiques les plus utiles des langages de programmation est leur capacité à prendre et à composer de petits blocs de construction. Par exemple, l'argument d'une fonction peut être n'importe quel type d'expression, y compris les opérateurs arithmétiques:
+
+```python
+x = math.sin (degrés / 360.0 * 2 * math.pi)
+```
+
+Et même des appels de fonction:
+
+```python
+x = math.exp (math.log (x + 1))
+```
+
+Presque n'importe où vous pouvez mettre une valeur, vous pouvez mettre une expression arbitraire, à une exception près: le côté gauche d'une instruction d'affectation doit être un nom de variable. Toute autre expression à gauche est une erreur de syntaxe (nous verrons des exceptions à cette règle plus tard).
+
+```python
+>>> minutes = heures * 60 # droite
+>>> heures * 60 = minutes # faux!
+SyntaxError: can't assign to operator
+```
+
+### 3.4 Ajouter de nouvelles fonctions
+
+Jusqu'à présent, nous utilisions uniquement les fonctions fournies avec Python, mais il est également possible d'ajouter de nouvelles fonctions. Une définition de fonction spécifie le nom d'une nouvelle fonction et la séquence d'instructions qui s'exécutent lorsque la fonction est appelée.
+
+Voici un exemple:
+
+```python
+def print_lyrics():
+    print("I'm a lumberjack, and I'm okay.")
+    print("I sleep all night and I work all day.")
+```
+
+```def``` est un mot clé qui indique qu'il s'agit d'une définition de fonction. Le nom de la fonction est ```print_lyrics```. Les règles pour les noms de fonctions sont les mêmes que pour les noms de variables: les lettres, les chiffres et les traits de soulignement sont légaux, mais le premier caractère ne peut pas être un nombre. Vous ne pouvez pas utiliser un mot-clé comme nom d'une fonction et vous devez éviter d'avoir une variable et une fonction du même nom.
+Les parenthèses vides après le nom indiquent que cette fonction ne prend aucun argument.
+
+La première ligne de la définition de fonction s'appelle l'en-tête. le reste s'appelle le corps. L'en-tête doit se terminer par un deux-points et le corps doit être mis en retrait. Par convention, l'indentation est toujours de quatre espaces. Le corps peut contenir n'importe quel nombre d'énoncés.
+
+Les chaînes dans les instructions print sont placées entre guillemets. Les guillemets simples et les guillemets doubles font la même chose; la plupart des gens utilisent des guillemets simples, sauf dans les cas comme celui-ci où un guillemet simple (qui est aussi une apostrophe) apparaît dans la chaîne.
+
+Tous les guillemets (simples et doubles) doivent être des «guillemets droits», généralement situés à côté de la touche Entrée du clavier. Les «guillemets bouclés», comme ceux de cette phrase, ne sont pas légaux en Python.
+
+Si vous tapez une définition de fonction en mode interactif, l’interprète imprime des points (...) pour vous informer que la définition n’est pas complète:
+```python
+>>> def print_lyrics():
+...     print("I'm a lumberjack, and I'm okay.")
+...     print("I sleep all night and I work all day.")
+...
+```
+Pour terminer la fonction, vous devez entrer une ligne vide.
+
+Définir une fonction crée un objet de fonction, qui a le type fonction:
+
+```python
+>>> print(print_lyrics)
+<function print_lyrics at 0xb7e99e9c>
+>>> type(print_lyrics)
+<class 'function'>
+```
+
+La syntaxe pour appeler la nouvelle fonction est la même que pour les fonctions intégrées:
+```python
+>>> print_lyrics()
+I'm a lumberjack, and I'm okay.
+I sleep all night and I work all day.
+```
+Une fois que vous avez défini une fonction, vous pouvez l’utiliser dans une autre fonction. Par exemple, pour répéter le refrain précédent, nous pourrions écrire une fonction appelée repeat_lyrics:
+
+```python
+def repeat_lyrics ():
+    print_lyrics ()
+    print_lyrics ()
+```
+
+Et ensuite, appelez ```repeat_lyrics```:
+
+```python
+>>> repeat_lyrics()
+I'm a lumberjack, and I'm okay.
+I sleep all night and I work all day.
+I'm a lumberjack, and I'm okay.
+I sleep all night and I work all day.
 ```
 ### 3.5 Composition
 

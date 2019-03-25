@@ -17,7 +17,9 @@ TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
 <div class="container">
+
 {{content}}
+
 <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 </div>
@@ -56,7 +58,7 @@ def main(args=None):
 
 def main(args=None):
     print('[x] reading md file ...')
-    with open('all_in_one.md', 'r', encoding='utf8') as f:
+    with open('completed_upto_now.md', 'r', encoding='utf8') as f:
         md = f.read()
     print('[x] fetching extentions ...')
     extensions = ['extra', 'smarty']
@@ -65,7 +67,7 @@ def main(args=None):
     print('[x] rendering template ...')
     doc = jinja2.Template(TEMPLATE).render(content=html)
     print('[x] writing ...')
-    with open('ttt.html', 'w+', encoding='utf8') as f:
+    with open('completed_upto_now.html', 'w+', encoding='utf8') as f:
         f.write(doc)
     print('Terminated')
 

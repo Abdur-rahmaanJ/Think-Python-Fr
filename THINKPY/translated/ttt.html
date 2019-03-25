@@ -389,10 +389,10 @@ x + 1
 <p>Lorsqu&rsquo;une expression contient plusieurs opérateurs, l&rsquo;ordre d&rsquo;évaluation dépend de l&rsquo;ordre des opérations. Pour les opérateurs mathématiques, Python respecte les conventions mathématiques. L&rsquo;acronyme <strong>PEMDAS</strong> est un moyen utile de mémoriser les règles:</p>
 <ul>
 <li>
-<p>Les <strong>P</strong>arenthèses ont la priorité la plus élevée et peuvent être utilisées pour forcer l’évaluation d’une expression dans l’ordre que vous souhaitez. Comme les expressions entre parenthèses sont évaluées en premier, <code>2 * (3-1)</code> est égal à <code>4</code> et <code>(1 + 1) ** (5-2)</code> est égal à <code>8</code>. Vous pouvez également utiliser des parenthèses pour faciliter la lecture d’une expression, comme dans <code>( minute * 100) / 60</code>, même si cela ne change pas le résultat.</p>
+<p>Les <strong>P</strong>arenthèses ont la priorité la plus élevée et peuvent être utilisées pour forcer l’évaluation d’une expression dans l’ordre que vous souhaitez. Comme les expressions entre parenthèses sont évaluées en premier, <code>2 * (3-1)</code> est égal à 4 et <code>(1 + 1) ** (5-2)</code> est égal à 8. Vous pouvez également utiliser des parenthèses pour faciliter la lecture d’une expression, comme dans <code>( minute * 100) / 60</code>, même si cela ne change pas le résultat.</p>
 </li>
 <li>
-<p>L&rsquo;<strong>E</strong>xponentiation a la priorité suivante, donc <code>1 + 2 ** 3</code> est égal à 9 et non 27 et<code>2 * 3 ** 2</code> à 18 et non 36.</p>
+<p>L&rsquo;<strong>E</strong>xponentiation a la priorité suivante, donc <code>1 + 2 ** 3</code> est égal à 9 et non 27 et <code>2 * 3 ** 2</code> à 18 et non 36.</p>
 </li>
 <li>
 <p>La <strong>M</strong>ultiplication et la <strong>D</strong>ivision ont une priorité plus élevée que l&rsquo;addition et la soustraction. Donc, <code>2 * 3-1</code> correspond à 5, pas 4, et <code>6 + 4/2</code> à 8, pas 5.</p>
@@ -402,226 +402,243 @@ x + 1
 </li>
 </ul>
 <p>Je ne travaille pas très dur pour me souvenir de la préséance des opérateurs. Si je ne peux pas dire en regardant l&rsquo;expression, j&rsquo;utilise des parenthèses pour la rendre évidente.</p>
-<h3>2.6 Opérateurs et opérandes</h3>
-<p>Les opérateurs sont des symboles spéciaux qui représentent des calculs comme l&rsquo;addition et multiplication. Les valeurs utilisées par l&rsquo;opérateur sont appelées opérandes.
-Ce qui suit sont toutes les expressions Python légales dont la signification est plus ou moins claire:
-20 + 32 heures-1 heure * 60 + minutes minute / 60 5 <strong> 2 (5 + 9) * (15-7)
-Les symboles +, -, et /, et l&rsquo;utilisation de parenthèses pour le regroupement signifient en Python ce qu&rsquo;ils veulent dire en mathématiques. L&rsquo;astérisque (*) est le symbole de
-multiplication, et </strong> est le symbole de l&rsquo;exponentiation.
-Quand un nom de variable apparaît à la place d&rsquo;un opérande, il est remplacé par sa valeur avant que l&rsquo;opération soit effectuée.
-L&rsquo;addition, la soustraction, la multiplication et l&rsquo;exponentiation font toutes ce que vous attendez,
-mais vous pourriez être surpris par la division. L&rsquo;opération suivante a un
-résultat inattendu:</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>minute = 59
-minute / 60
-0
-La valeur de minute est 59, et en arithmétique conventionnelle 59 divisé par 60 est
-0,98333, pas 0. La raison de l&rsquo;écart est que Python effectue une division entière.
-Lorsque les deux opérandes sont des entiers, le résultat doit également être un entier, et par convention, la division entière arrondit toujours vers le bas, même dans des cas comme celui-ci où
-l&rsquo;entier suivant est très proche.
-Une solution possible à ce problème consiste à calculer un pourcentage plutôt qu&rsquo;un
-fraction:
-minute * 100/60
-98
-Encore une fois le résultat est arrondi vers le bas, mais au moins maintenant la réponse est environ
-correct. Une autre alternative est d&rsquo;utiliser la division à virgule flottante, que nous parcourerons au Chapitre 3.</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<h3>2.7 Ordre des opérations</h3>
-<p>Lorsque plus d&rsquo;un opérateur apparaît dans une expression, l&rsquo;ordre d&rsquo;évaluation
-dépend des règles de préséance. Python suit la même préséance
-règles pour ses opérateurs mathématiques que les mathématiques font. L&rsquo;acronyme PEMDAS est un moyen utile de se souvenir de l&rsquo;ordre des opérations :
-• Les parenthèses ont la plus haute priorité et peuvent être utilisées pour forcer un
-expression à évaluer dans l&rsquo;ordre que vous voulez. Depuis les expressions entre parenthèses
-sont évalués en premier, 2 * (3-1) est 4, et (1 + 1) <strong> (5-2) est 8. Vous pouvez également utiliser des parenthèses pour rendre une expression plus facile à lire, comme dans (minute * 100) / 60, même si cela ne change pas le résultat.
-• L&rsquo;exponentiation a la plus haute priorité suivante, donc 2 </strong> 1 + 1 est 3 et non
-4, et 3 * 1 ** 3 est 3 et non 27.
-• La multiplication et la division ont la même précédence, ce qui est plus élevé
-que l&rsquo;addition et la soustraction, qui ont également la même priorité. Alors
-2 * 3-1 donne 5 plutôt que 4, et 2 / 3-1 est -1, pas 1 (souvenez-vous que dans
-division entière, 2/3 = 0).
-• Les opérateurs ayant la même priorité sont évalués de gauche à droite. Donc dans
-l&rsquo;expression minute * 100/60, la multiplication arrive en premier, produisant
-5900/60, ce qui donne à son tour 98. Si les opérations avaient été évaluées
-de droite à gauche, le résultat aurait été 59 * 1, ce qui est 59, ce qui est faux.</p>
-<h3>2.8 Opérations sur les chaînes</h3>
-<p>En général, vous ne pouvez pas effectuer d&rsquo;opérations mathématiques sur des chaînes, même si
-les chaînes ressemblent à des nombres. Les éléments suivants sont illégaux (en supposant que ce message a pour type string):
-message-1 &ldquo;Bonjour&rdquo; / 123 message * &ldquo;Bonjour&rdquo; &ldquo;15&rdquo; +2
-Fait intéressant, l&rsquo;opérateur + travaille avec des chaînes, bien qu&rsquo;il ne le fasse pas exactement ce que vous pourriez attendre. Pour les chaînes, l&rsquo;opérateur + représente la concaténation, ce qui signifie rejoindre les deux opérandes en les reliant bout à bout. Pour
-Exemple:
-fruit = &ldquo;banane&rdquo;
-bakedGood = &rdquo; pain aux noix&rdquo;
-print fruits + bakedGood
-Le résultat de ce programme est &ldquo;banane pain aux noix&rdquo;. L&rsquo;espace avant le mot noix fait partie de la chaîne, et est nécessaire pour produire l&rsquo;espace entre le chaînes concaténées.
-L&rsquo;opérateur * travaille également sur les chaînes; il effectue la répétition. Par exemple,
-&ldquo;Fun&rdquo; * 3 est &ldquo;FunFunFun&rdquo;. L&rsquo;un des opérandes doit être une chaîne; l&rsquo;autre doit être un nombre entier.</p>
-<p>D&rsquo;une part, cette interprétation de + et * a un sens par analogie avec l&rsquo;addition et multiplication. Tout comme 4 * 3 équivaut à 4 + 4 + 4, nous nous attendons à ce que &ldquo;Fun&rdquo; * 3
-être le même que &ldquo;Fun&rdquo; + &ldquo;Fun&rdquo; + &ldquo;Fun&rdquo;, et il est. D&rsquo;un autre côté, il y a un façon significative dans laquelle la concaténation de chaînes et la répétition sont différentes de addition et multiplication entières. Pouvez-vous penser à une propriété que l&rsquo;addition
-et la multiplication ont et que la concaténation et la répétition n&rsquo;ont pas?</p>
-<h3>2.9 Composition</h3>
-<p>Jusqu&rsquo;à présent, nous avons examiné les éléments d&rsquo;un programme-variables, expressions,et déclarations - isolément, sans parler de la façon de les combiner.
-L&rsquo;une des caractéristiques les plus utiles des langages de programmation est leur capacité à prendre de petits blocs de construction et de les composer. Par exemple, nous savons comment ajouter des chiffres et nous savons comment imprimer; il se trouve que nous pouvons faire les deux à la fois :</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>print 17 + 3
-20
-En réalité, l&rsquo;ajout doit se produire avant l&rsquo;impression, de sorte que les actions ne sont pas
-se passe réellement en même temps. Le fait est que toute expression impliquant les nombres, les chaînes et les variables peuvent être utilisés dans une instruction print. Vous avez
-déjà vu un exemple de ceci:
-print &ldquo;Nombre de minutes écoulées depuis minuit:&rdquo;, heure * 60 + minute
-Vous pouvez également placer des expressions arbitraires sur le côté droit d&rsquo;une affectation :
+<h3>2.6 Opérations sur les chaînes</h3>
+<p>En général, vous ne pouvez pas effectuer d’opérations mathématiques sur des chaînes, même si elles ressemblent à des nombres, les opérations suivantes sont donc illégales:</p>
+<pre><code>'2' - '1' 
+'oeufs' / 'facile' 
+'troisième' * 'un charme'
+</code></pre>
+
+<p>Mais il y a deux exceptions, + et * .</p>
+<p>L&rsquo;opérateur + effectue la concaténation de chaînes, ce qui signifie qu&rsquo;il joint les chaînes en les liant de bout en bout. Par exemple:</p>
+<pre><code class="python">&gt;&gt;&gt; first = 'throat'
+&gt;&gt;&gt; second = 'warbler'
+&gt;&gt;&gt; first + second
+throatwarbler
+</code></pre>
+
+<p>L&rsquo;opérateur * travaille également sur les chaînes; il effectue la répétition. Par exemple, <code>"Spam" * 3</code> est <code>"SpamSpamSpam"</code>. Si l&rsquo;une des valeurs est une chaîne, l&rsquo;autre doit être un entier.</p>
+<p>Cette utilisation de + et * est logique par analogie avec l&rsquo;addition et la multiplication. Tout comme <code>4 * 3</code> équivaut à <code>4 + 4 + 4</code>, nous nous attendons à ce que <code>'Spam' * 3</code> soit identique à <code>'Spam' + 'Spam' + 'Spam'</code>, et c&rsquo;est le cas. D&rsquo;autre part, il existe une différence significative entre la concaténation et la répétition de chaînes et l&rsquo;addition et la multiplication d&rsquo;entiers. Pouvez-vous penser à une propriété dont l&rsquo;addition a que lq concaténation n&rsquo;ait pas?</p>
+<h3>2.7 Commentaires</h3>
+<p>À mesure que les programmes deviennent plus grands et plus compliqués, ils deviennent plus difficiles à lire. Les langages formels sont denses et il est souvent difficile de regarder un morceau de code et de comprendre ce qu&rsquo;il fait ou pourquoi.</p>
+<p>Pour cette raison, il est judicieux d’ajouter des notes à vos programmes pour expliquer en langage naturel ce qu’il fait. Ces notes s&rsquo;appellent des commentaires et commencent par le symbole <code>#</code>:</p>
+<pre><code class="python"># calcule le pourcentage de l'heure écoulée
 pourcentage = (minute * 100) / 60
-Cette capacité peut ne pas sembler impressionnante maintenant, mais vous verrez d&rsquo;autres exemples
-où la composition permet d&rsquo;exprimer des calculs complexes
-et concise.
-Attention: Il y a des limites sur l&rsquo;endroit où vous pouvez utiliser certaines expressions. Par exemple,
-le côté gauche d&rsquo;une instruction d&rsquo;affectation doit être un nom de variable,
-pas une expression. Donc, ce qui suit est illégal: minute + 1 = heure.</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<h3>2.10 Commentaires</h3>
-<p>À mesure que les programmes deviennent plus gros et plus compliqués, ils deviennent plus difficiles à lire.
-Les langages formels sont denses, et il est souvent difficile de regarder un morceau de code
-et comprendre ce qu&rsquo;il fait, ou pourquoi.</p>
-<p>Pour cette raison, c&rsquo;est une bonne idée d&rsquo;ajouter des notes à vos programmes pour expliquer dans
-langage naturel ce que le programme fait. Ces notes sont appelées commentaires,
-et ils sont marqués du symbole #:</p>
-<h1>calcule le pourcentage de l&rsquo;heure qui s&rsquo;est écoulée</h1>
-<p>pourcentage = (minute * 100) / 60
-Dans ce cas, le commentaire apparaît sur une ligne par lui-même. Vous pouvez également mettre des commentaires
-à la fin d&rsquo;une ligne:
-pourcentage = (minute * 100) / 60 # attention: division entière
-Tout du # à la fin de la ligne est ignoré - il n&rsquo;a aucun effet sur le
-programme. Le message est destiné au programmeur ou aux futurs programmeurs
-qui pourrait utiliser ce code. Dans ce cas, il rappelle au lecteur le
-comportement toujours surprenant de la division entière.
-Ce genre de commentaire est moins nécessaire si vous utilisez l&rsquo;opération de division entière,
-//. Il a le même effet que l&rsquo;opérateur de division1
-, mais cela indique que l&rsquo;effet est délibéré.
-pourcentage = (minute * 100) // 60
-L&rsquo;opérateur de division entier est comme un commentaire qui dit: &ldquo;Je sais que c&rsquo;est un nombre entier
-division, et je l&rsquo;aime comme ça! &ldquo;</p>
-<h3>2.11 Glossaire</h3>
-<p>value: Un nombre ou une chaîne (ou une autre chose à nommer plus tard) qui peut être stockée dans une variable ou calculé dans une expression.
-type: un ensemble de valeurs. Le type d&rsquo;une valeur détermine comment elle peut être utilisée dans les expressions. Jusqu&rsquo;à présent, les types que vous avez vus sont des entiers (type int), nombres flottants (type float) et chaînes (type string).
-floating-point: Un format pour représenter des nombres avec des parties fractionnaires.
-variable: un nom qui fait référence à une valeur.
-statement: Une section de code représentant une commande ou une action. Jusqu&rsquo;à présent, les déclarations que vous avez vues sont des affectations et des déclarations print.
-affectation: une instruction qui affecte une valeur à une variable.
-1Pour maintenant. Le comportement de l&rsquo;opérateur de division peut changer dans les futures versions de Python.
-20 Variables, expressions et déclarations
-state diagrams: Représentation graphique d&rsquo;un ensemble de variables et des valeurs
-auquel ils se réfèrent.
-keyword : mot réservé utilisé par le compilateur pour analyser un programme;
-vous ne pouvez pas utiliser des mots-clés comme if, def et while comme noms de variables.
-operator: Un symbole spécial qui représente un calcul simple comme l&rsquo;addition,
-multiplication, ou concaténation de chaîne.
-Opérande: Une des valeurs sur lesquelles un opérateur opère.
-expression: une combinaison de variables, d&rsquo;opérateurs et de valeurs représentant
-une seule valeur de résultat.
-évaluer: Pour simplifier une expression en effectuant les opérations afin de
-donner une seule valeur.
-division entière: Opération qui divise un entier par un autre et donne
-un nombre entier. La division entière ne donne que le nombre entier de fois que
-Le numérateur est divisible par le dénominateur et rejette tout ce qui reste.
-règles de précédance: Ensemble de règles régissant l&rsquo;ordre dans lequel les expressions impliquant plusieurs opérateurs et opérandes sont évalués.
-concaténer: Pour combiner deux opérandes.
-composition: La capacité de combiner des expressions simples et des déclarations dans
-expressions et expressions composées afin de représenter des calculs complexes
-avec concision.
-commentaire : Information dans un programme destiné à d&rsquo;autres programmeurs (ou quiconque lit le code source) et n&rsquo;a aucun effet sur l&rsquo;exécution du programme.</p>
+</code></pre>
+
+<p>Dans ce cas, le commentaire apparaît sur une ligne à part. Vous pouvez également mettre des commentaires à la fin d&rsquo;une ligne:</p>
+<pre><code class="python">pourcentage = (minute * 100) / 60 # pourcentage d'une heure
+</code></pre>
+
+<p>Tout ce qui va du <code>#</code> à la fin de la ligne est ignoré - cela n’a aucun effet sur l’exécution du programme.</p>
+<p>Les commentaires sont plus utiles lorsqu&rsquo;ils documentent des caractéristiques non évidentes du code. Il est raisonnable de supposer que le lecteur peut comprendre ce que fait le code; il est plus utile d&rsquo;expliquer pourquoi.</p>
+<p>Ce commentaire est redondant avec le code et inutile:</p>
+<pre><code class="python">v = 5 # assigner 5 à v
+</code></pre>
+
+<p>Ce commentaire contient des informations utiles qui ne figurent pas dans le code:</p>
+<pre><code class="python">v = 5 # vitesse en mètres / seconde.
+</code></pre>
+
+<p>De bons noms de variables peuvent réduire le besoin de commentaires, mais des noms longs peuvent rendre les expressions complexes difficiles à lire, ce qui crée un compromis.</p>
+<h3>2.8 Débogage</h3>
+<p>Trois types d’erreur peuvent se produire dans un programme: les erreurs de syntaxe, les erreurs d’exécution et les erreurs sémantiques. Il est utile de les distinguer afin de les localiser plus rapidement.</p>
+<ul>
+<li>
+<p><strong>Erreur de syntaxe:</strong> La «syntaxe» fait référence à la structure d&rsquo;un programme et aux règles relatives à cette structure. Par exemple, les parenthèses doivent être appariées, donc <code>(1 + 2)</code> est légal, mais <code>8)</code> est une erreur de syntaxe.
+S&rsquo;il y a une erreur de syntaxe dans votre programme, Python affiche un message d&rsquo;erreur et se ferme. Vous ne pourrez pas exécuter le programme. Pendant les premières semaines de votre carrière en programmation, vous passerez peut-être beaucoup de temps à rechercher les erreurs de syntaxe. Au fur et à mesure que vous gagnerez de l&rsquo;expérience, vous ferez moins d&rsquo;erreurs et les trouverez plus rapidement.</p>
+</li>
+<li>
+<p><strong>Erreur d&rsquo;exécution:</strong> Le deuxième type d&rsquo;erreur est une erreur d&rsquo;exécution, ainsi appelée car l&rsquo;erreur n&rsquo;apparaît pas avant que le programme n&rsquo;ait commencé à s&rsquo;exécuter. Ces erreurs sont également appelées exceptions car elles indiquent généralement qu&rsquo;un événement exceptionnel (et un incident grave) s&rsquo;est produit.
+Les erreurs d&rsquo;exécution sont rares dans les programmes simples que vous verrez dans les premiers chapitres, il faudra donc peut-être un peu de temps avant d&rsquo;en rencontrer un.</p>
+</li>
+<li>
+<p><strong>Erreur sémantique:</strong> Le troisième type d&rsquo;erreur est «sémantique», ce qui signifie lié au sens. S&rsquo;il y a une erreur sémantique dans votre programme, celui-ci s&rsquo;exécutera sans générer de message d&rsquo;erreur, mais cela ne fonctionnera pas correctement. Cela fera autre chose. Plus précisément, il fera ce que vous lui avez dit de faire.
+Identifier les erreurs sémantiques peut être délicat, car cela nécessite de travailler en arrière en examinant les résultats du programme et en essayant de comprendre ce qu&rsquo;il fait.</p>
+</li>
+</ul>
+<h3>2.9 Glossaire</h3>
+<ul>
+<li>
+<p><strong>variable:</strong> Un nom qui fait référence à une valeur.</p>
+</li>
+<li>
+<p><strong>affectation:</strong> Une déclaration qui assigne une valeur à une variable.</p>
+</li>
+<li>
+<p><strong>diagramme d&rsquo;état:</strong> Représentation graphique d&rsquo;un ensemble de variables et des valeurs auxquelles elles se rapportent.</p>
+</li>
+<li>
+<p><strong>mot-clé:</strong> Mot réservé utilisé pour analyser un programme. vous ne pouvez pas utiliser de mots-clés tels que if, def et while comme noms de variable.</p>
+</li>
+<li>
+<p><strong>opérande:</strong> Une des valeurs sur lesquelles opère un opérateur.</p>
+</li>
+<li>
+<p><strong>expression:</strong> Combinaison de variables, d&rsquo;opérateurs et de valeurs représentant un seul résultat.</p>
+</li>
+<li>
+<p><strong>évaluer:</strong> Simplifier une expression en effectuant les opérations afin de générer une valeur unique.</p>
+</li>
+<li>
+<p><strong>déclaration:</strong> Une section de code qui représente une commande ou une action. Jusqu&rsquo;à présent, les déclarations que nous avons vues sont des assignations et des déclarations imprimées.</p>
+</li>
+<li>
+<p><strong>exécuter:</strong> Pour exécuter une déclaration et faire ce qu&rsquo;elle dit.</p>
+</li>
+<li>
+<p><strong>mode interactif:</strong> Une façon d&rsquo;utiliser l&rsquo;interpréteur Python en tapant du code à l&rsquo;invite.</p>
+</li>
+<li>
+<p><strong>mode script:</strong> Une façon d&rsquo;utiliser l&rsquo;interpréteur Python pour lire le code d&rsquo;un script et l&rsquo;exécuter.</p>
+</li>
+<li>
+<p><strong>scénario:</strong> Un programme stocké dans un fichier.</p>
+</li>
+<li>
+<p><strong>ordre des opérations:</strong> Règles régissant l&rsquo;ordre dans lequel les expressions impliquant plusieurs opérateurs et opérandes sont évaluées.</p>
+</li>
+<li>
+<p><strong>enchaîner:</strong> Pour joindre deux opérandes de bout en bout.</p>
+</li>
+<li>
+<p><strong>commentaire:</strong> Informations contenues dans un programme destiné à d&rsquo;autres programmeurs (ou à toute personne lisant le code source) et n&rsquo;ayant aucun effet sur l&rsquo;exécution du programme.</p>
+</li>
+<li>
+<p><strong>erreur de syntaxe:</strong> Une erreur dans un programme qui rend impossible l&rsquo;analyse (et donc impossible à interpréter).</p>
+</li>
+<li>
+<p><strong>exception:</strong> Une erreur détectée pendant l&rsquo;exécution du programme.</p>
+</li>
+<li>
+<p><strong>sémantique:</strong> Le sens d&rsquo;un programme.</p>
+</li>
+<li>
+<p><strong>erreur sémantique:</strong> Une erreur dans un programme qui lui fait faire autre chose que ce que le programmeur avait prévu.</p>
+</li>
+</ul>
+<h3>2.10 Exercices</h3>
+<p><strong> Exercice 1 </strong></p>
+<p><em>Répétant les conseils du chapitre précédent, chaque fois que vous apprenez une nouvelle fonctionnalité, vous devriez l&rsquo;essayer en mode interactif et faire des erreurs exprès pour voir ce qui ne va pas.</em></p>
+<ul>
+<li>
+<p><em>Nous avons vu que <code>n = 42</code> est légal. Qu&rsquo;en est-il de <code>42 = n</code> ?</em></p>
+</li>
+<li>
+<p><em>Comment à propos de <code>x = y = 1</code>?</em></p>
+</li>
+<li>
+<p><em>Dans certaines langues, chaque instruction se termine par un point-virgule,;. Que se passe-t-il si vous mettez un point-virgule à la fin d&rsquo;une instruction Python?</em></p>
+</li>
+<li>
+<p><em>Que se passe-t-il si vous mettez un point à la fin d&rsquo;une déclaration?</em></p>
+</li>
+<li>
+<p><em>En notation mathématique, vous pouvez multiplier x et y comme ceci: <code>x y</code>. Que se passe-t-il si vous essayez cela en Python?</em></p>
+</li>
+</ul>
+<p><strong> Exercice 2 </strong></p>
+<p><em>Pratique utilisant l&rsquo;interpréteur Python comme calculatrice:</em></p>
+<ol>
+<li>
+<p><em>Le volume d&rsquo;une sphère de rayon r est 4/3 π r<sup>3</sup>. Quel est le volume d&rsquo;une sphère de rayon 5?</em></p>
+</li>
+<li>
+<p><em>Supposez que le prix de vente d&rsquo;un livre est de $24,95 , mais les librairies bénéficient d&rsquo;une réduction de 40%. La livraison coûte $3 pour le premier exemplaire et 75 cents pour chaque exemplaire supplémentaire. Quel est le prix en gros total pour 60 exemplaires?</em></p>
+</li>
+<li>
+<p><em>Si je quitte ma maison à 6h52 du matin et que je cours 1 mile à un rythme lent (8:15 par mile), puis 3 miles au tempo (7:12 par mile) et à un mile à nouveau, quelle heure puis-je rentrer à la maison pour le petit déjeuner?</em> </p>
+</li>
+</ol>
 <h1>Chapitre 3 <a name="ch3"></a></h1>
-<h3>Les fonctions</h3>
+<h2>Les fonctions</h2>
+<p>Dans le contexte de la programmation, une fonction est une séquence d&rsquo;instructions nommée qui effectue un calcul. Lorsque vous définissez une fonction, vous spécifiez le nom et la séquence d&rsquo;instructions. Plus tard, vous pourrez “appeler” la fonction par son nom.
+<br><br></p>
 <h3>3.1 Appels de fonction</h3>
 <p>Vous avez déjà vu un exemple d&rsquo;appel de fonction:</p>
-<pre><code class="python">&gt;&gt;&gt; type (&quot;32&quot;)
+<pre><code class="python">&gt;&gt;&gt; type (&quot;42&quot;)
 &lt;type 'str'&gt;
 </code></pre>
 
-<p>Le nom de la fonction est type, et il affiche le type d&rsquo;une valeur ou d&rsquo;une variable.
-La valeur ou variable, appelée argument de la fonction, doit
-être entouré de parenthèses. Il est courant de dire qu&rsquo;une fonction &ldquo;prend&rdquo; un
-argument et &ldquo;renvoie&rdquo; un résultat. Le résultat est appelé la valeur de retour.
-Au lieu d&rsquo;imprimer la valeur de retour, nous pourrions l&rsquo;assigner à une variable:</p>
-<pre><code class="python">&gt;&gt;&gt; betty = type (&quot;32&quot;)
-&gt;&gt;&gt; print betty
-&lt;type 'str'&gt;
-</code></pre>
-
-<p>Comme un autre exemple, la fonction id prend une valeur ou une variable et retourne un
-entier qui agit comme un identifiant unique pour la valeur:</p>
-<pre><code class="python">&gt;&gt;&gt; id (3)
-134882108
-&gt;&gt;&gt; betty = 3
-&gt;&gt;&gt; id (betty)
-134882108
-</code></pre>
-
-<p>Chaque valeur a un identifiant, qui est un nombre unique lié à l&rsquo;endroit où il est stocké
-dans la mémoire de l&rsquo;ordinateur. L&rsquo;identifiant d&rsquo;une variable est l&rsquo;identifiant de la valeur à
-auquel il se réfère.</p>
-<h3>3.2 Conversion de type</h3>
-<p>Python fournit une collection de fonctions intégrée qui convertit les valeurs d&rsquo;un
-int à un autre. La fonction int prend n&rsquo;importe quelle valeur et la convertit en entier,
-si possible, ou se plaint autrement:</p>
-<pre><code class="python">&gt;&gt;&gt; int (&quot;32&quot;)
+<p>Le nom de la fonction est <code>type</code>. L&rsquo;expression entre parenthèses est appelée l&rsquo;argument de la fonction. Le résultat, pour cette fonction, est le type de l&rsquo;argument.</p>
+<p>Il est courant de dire qu&rsquo;une fonction &ldquo;prend&rdquo; un argument et &ldquo;renvoie&rdquo; un résultat. Le résultat s&rsquo;appelle également la valeur de retour.</p>
+<p>Python fournit des fonctions qui convertissent les valeurs d&rsquo;un type à un autre. La fonction int prend n&rsquo;importe quelle valeur et la convertit en un entier, si elle le peut, ou se plaint sinon:</p>
+<pre><code class="python">&gt;&gt;&gt; int('32')
 32
-&gt;&gt;&gt; int (&quot;Bonjour&quot;)
+&gt;&gt;&gt; int('Hello')
 ValueError: invalid literal for int(): Hello
 </code></pre>
 
-<p>int peut également convertir des floats en entiers, mais rappelez-vous qu&rsquo;il
-tronque la partie fractionnaire:</p>
+<p>int peut convertir les valeurs en virgule flottante en nombres entiers, mais cela n’arrondit pas; il coupe la partie fraction:</p>
 <pre><code class="python">&gt;&gt;&gt; int (3.99999)
 3
 &gt;&gt;&gt; int (-2.3)
 -2
 </code></pre>
 
-<p>La fonction float convertit les entiers et les chaînes en float:</p>
-<pre><code class="python">&gt;&gt;&gt; float (32)
-32,0
-&gt;&gt;&gt; float (&quot;3.14159&quot;)
+<p>float convertit les entiers et les chaînes en nombres à virgule flottante:</p>
+<pre><code class="python">&gt;&gt;&gt; float(32)
+32.0
+&gt;&gt;&gt; float('3.14159')
 3.14159
-Enfin, la fonction str convertit en chaîne de caractères:
-&gt;&gt;&gt; str (32)
+</code></pre>
+
+<p>Enfin, str convertit son argument en chaîne:</p>
+<pre><code class="python">&gt;&gt;&gt; str (32)
 '32'
-&gt;&gt;&gt; str (3.14149)
-'3.14149'
+&gt;&gt;&gt; str (3.14159)
+'3.14159'
 </code></pre>
 
-<p>Il peut sembler étrange que Python distingue la valeur entière 1 du float
-1,0. Ils peuvent représenter le même nombre, mais ils appartiennent à
-différents types. La raison en est qu&rsquo;ils sont représentés différemment dans
-l&rsquo;ordinateur.</p>
-<h3>3.3 Coertion de type</h3>
-<p>Maintenant que nous pouvons convertir entre les types, nous avons une autre façon de faire face à
-la division entière. En revenant à l&rsquo;exemple du chapitre précédent, supposons que
-nous voulons calculer la fraction d&rsquo;une heure qui s&rsquo;est écoulée. Le plus évident
-expression, minute / 60, fait l&rsquo;arithmétique entière, donc le résultat est toujours 0, même
-à 59 minutes après l&rsquo;heure.</p>
-<p>Une solution consiste à convertir la minute en float et faire la division:</p>
-<pre><code class="python">&gt;&gt;&gt; minute = 59
-&gt;&gt;&gt; float (minute) / 60
-0,983333333333
+<h3>3.2 Fonctions mathématiques</h3>
+<p>Python a un module mathématique qui fournit la plupart des fonctions mathématiques habituelles. Un module est un fichier contenant une collection de fonctions connexes.</p>
+<p>Avant de pouvoir utiliser les fonctions d&rsquo;un module, nous devons l&rsquo;importer avec une instruction import:</p>
+<pre><code class="python">&gt;&gt;&gt; maths d'importation
 </code></pre>
 
-<p>Alternativement, nous pouvons tirer parti des règles pour la conversion automatique de type,
-ce qui s&rsquo;appelle la coercition de type. Pour les opérateurs mathématiques, si
-l&rsquo;opérande est un float, l&rsquo;autre est automatiquement converti en un float:</p>
-<pre><code class="python">&gt;&gt;&gt; minute = 59
-&gt;&gt;&gt; minute / 60.0
-0,983333333333
+<p>Cette instruction crée un objet module nommé math. Si vous affichez l&rsquo;objet module, vous obtenez des informations à ce sujet:</p>
+<pre><code class="python">&gt;&gt;&gt; maths
+&lt;module 'math' (built-in)&gt;
 </code></pre>
 
-<p>En transformant le dénominateur en float, nous forçons Python à faire la division comme on souhaitait.</p>
+<p>L&rsquo;objet module contient les fonctions et les variables définies dans le module. Pour accéder à l&rsquo;une des fonctions, vous devez spécifier le nom du module et le nom de la fonction, séparés par un point (également appelé période). Ce format s&rsquo;appelle la notation par points.</p>
+<pre><code class="python">&gt;&gt;&gt; ratio = signal_power / noise_power
+&gt;&gt;&gt; décibels = 10 * math.log10 (ratio)
+
+&gt;&gt;&gt; radians = 0,7
+&gt;&gt;&gt; height = math.sin (radians)
+</code></pre>
+
+<p>Le premier exemple utilise <code>math.log10</code> pour calculer un rapport signal sur bruit en décibels (en supposant que signal_power et noise_power soient définis). Le module mathématique fournit également un journal, qui calcule les logarithmes de base e.</p>
+<p>Le deuxième exemple trouve le sinus de radians. Le nom de la variable est un indice que péché et les autres fonctions trigonométriques (cos, tan, etc.) prennent des arguments en radians. Pour convertir des degrés en radians, divisez par 180 et multipliez par π:</p>
+<pre><code class="python">&gt;&gt;&gt; degrees = 45
+&gt;&gt;&gt; radians = degrees / 180.0 * math.pi
+&gt;&gt;&gt; math.sin(radians)
+0,707106781187
+</code></pre>
+
+<p>L&rsquo;expression <code>math.pi</code> obtient la variable pi du module mathématique. Sa valeur est une approximation à virgule flottante de π, précise à environ 15 chiffres.</p>
+<p>Si vous connaissez la trigonométrie, vous pouvez vérifier le résultat précédent en le comparant à la racine carrée de deux divisée par deux:</p>
+<pre><code class="python">&gt;&gt;&gt; math.sqrt(2) / 2.0
+0,707106781187
+</code></pre>
+
+<h3>3.3 Composition</h3>
+<p>Jusqu&rsquo;à présent, nous avons examiné les éléments d&rsquo;un programme - variables, expressions et déclarations - de manière isolée, sans parler de la façon de les combiner.</p>
+<p>Une des caractéristiques les plus utiles des langages de programmation est leur capacité à prendre et à composer de petits blocs de construction. Par exemple, l&rsquo;argument d&rsquo;une fonction peut être n&rsquo;importe quel type d&rsquo;expression, y compris les opérateurs arithmétiques:</p>
+<pre><code class="python">x = math.sin (degrés / 360.0 * 2 * math.pi)
+</code></pre>
+
+<p>Et même des appels de fonction:</p>
+<pre><code class="python">x = math.exp (math.log (x + 1))
+</code></pre>
+
+<p>Presque n&rsquo;importe où vous pouvez mettre une valeur, vous pouvez mettre une expression arbitraire, à une exception près: le côté gauche d&rsquo;une instruction d&rsquo;affectation doit être un nom de variable. Toute autre expression à gauche est une erreur de syntaxe (nous verrons des exceptions à cette règle plus tard).</p>
+<pre><code class="python">&gt;&gt;&gt; minutes = heures * 60 # droite
+&gt;&gt;&gt; heures * 60 = minutes # faux!
+SyntaxError: can't assign to operator
+</code></pre>
+
 <h3>3.4 Fonctions mathématiques</h3>
 <p>En mathématiques, vous avez probablement vu des fonctions comme le sin et le log, et on vous
 a apprit à évaluer des expressions comme sin (pi / 2) et log (1 / x). D&rsquo;abord, vous
