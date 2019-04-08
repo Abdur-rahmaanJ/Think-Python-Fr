@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/atelier-forest-light.min.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="container">
+
+<h1>Chapitre 5<a name="ch5"></a></h1>
+<h2>Conditions et récursivité</h2>
+<p><br><br></p>
+<p>Le sujet principal de ce chapitre est l&rsquo;instruction if, qui exécute un code différent en fonction de l&rsquo;état du programme. Mais je veux d&rsquo;abord présenter deux nouveaux opérateurs: la division floor et le modulus.</p>
+<h3>5.1 Division et module de plancher</h3>
+<p>L&rsquo;opérateur de division floor, <code>//</code>, divise deux nombres et arrondit à un entier. Par exemple, supposons que le temps d&rsquo;exécution d&rsquo;un film est de 105 minutes. Vous voudrez peut-être savoir le temps en heures. La division conventionnelle renvoie un float:</p>
+<pre><code class="python">&gt;&gt;&gt; minutes = 105
+&gt;&gt;&gt; minutes / 60
+1.75
+</code></pre>
+
+<p>Mais normalement, nous n&rsquo;écrivons pas des heures avec des points décimaux. La division classique renvoie le nombre d&rsquo;heures en entier, en laissant tomber la fraction:</p>
+<pre><code class="python">&gt;&gt;&gt; minutes = 105
+&gt;&gt;&gt; hours = minutes // 60
+&gt;&gt;&gt; hours
+1
+</code></pre>
+
+<p>Pour obtenir le reste, vous pouvez soustraire une heure en minutes:</p>
+<pre><code class="python">&gt;&gt;&gt; remainder = minutes - hours * 60
+&gt;&gt;&gt; remainder
+45
+</code></pre>
+
+<p>Une alternative consiste à utiliser l&rsquo;opérateur de modulus,<code>%</code>, qui divise deux nombres et renvoie
+le reste.</p>
+<pre><code class="python">&gt;&gt;&gt; remainder = minutes % 60
+&gt;&gt;&gt; remainder
+45
+</code></pre>
+
+<p>L&rsquo;opérateur modulus est plus utile qu&rsquo;il n&rsquo;y paraît. Par exemple, vous pouvez vérifier si
+un nombre est divisible par un autre - si <code>x % y</code> est zéro, alors x est divisible par y.</p>
+<p>Vous pouvez également extraire le chiffre ou les chiffres les plus à droite d&rsquo;un nombre. Par exemple, <code>x % 10</code> donne le chiffre le plus à droite de x (en base 10). De même, <code>x % 100</code> fournit les deux derniers chiffres.</p>
+<p>Si vous utilisez Python 2, la division fonctionne différemment. L&rsquo;opérateur de division, /, effectue la division de plancher si les deux opérandes sont des nombres entiers, et la division en float si l&rsquo;un des opérandes est
+un float.</p>
+<h3>5.2 Expressions booléennes</h3>
+<p>Une expression booléenne est une expression vraie ou fausse. Les exemples suivants utilisent l&rsquo;opérateur <code>==</code>, qui compare deux opérandes et produit True s&rsquo;ils sont égaux et False sinon:</p>
+<pre><code class="python">&gt;&gt;&gt; 5 == 5
+True
+&gt;&gt;&gt; 5 == 6
+False
+</code></pre>
+
+<p>True et False sont des valeurs spéciales appartenant au type bool; ce ne sont pas des strings:</p>
+<pre><code>&gt;&gt;&gt; type(True)
+&lt;class 'bool'&gt;
+&gt;&gt;&gt; type(False)
+&lt;class 'bool'&gt;
+</code></pre>
+
+<p>L&rsquo;opérateur <code>==</code> est l&rsquo;un des opérateurs relationnels; les autres sont:</p>
+<pre><code>    x != y               # x is not equal to y
+    x &gt; y                # x is greater than y
+    x &lt; y                # x is less than y
+    x &gt;= y               # x is greater than or equal to y
+    x &lt;= y               # x is less than or equal to y
+</code></pre>
+
+<p>Bien que ces opérations vous soient probablement familières, les symboles Python sont différents des symboles mathématiques. Une erreur courante consiste à utiliser un seul signe égal (<code>=</code>) au lieu d&rsquo;un double signe égal (<code>==</code>). Rappelez-vous que <code>=</code> est un opérateur d&rsquo;affectation et <code>==</code> est un opérateur relationnel. Il n&rsquo;y a pas de chose comme <code>=&lt;</code> ou <code>=&gt;</code>.</p>
+<h3>5.3 Opérateurs logiques</h3>
+<p>Il existe trois opérateurs logiques: <code>and</code>, <code>or</code>, et <code>not</code>. La sémantique (signification) de ces
+opérateurs sont similaires à leur signification en anglais. Par exemple, <code>x&gt;0</code> et <code>x&lt;10</code> est vrai
+seulement si x est supérieur à 0 et inférieur à 10.</p>
+<p><code>n%2 == 0</code> ou <code>n%3 == 0</code> est vraie si l’une ou les deux conditions est vraie, c’est-à-dire si le nombre est divisible par 2 ou 3.</p>
+<p>Enfin, l’opérateur not nie une expression booléenne, donc <code>not (x &gt; y)</code> est vrai si <code>x &gt; y</code> est False, c&rsquo;est-à-dire si x est inférieur ou égal à y.</p>
+<p>Strictement parlant, les opérandes des opérateurs logiques doivent être des expressions booléennes, mais Python n&rsquo;est pas très strict. Tout nombre différent de zéro est interprété comme True:</p>
+<pre><code>&gt;&gt;&gt; 42 and True
+True
+</code></pre>
+
+<p>Cette flexibilité peut être utile, mais certaines subtilités peuvent être déroutantes.
+Vous voudrez peut-être l&rsquo;éviter (sauf si vous savez ce que vous faites).</p>
+<h3>5.4 Exécution conditionnelle</h3>
+<p>Pour écrire des programmes utiles, nous avons presque toujours besoin de pouvoir vérifier les conditions et modifier le comportement du programme en conséquence. Les déclarations conditionnelles nous donnent cette aptitude. La forme la plus simple est l&rsquo;instruction if:</p>
+<pre><code class="python">if x &gt; 0:
+    print('x is positive')
+</code></pre>
+
+<p>L&rsquo;expression booléenne après if s&rsquo;appelle la condition. Si c&rsquo;est vrai, la déclaration en retrait s&rsquo;exécute. Sinon, rien ne se passe.</p>
+<p>les instructions if ont la même structure que les définitions de fonctions: un en-tête suivi d&rsquo;un
+corps en retrait. Des déclarations comme celles-ci sont appelées des déclarations composées.</p>
+<p>Il n&rsquo;y a pas de limite au nombre de déclarations pouvant apparaître dans le corps, mais il doit y avoir au moins un. À l’occasion, il est utile d’avoir un corps sans déclaration (généralement placekeeper pour le code que vous n&rsquo;avez pas encore écrit). Dans ce cas, vous pouvez utiliser la déclaration de passage, qui ne fait rien.</p>
+<pre><code class="python">if x &lt; 0:
+    pass
+</code></pre>
+
+<h3>5.5 Exécution alternative</h3>
+<p>Une deuxième forme de l&rsquo;instruction if est &ldquo;exécution alternative&rdquo;, dans laquelle il existe deux possibilités et la condition détermine celle qui s&rsquo;exécute. La syntaxe ressemble à ceci:</p>
+<pre><code class="python">if x % 2 == 0:
+    print('x is even')
+else:
+    print('x is odd')
+</code></pre>
+
+<p>Si le restant lorsque x est divisé par 2 est 0, alors nous savons que x est pair, et le programme affiche un message approprié. Si la condition est fausse, la deuxième série de déclarations s&rsquo;exécute. Comme la condition doit être vraie ou fausse, l&rsquo;une des alternatives s&rsquo;exécutera .</p>
+<p>Les alternatives sont appelées branches, car elles sont des branches dans le flux d&rsquo;exécution.</p>
+<h3>5.6 Conditionnels en chaînes</h3>
+<p>Parfois, il y a plus de deux possibilités et nous avons besoin de plus de deux branches.
+Une façon d&rsquo;exprimer un calcul comme celui-là est un chaîne conditionnel:</p>
+<pre><code class="python">if x &lt; y:
+    print('x is less than y')
+elif x &gt; y:
+    print('x is greater than y')
+else:
+    print('x and y are equal')
+</code></pre>
+
+<p>elif est une abréviation de &ldquo;else if&rdquo;. Encore une fois, exactement une branche sera exécutée. Il n&rsquo;y a pas de limite sur
+le nombre de déclarations elif. S&rsquo;il y a une clause else, elle doit être à la fin, mais
+cela est facultatif.</p>
+<pre><code class="python">if choice == 'a':
+    draw_a()
+elif choice == 'b':
+    draw_b()
+elif choice == 'c':
+    draw_c()
+</code></pre>
+
+<p>Chaque condition est vérifiée dans l&rsquo;ordre. Si le premier est faux, le suivant est coché, et ainsi de suite. Si un d&rsquo;entre eux est vrai, la branche correspondante s&rsquo;exécute et l&rsquo;instruction se termine. Même si plus d&rsquo;une condition est vraie, seule la première branche vraie s&rsquo;exécute.</p>
+<h3>5.7 Conditionals imbriqués</h3>
+<p>Un conditionnel peut aussi être imbriqué dans un autre. Nous aurions pu écrire l&rsquo;exemple dans
+la section précédente comme ceci:</p>
+<pre><code class="python">if x == y:
+    print('x and y are equal')
+else:
+    if x &lt; y:
+        print('x is less than y')
+    else:
+        print('x is greater than y')
+</code></pre>
+
+<p>Le conditionnel externe contient deux branches. La première branche contient une simple déclaration. La seconde branche contient une autre instruction if, qui comporte deux branches. Ces deux branches sont toutes deux des déclarations simples, bien qu’elles aient pu être conditionnelles.</p>
+<p>Bien que l&rsquo;indentation des déclarations rendent la structure apparente, les conditionnels imbriqués deviennent difficiles à lire très rapidement. C&rsquo;est une bonne idée de les éviter quand vous
+pouvez.</p>
+<p>Les opérateurs logiques permettent souvent de simplifier les instructions conditionnelles imbriquées. Par exemple, nous pouvons réécrire le code suivant en utilisant un seul conditionnel:</p>
+<pre><code class="python">if 0 &lt; x:
+    if x &lt; 10:
+        print('x is a positive single-digit number.')
+</code></pre>
+
+<p>L&rsquo;instruction print ne s&rsquo;exécute que si nous passons les deux conditions, afin que nous puissions obtenir la même chose
+effet avec l&rsquo;opérateur et:</p>
+<pre><code class="python">if 0 &lt; x and x &lt; 10:
+    print('x is a positive single-digit number.')
+</code></pre>
+
+<p>Pour ce type de condition, Python fournit une option plus concise:</p>
+<pre><code class="python">if 0 &lt; x &lt; 10:
+    print('x is a positive single-digit number.')
+</code></pre>
+
+<h3>5.8 Récursivité</h3>
+<p>Il est légal qu&rsquo;une fonction appelle une autre; il est également légal qu&rsquo;une fonction s&rsquo;appelle elle-même. Cela pourrait ne pas être évident pourquoi c&rsquo;est une bonne chose, mais il s&rsquo;avère être l&rsquo;un des choses les plus magiques qu&rsquo;un programme puisse faire. Par exemple, regardez la fonction suivante:</p>
+<pre><code class="python">def countdown(n):
+    if n &lt;= 0:
+        print('Blastoff!')
+    else:
+        print(n)
+        countdown(n-1)
+</code></pre>
+
+<p>Si n est 0 ou négatif, il affiche le mot &ldquo;Blastoff!&rdquo; Sinon, il affiche n puis appelle une fonction nommée countdown (soi-même) en passant n-1 en argument.
+Que se passe-t-il si nous appelons cette fonction comme ceci?</p>
+<pre><code>&gt;&gt;&gt; countdown(3))
+</code></pre>
+
+<pre><code>The execution of countdown begins with n=3, and since n is greater than 0, it outputs the value 3, and then calls itself...
+
+    The execution of countdown begins with n=2, and since n is greater than 0, it outputs the value 2, and then calls itself...
+
+        The execution of countdown begins with n=1, and since n is greater than 0, it outputs the value 1, and then calls itself...
+
+            The execution of countdown begins with n=0, and since n is not greater than 0, it outputs the word, “Blastoff!” and then returns.
+
+        The countdown that got n=1 returns.
+
+    The countdown that got n=2 returns.
+
+The countdown that got n=3 returns.
+</code></pre>
+
+<p>Et puis vous êtes de retour dans <strong>main</strong>. Ainsi, la sortie totale ressemble à ceci:</p>
+<pre><code>3
+2
+1
+Blastoff!
+</code></pre>
+
+<p>Une fonction qui s&rsquo;appelle elle-même est récursive; le processus d&rsquo;exécution est appelé récursivité.
+Comme autre exemple, nous pouvons écrire une fonction qui imprime une chaîne n fois.</p>
+<pre><code class="python">def print_n(s, n):
+    if n &lt;= 0:
+        return
+    print(s)
+    print_n(s, n-1)
+</code></pre>
+
+<p>Si n &lt;= 0, l&rsquo;instruction de retour quitte la fonction. Le flux d&rsquo;exécution retourne immédiatement à l&rsquo;appelant et les lignes restantes de la fonction ne s&rsquo;exécutent pas.</p>
+<p>Le reste de la fonction est similaire au compte à rebours: il affiche s puis appelle lui-même pour afficher
+s <code>n - 1</code> fois supplémentaires. Donc, le nombre de lignes de sortie est <code>1 + (n - 1)</code>, ce qui totalise
+à n.</p>
+<p>Pour des exemples simples comme celui-ci, il est probablement plus facile d&rsquo;utiliser une boucle for. Mais on verra des
+exemples plus tard qui sont difficiles à écrire avec une boucle for et facile à écrire avec la récursivité, de sorte qu&rsquo;il est bon de commencer tôt.</p>
+<h3>5.9 Diagrammes de pile pour les fonctions récursives</h3>
+<p>Dans la section 3.9, nous avons utilisé un diagramme de pile pour représenter l&rsquo;état d&rsquo;un programme au cours d&rsquo;une fonction
+appel. Le même type de diagramme peut aider à interpréter une fonction récursive.</p>
+<p>Chaque fois qu’une fonction est appelée, Python crée un cadre pour contenir les variables et paramètres locaux de la fonction. Pour une fonction récursive, il peut y avoir plus d&rsquo;un frame sur la pile en même temps.</p>
+<p>La figure 5.1 montre un diagramme de pile pour le compte à rebours appelé avec <code>n = 3</code>.</p>
+<p><img alt="fig5.1" src="assets/tp5.1.png"></p>
+<p>Comme d&rsquo;habitude, le haut de la pile est dans le cadre de <strong>main</strong>. C&rsquo;est vide parce que nous n&rsquo;avons pas créer des variables dans <strong>main</strong> ou lui transmettre des arguments.</p>
+<p>Les quatres images du compte à rebours ont des valeurs différentes pour le paramètre n. Le fond de la pile, où n = 0, est appelé le cas de base. Il ne fait pas un appel récursif, donc il n&rsquo;y a plus de frame.</p>
+<p>Comme exercice, dessinez un diagramme de pile pour print_n appelé avec <code>s = 'Hello'</code> et <code>n = 2</code>. Alors écrivez une fonction appelée do_n qui prend un objet fonction et un nombre, n, comme arguments, et qui appelle la fonction donnée n fois.</p>
+<h3>5.10 Récursion infinie</h3>
+<p>Si une récursivité n&rsquo;atteint jamais un cas de base, elle continue à faire des appels récursifs pour toujours et le programme ne se termine jamais. Ceci est connu comme la récursion infinie, et ce n&rsquo;est généralement pas une
+bonne idée. Voici un programme minimal avec une récursion infinie:</p>
+<pre><code>  File &quot;&lt;stdin&gt;&quot;, line 2, in recurse
+  File &quot;&lt;stdin&gt;&quot;, line 2, in recurse
+  File &quot;&lt;stdin&gt;&quot;, line 2, in recurse
+                  .   
+                  .
+                  .
+  File &quot;&lt;stdin&gt;&quot;, line 2, in recurse
+RuntimeError: Maximum recursion depth exceeded
+</code></pre>
+
+<p>Ce traceback est un peu plus longue que celui dont nous avions vu dans le chapitre précédente. Quand l&rsquo;erreur apparait, il y a plus de 1000 frames dans le stack!</p>
+<p>Si vous rencontrez une recursion infinie par accident, revisez votre fonction pour comfirmer s&rsquo;il y a un cas de base qui ne prend pas un appel recursive. S&rsquo;il y en a, vérifiez si vous êtes assuré d&rsquo;y accéder.</p>
+<h3>5.11 La saisie au clavier</h3>
+<p>Les programmes que nous avons écrits jusqu&rsquo;à présent n&rsquo;acceptent aucune contribution de l&rsquo;utilisateur. Ils font juste la même chose à chaque fois.</p>
+<p>Python fournit une fonction intégrée appelée entrée qui arrête le programme et attend l&rsquo;utilisateur de taper quelque chose. Lorsque l&rsquo;utilisateur appuie sur Entrée ou Retour, le programme reprend et input renvoie ce que l&rsquo;utilisateur a tapé en tant que chaîne. Dans Python 2, la même fonction est appelée <code>raw_input</code>.</p>
+<pre><code class="python">&gt;&gt;&gt; text = input()
+'What are you waiting for?'
+&gt;&gt;&gt; text
+'What are you waiting for?'
+</code></pre>
+
+<p>Avant d’obtenir les commentaires de l’utilisateur, il est conseillé d’imprimer une quelquechose indiquant à l’utilisateur quoi typer. input peut prendre une invite en argument:</p>
+<pre><code class="python">&gt;&gt;&gt; name = input('What...is your name?\n')
+What...is your name?
+Arthur, King of the Britons!
+&gt;&gt;&gt; name
+'Arthur, King of the Britons!'
+</code></pre>
+
+<p>La séquence <code>\n</code> à la fin de l&rsquo;invite représente une nouvelle ligne, qui est un caractère spécial cela provoque un saut de ligne. C&rsquo;est pourquoi l&rsquo;entrée de l&rsquo;utilisateur apparaît sous l&rsquo;invite.</p>
+<p>Si vous vous attendez à ce que l&rsquo;utilisateur tape un entier, vous pouvez essayer de convertir la valeur de retour en int:</p>
+<pre><code class="python">&gt;&gt;&gt; prompt = 'What...is the airspeed velocity of an unladen swallow?\n'
+&gt;&gt;&gt; speed = input(prompt)
+What...is the airspeed velocity of an unladen swallow?
+42
+&gt;&gt;&gt; int(speed)
+42
+</code></pre>
+
+<p>Mais si l&rsquo;utilisateur tape autre chose qu&rsquo;une chaîne de chiffres, vous obtenez une erreur:</p>
+<pre><code class="python">&gt;&gt;&gt; speed = input(prompt)
+What...is the airspeed velocity of an unladen swallow?
+What do you mean, an African or a European swallow?
+&gt;&gt;&gt; int(speed)
+ValueError: invalid literal for int() with base 10
+</code></pre>
+
+<p>Nous verrons comment gérer ce type d&rsquo;erreur plus tard.</p>
+<h3>5.12 Le débogage</h3>
+<p>Lorsqu&rsquo;une erreur de syntaxe ou d&rsquo;exécution se produit, le message d&rsquo;erreur contient beaucoup d&rsquo;informations, mais cela peut être accablant. Les parties les plus utiles sont généralement les suivantes:</p>
+<ul>
+<li>Quel type d&rsquo;erreur était-ce et</li>
+<li>où il s&rsquo;est produit.</li>
+</ul>
+<p>Les erreurs de syntaxe sont généralement faciles à trouver, mais il y a quelques pièges. Les erreurs d&rsquo;espacement peuvent être difficile parce que les espaces et les onglets sont invisibles et nous sommes habitués à les ignorer.</p>
+<pre><code>&gt;&gt;&gt; x = 5
+&gt;&gt;&gt;  y = 6
+File &quot;&lt;stdin&gt;&quot;, line 1
+y = 6
+^
+IndentationError: unexpected indent
+</code></pre>
+
+<p>Dans cet exemple, le problème est que la deuxième ligne est en retrait d&rsquo;une espace. Mais l&rsquo;erreur dans le message indique y, ce qui est trompeur. En général, les messages d’erreur indiquent où le problème a été découvert, mais l&rsquo;erreur réelle peut être antérieure dans le code, parfois sur une ligne précédente.</p>
+<p>La même chose est vraie pour les erreurs d&rsquo;exécution. Supposons que vous essayiez de calculer un rapport signal / bruit en décibels. La formule est SNRdb = 10 log10 (Psignal / Pnoise) ). En python, vous pourriez écrire quelque chose comme ceci:</p>
+<pre><code class="python">import math
+signal_power = 9
+noise_power = 10
+ratio = signal_power // noise_power
+decibels = 10 * math.log10(ratio)
+print(decibels)
+</code></pre>
+
+<p>Lorsque vous exécutez ce programme, vous obtenez une exception:</p>
+<pre><code>Traceback (most recent call last):
+  File &quot;snr.py&quot;, line 5, in ?
+    decibels = 10 * math.log10(ratio)
+ValueError: math domain error
+</code></pre>
+
+<p>Le message d&rsquo;erreur indique la ligne 5, mais il n&rsquo;y a rien de mal avec cette ligne. Pour trouver l&rsquo;erreur réelle, il pourrait être utile d’imprimer la valeur du ratio, qui se révèle être 0. Le problème est à la ligne 4, qui utilise la division au sol au lieu de la division en float. Vous devriez prendre le temps de lire attentivement les messages d&rsquo;erreur, mais ne présumez pas que tout ils disent est correct.</p>
+<h3>5.13 Glossaire</h3>
+<ul>
+<li>
+<p><strong>Division de plancher / floor division:</strong> Un opérateur, noté //, qui divise deux nombres et arrondit à un entier inférieur (vers l&rsquo;infini négatif).</p>
+</li>
+<li>
+<p><strong>opérateur modulus / modulus operator:</strong> un opérateur, noté avec un signe de pourcentage (%), qui fonctionne sur des nombres entiers
+et renvoie le reste lorsqu&rsquo;un nombre est divisé par un autre.</p>
+</li>
+<li>
+<p><strong>expression booléenne:</strong> expression dont la valeur est True ou False.</p>
+</li>
+<li>
+<p><strong>opérateur relationnel:</strong> Un des opérateurs qui compare ses opérandes: <code>==</code>,<code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code> et <code>&lt;=</code>.</p>
+</li>
+<li>
+<p><strong>opérateur logique:</strong> un des opérateurs combinant des expressions booléennes: et, ou
+ne pas.</p>
+</li>
+<li>
+<p><strong>instruction conditionnelle:</strong> une instruction qui contrôle le flux d&rsquo;exécution en fonction de certains
+conditions.</p>
+</li>
+<li>
+<p><strong>condition:</strong> expression booléenne dans une instruction conditionnelle qui détermine une
+branche court.</p>
+</li>
+<li>
+<p><strong>déclaration composée:</strong> déclaration composée d&rsquo;un en-tête et d&rsquo;un corps. L&rsquo;en-tête se termine
+avec deux points (:). Le corps est en retrait par rapport à l&rsquo;en-tête.</p>
+</li>
+<li>
+<p><strong>branch:</strong> une des séquences alternatives d&rsquo;instructions dans une instruction conditionnelle.</p>
+</li>
+<li>
+<p><strong>conditionnel en chaînes:</strong> une instruction conditionnelle avec une série de branches alternatives.</p>
+</li>
+<li>
+<p><strong>conditionnel imbriqué:</strong> instruction conditionnelle qui apparaît dans l&rsquo;une des branches d&rsquo;une autre déclaration conditionnelle.</p>
+</li>
+<li>
+<p><strong>instruction de retour:</strong> instruction qui entraîne la fin immédiate d&rsquo;une fonction et le retour &gt;a&lt; l&rsquo;appeleur.</p>
+</li>
+<li>
+<p><strong>récursivité:</strong> processus d&rsquo;appel de la fonction en cours d&rsquo;exécution.</p>
+</li>
+<li>
+<p><strong>cas de base:</strong> branche conditionnelle dans une fonction récursive qui ne fait pas un appel récursif.</p>
+</li>
+<li>
+<p><strong>récursion infinie:</strong> récursivité qui n&rsquo;a pas de cas de base ou ne l&rsquo;atteint jamais. Finalement, une récursion infinie provoque une erreur d&rsquo;exécution.</p>
+</li>
+</ul>
+<h3>5.14 Exercices</h3>
+<p><strong>Exercice 1</strong></p>
+<p><em>La module time fournit une fonction, également nommée time, qui renvoie le Greenwich Mean Time en tant que &ldquo;epoch&rdquo;, qui est un temps arbitraire utilisé comme point de référence. Sur les Systèmes UNIX, epoch est le 1er janvier 1970.</em></p>
+<pre><code class="python">&gt;&gt;&gt; import time
+&gt;&gt;&gt; time.time()
+1437746094.5735958
+</code></pre>
+
+<p><em>Écrivez un script qui lit l&rsquo;heure actuelle et le convertit en heure, en minutes et en minutes.
+secondes, plus le nombre de jours écoulés depuis l&rsquo;époque.</em></p>
+<p><strong>Exercice 2</strong></p>
+<p><em>Le dernier théorème de Fermat dit qu&rsquo;il n&rsquo;y a pas d&rsquo;entiers positifs a, b et c tels que</em></p>
+<p>a<sup>n</sup> + b<sup>n</sup> = c<sup>n</sup></p>
+<p><em>pour toute valeur de n supérieure à 2.</em></p>
+<ul>
+<li>
+<ol>
+<li><em>Écrivez une fonction nommée check_fermat qui prend quatre paramètres- a, b, c et n -et
+vérifie si le théorème de Fermat est valide. Si n est supérieur à 2 et</em></li>
+</ol>
+</li>
+</ul>
+<p>a<sup>n</sup> + b<sup>n</sup> = c<sup>n</sup></p>
+<p><em>le programme devrait imprimer, &ldquo;Holy smokes, Fermat was wrong!&rdquo; Sinon, le programme devrait
+imprimer, &ldquo;No, that doesn’t work.&rdquo;</em></p>
+<ul>
+<li>
+<ol>
+<li><em>Écrivez une fonction qui invite l’utilisateur à saisir des valeurs pour a, b, c et n, les convertir en entiers, et utilise check_fermat pour vérifier s&rsquo;ils ne respectent pas le théorème de Fermat.</em></li>
+</ol>
+</li>
+</ul>
+<p><strong>Exercice 3</strong></p>
+<p><em>Si on vous donne trois bâtons, vous pouvez ou non être en mesure de les organiser en triangle.
+Par exemple, si l&rsquo;un des bâtons fait 12 pouces de long et que les deux autres ont un pouce de long, vous ne pourrez pas être en mesure de faire en sorte que les bâtons courts se rencontrent au milieu. Pour trois longueurs, il existe un test simple pour voir s&rsquo;il est possible de former un triangle:</em></p>
+<p><em>Si l&rsquo;une des trois longueurs est supérieure à la somme des deux autres, vous ne pouvez pas
+former un triangle. Sinon, vous pouvez. (Si la somme de deux longueurs est égale à la troisième, elles forme ce qu&rsquo;on appelle un triangle &ldquo;dégénéré&rdquo;.)</em></p>
+<ul>
+<li>
+<ol>
+<li><em>Écrivez une fonction nommée is_triangle qui prend trois nombres entiers comme arguments et qui imprime soit &ldquo;Yes&rdquo; ou &ldquo;No&rdquo;, selon que vous pouvez ou ne pouvez pas former un triangle à partir de bâtons avec les longueurs données.</em></li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Écrivez une fonction qui invite l’utilisateur à saisir trois longueurs de bâtons, à les convertir en nombres entiers,
+et utilise is_triangle pour vérifier si les bâtons de longueur donnée peuvent former un triangle.</em></li>
+</ol>
+</li>
+</ul>
+<p><strong>Exercice 4</strong> </p>
+<p>Quelle est la sortie du programme suivant? Dessine un diagramme de pile qui montre le
+état du programme lorsqu&rsquo;il imprime le résultat.</p>
+<pre><code>def recurse(n, s):
+    if n == 0:
+        print(s)
+    else:
+        recurse(n-1, n+s)
+
+recurse(3, 0)
+</code></pre>
+
+<ul>
+<li>
+<ol>
+<li><em>Que se passerait-il si vous appeliez cette fonction comme ceci: recurse (-1, 0)?</em></li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Ecrivez un docstring qui explique tout ce que quelqu&rsquo;un devrait savoir pour pouvoir utiliser cet fonction (et rien d&rsquo;autre).</em></li>
+</ol>
+</li>
+</ul>
+<p>Les exercices suivants utilisent le module tortue, décrit au chapitre 4:</p>
+<p><strong>Exercice 5</strong> </p>
+<p><em>Lisez la fonction suivante et voyez si vous pouvez comprendre ce qu’elle fait (voir les exemples du chapitre 4). Puis lancez-le et voyez si vous avez bien compris.</em></p>
+<pre><code class="python">def draw(t, length, n):
+    if n == 0:
+        return
+    angle = 50
+    t.fd(length*n)
+    t.lt(angle)
+    draw(t, length, n-1)
+    t.rt(2*angle)
+    draw(t, length, n-1)
+    t.lt(angle)
+    t.bk(length*n)
+</code></pre>
+
+<p><img alt="fig5.2" src="assets/tp5.2.png"></p>
+<p>La courbe de Koch est une fractale qui ressemble à la figure 5.2. Dessiner un Koch
+courbe avec longueur x, tout ce que vous avez à faire est de</p>
+<ul>
+<li>
+<ol>
+<li><em>Tracez une courbe de Koch avec une longueur x / 3.</em></li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tourner à gauche de 60 degrés.</em></li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tracez une courbe de Koch avec une longueur x / 3.</em> </li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tournez à droite de 120 degrés.</em> </li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tracez une courbe de Koch avec une longueur x / 3.</em> </li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tournez à gauche de 60 degrés.</em> </li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tracez une courbe de Koch avec une longueur x / 3.</em> </li>
+</ol>
+</li>
+</ul>
+<p><em>L&rsquo;exception est si x est inférieur à 3: dans ce cas, vous pouvez simplement tracer une ligne de longueur x.</em></p>
+<ul>
+<li>
+<ol>
+<li><em>Écrivez une fonction appelée koch qui prend une tortue et une longueur comme paramètres, et qui utilise la tortue pour dessiner une courbe de Koch avec la longueur donnée.</em></li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Écrivez une fonction appelée flocon de neige qui dessine trois courbes de Koch pour dessiner le contour d&rsquo;un flocon de neige.</em>
+Solution: <a href="http://thinkpython2.com/code/koch.py">http://thinkpython2.com/code/koch.py</a>.</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>_La courbe de Koch peut être généralisée de plusieurs manières. Voir <a href="http://en.wikipedia.org/wiki/Koch_snowflake">http://en.wikipedia.org/wiki/Koch_snowflake</a> pour des exemples et implémentez votre favori.</li>
+</ol>
+</li>
+</ul>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</div>
+</body>
+</html>

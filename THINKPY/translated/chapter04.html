@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/atelier-forest-light.min.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="container">
+
+<h1>Chapitre 4<a name="ch3"></a></h1>
+<h2>Cas d&rsquo;étude: conception d&rsquo;interface</h2>
+<p><br><br></p>
+<p>Ce chapitre présente une cas d&rsquo;étude qui illustre un processus de conception de fonctions qui travaillent ensemble.</p>
+<p>Il présente la module tortue, qui vous permet de créer des images à l&rsquo;aide de graphiques tortue.
+La module tortue est inclus dans la plupart des installations Python, mais si vous utilisez Python
+en utilisant PythonAnywhere, vous ne pourrez pas exécuter les exemples de tortue (au moins vous ne pouviez pas quand j&rsquo;ai écrit ceci).
+Si vous avez déjà installé Python sur votre ordinateur, vous devriez pouvoir exécuter les
+exemples. Sinon, c&rsquo;est le bon moment pour l&rsquo;installer. J&rsquo;ai posté des instructions sur <a href="http://tinyurl.com/thinkpython2e">http://tinyurl.com/thinkpython2e</a>.
+Des exemples de code de ce chapitre sont disponibles sur <a href="http://thinkpython2.com/code/polygon.py">http://thinkpython2.com/code/polygon.py</a>.</p>
+<h3>4.1 La module tortue</h3>
+<p>Pour vérifier si vous avez la module tortue, ouvrez l&rsquo;interpréteur Python et tapez</p>
+<pre><code class="python">&gt;&gt;&gt; import turtle
+&gt;&gt;&gt; bob = turtle.Turtle()
+</code></pre>
+
+<p>Lorsque vous exécutez ce code, il doit créer une nouvelle fenêtre avec une petite flèche qui représente
+la tortue. Fermez la fenêtre.
+Créez un fichier nommé mypolygon.py et tapez le code suivant:</p>
+<pre><code class="python">import turtle
+
+bob = turtle.Turtle()
+print(bob)
+turtle.mainloop()
+</code></pre>
+
+<p>La module turtle (avec un &lsquo;t&rsquo; minuscule) fournit une fonction appelée Turtle (avec un &lsquo;T&rsquo; majuscule) qui crée un objet Turtle, que nous assignons à une variable nommée bob. print
+bob affiche quelque chose comme:</p>
+<pre><code>&lt;turtle.Turtle object at 0xb7bfbf4c&gt;
+</code></pre>
+
+<p>Cela signifie que bob fait référence à un objet de type Turtle tel que défini dans la tortue de module.</p>
+<p><code>mainloop</code> indique à la fenêtre d&rsquo;attendre que l&rsquo;utilisateur fasse quelque chose, bien que dans ce cas il n&rsquo;y a pas grand chose à faire pour l&rsquo;utilisateur, sauf fermer la fenêtre.
+Une fois que vous créez une tortue, vous pouvez appeler une méthode pour la déplacer dans la fenêtre. Une méthode est similaire à une fonction, mais utilise une syntaxe légèrement différente. Par exemple, pour déplacer la tortue
+vers l&rsquo;avant:</p>
+<pre><code class="python">bob.fd(100)
+</code></pre>
+
+<p>La méthode fd est associée à l&rsquo;objet tortue que nous appelons bob. L&rsquo;appel d&rsquo;une méthode est
+comme faire une demande: vous demandez à Bob d&rsquo;avancer.
+L&rsquo;argument de fd étant une distance en pixels, la taille réelle dépend de votre affichage.
+Les autres méthodes que vous pouvez appeler sur une tortue sont bk pour reculer, lt pour tourner à gauche et rt virage à droite. L&rsquo;argument pour lt et rt est un angle en degrés.
+En outre, chaque tortue tient un stylo, qui est soit en bas soit en haut; si le stylo touche la page, la tortue laisse une trace quand il bouge. Les méthodes <code>pu</code> et <code>pd</code> représentent &ldquo;pen up&rdquo; et &ldquo;pen down&rdquo;.
+Pour dessiner un angle droit, ajoutez ces lignes au programme (après avoir créé bob et avant d&rsquo;appeler la
+boucle principale):</p>
+<pre><code class="python">bob.fd(100)
+bob.lt(90)
+bob.fd(100)
+</code></pre>
+
+<p>Lorsque vous exécutez ce programme, vous devriez voir Bob se déplacer vers l’est puis vers le nord, laissant deux
+segments de ligne derrière.
+Modifiez maintenant le programme pour dessiner un carré. Ne continuez pas tant que vous ne l&rsquo;avez pas fait fonctionner!</p>
+<h3>4.2 Répétition simple</h3>
+<p>Les chances sont que vous avez écrit quelque chose comme ceci:</p>
+<pre><code class="python">bob.fd(100)
+bob.lt(90)
+
+bob.fd(100)
+bob.lt(90)
+
+bob.fd(100)
+bob.lt(90)
+
+bob.fd(100)
+</code></pre>
+
+<p>Nous pouvons faire la même chose de manière plus concise avec une déclaration. Ajouter cet exemple à
+mypolygon.py et lancez-le à nouveau:</p>
+<pre><code class="python">for i in range(4):
+    print('Hello!')
+</code></pre>
+
+<p>Vous devriez voir quelque chose comme ceci:</p>
+<pre><code>Hello!
+Hello!
+Hello!
+Hello!
+</code></pre>
+
+<p>C&rsquo;est l&rsquo;utilisation la plus simple de la déclaration for; nous verrons plus tard. Mais cela devrait être
+de quoi vous permettre de réécrire votre programme de dessin en carré. Ne continuez pas jusqu&rsquo;à ce que vous fassiez.
+Voici une déclaration qui dessine un carré:</p>
+<pre><code class="python">for i in range(4):
+    bob.fd(100)
+    bob.lt(90)
+</code></pre>
+
+<p>La syntaxe d&rsquo;une instruction for est similaire à une définition de fonction. Il a un en-tête qui se termine avec un colon et un corps en retrait. Le corps peut contenir n&rsquo;importe quel nombre d&rsquo;instructions.</p>
+<p>Un déclaration for est également appelé une boucle parce que le flux d&rsquo;exécution traverse le corps
+puis retourne au sommet. Dans ce cas, il court le corps quatre fois.
+Cette version est en fait un peu différente du précédent code de dessin car
+fait un autre tour après avoir dessiné le dernier côté de la place. Le tour supplémentaire prend plus
+temps, mais cela simplifie le code si nous faisons la même chose à chaque fois dans la boucle. Ce
+version la a également pour effet de laisser la tortue dans la position de départ, face à la
+direction de départ.</p>
+<h3>4.3 Exercices</h3>
+<p>Ce qui suit est une série d&rsquo;exercices utilisant TurtleWorld. Ils sont censés êtres amusants, mais ils
+ont un point aussi. Pendant que vous y travaillez, réfléchissez à la question.
+Les sections suivantes proposent des solutions aux exercices, ne regardez donc pas avant d&rsquo;avoir terminé
+(ou au moins essayé).</p>
+<ol>
+<li>
+<p>Ecrivez une fonction appelée carré qui prend un paramètre nommé t, qui est une tortue. Il
+doit utiliser la tortue pour dessiner un carré.
+Écrivez un appel de fonction qui passe Bob en argument à square, puis exécutez le
+programme à nouveau.</p>
+</li>
+<li>
+<p>Ajoutez un autre paramètre, nommé length, au carré. Modifier le corps si long de la
+les côtés est la longueur, puis modifiez l&rsquo;appel de la fonction pour fournir un second argument. Executer
+le programme à nouveau. Testez votre programme avec une plage de valeurs de longueur.</p>
+</li>
+<li>
+<p>Faites une copie du carré et changez le nom en polygone. Ajouter un autre paramètre
+nommée n et modifie le corps pour dessiner un polygone régulier à n côtés. Indice: le
+les angles extérieurs d&rsquo;un polygone régulier à n côtés sont de <code>360 ​​/ n</code> degrés.</p>
+</li>
+<li>
+<p>Écrivez une fonction appelée cercle qui prend comme paramètres une tortue, t et rayon, et
+qui trace un cercle approximatif en appelant le polygone avec une longueur appropriée et
+nombre de côtés. Testez votre fonction avec une plage de valeurs de r.
+Astuce: déterminez la circonférence du cercle et assurez-vous que cette <code>longueur * n =
+circonference</code>.</p>
+</li>
+<li>
+<p>Faire une version plus générale du cercle appelé arc qui prend un paramètre supplémentaire
+angle, qui détermine quelle fraction de cercle dessiner. l&rsquo;angle est en unités de degrés,
+Ainsi, lorsque angle = 360, l&rsquo;arc doit dessiner un cercle complet.</p>
+</li>
+</ol>
+<h3>4.4 Encapsulation</h3>
+<p>Le premier exercice vous demande de mettre votre code de dessin carré dans une définition de fonction et
+puis appelez la fonction, en passant la tortue en paramètre. Voici une solution:</p>
+<pre><code class="python">def square(t):
+    for i in range(4):
+        t.fd(100)
+        t.lt(90)
+
+square(bob)
+</code></pre>
+
+<p>Les instructions les plus internes, fd et lt, sont en retrait deux fois pour montrer qu&rsquo;elles sont à l&rsquo;intérieur du
+for loop, qui se trouve dans la définition de la fonction. La ligne suivante, square(bob), est alignée avec la marge de gauche, qui indique la fin de la boucle for et la définition de la fonction.
+À l’intérieur de la fonction, t fait référence au même bob tortue, donc <code>t.lt(90)</code> a le même effet que
+<code>bob.lt(90)</code>. Dans ce cas, pourquoi ne pas appeler le paramètre bob? L&rsquo;idée est que t peut être n&rsquo;importe quel
+tortue, pas seulement bob, vous pouvez donc créer une deuxième tortue et la passer en argument</p>
+<pre><code class="python">alice = turtle.Turtle()
+square(alice)
+</code></pre>
+
+<p>L&rsquo;encapsulation d&rsquo;un morceau de code dans une fonction est appelée encapsulation. Un des avantages de
+l&rsquo;encapsulation consiste à attacher un nom au code, qui sert de type de documentation. Un autre avantage est que si vous réutilisez le code, il est plus concis d&rsquo;appeler une fonction
+deux fois que de copier et coller le corps!</p>
+<h3>4.5 Généralisation</h3>
+<p>L&rsquo;étape suivante consiste à ajouter un paramètre de longueur à square. Voici une solution:</p>
+<pre><code class="python">def square(t, length):
+    for i in range(4):
+        t.fd(length)
+        t.lt(90)
+
+square(bob, 100)
+</code></pre>
+
+<p>L&rsquo;ajout d&rsquo;un paramètre à une fonction s&rsquo;appelle la généralisation car elle fait la fonction
+plus général: dans la version précédente, le carré a toujours la même taille; dans cette version c&rsquo;est
+peut être n&rsquo;importe quelle taille.
+L&rsquo;étape suivante est également une généralisation. Au lieu de dessiner des carrés, le polygone dessine des
+polygones régulière avec un nombre quelconque de côtés. Voici une solution:</p>
+<pre><code class="python">def polygon(t, n, length):
+    angle = 360 / n
+    for i in range(n):
+        t.fd(length)
+        t.lt(angle)
+
+polygon(bob, 7, 70)
+</code></pre>
+
+<p>Cet exemple dessine un polygone à sept côtés avec une longueur de côté 70.
+Si vous utilisez Python 2, la valeur de l&rsquo;angle peut être désactivée en raison de la division entière. Une
+solution simple est de calculer <code>angle = 360.0 / n</code>. Le numérateur étant un nombre à virgule flottante, le résultat est un nombre à virgule flottante.
+Lorsqu&rsquo;une fonction a plus que quelques arguments numériques, il est facile d&rsquo;oublier ce qu&rsquo;ils sont,
+ou dans quel ordre ils devraient être. Dans ce cas, il est souvent utile d&rsquo;inclure les noms de
+les paramètres de la liste d&rsquo;arguments:</p>
+<p><code>polygon(bob, n=7, length=70)</code></p>
+<p>Ceux-ci sont appelés des arguments de mots-clés car ils incluent les noms de paramètres en tant que &ldquo;mots-clés&rdquo; (à ne pas confondre avec les mots-clés Python comme while et def).
+Cette syntaxe rend le programme plus lisible. C&rsquo;est aussi un rappel sur la façon dont les arguments
+et paramètres fonctionnent: lorsque vous appelez une fonction, les arguments sont affectés aux paramètres.</p>
+<h3>4.6 Design d&rsquo;interface</h3>
+<p>L&rsquo;étape suivante consiste à écrire le cercle, qui prend un rayon, r, en tant que paramètre. Voici un simple
+solution qui utilise un polygone pour dessiner un polygone à 50 côtés:</p>
+<pre><code class="python">import math
+
+def circle(t, r):
+    circumference = 2 * math.pi * r
+    n = 50
+    length = circumference / n
+    polygon(t, n, length)
+</code></pre>
+
+<p>La première ligne calcule la circonférence d&rsquo;un cercle de rayon r en utilisant la formule 2πr.
+Puisque nous utilisons math.pi, nous devons importer des mathématiques. Par convention, les instructions d&rsquo;importation sont
+généralement au début du script.</p>
+<p>n est le nombre de segments de droite dans notre approximation d&rsquo;un cercle, donc la longueur est la longueur
+de chaque segment. Ainsi, le polygone dessine un polygone à 50 côtés qui se rapproche d’un cercle avec
+rayon r.
+Une des limites de cette solution est que n est une constante, ce qui signifie que pour de très grands cercles,
+les segments de ligne sont trop longs et pour les petits cercles, nous perdons du temps à dessiner très petit
+segments. Une solution consisterait à généraliser la fonction en prenant n comme paramètre.
+Cela donnerait à l&rsquo;utilisateur (celui qui appelle le cercle) plus de contrôle, mais l&rsquo;interface serait
+moins propre.
+L&rsquo;interface d&rsquo;une fonction est un résumé de son utilisation: quels sont les paramètres? Quelle
+la fonction fait-elle? Et quelle est la valeur de retour? Une interface est &ldquo;propre&rdquo; si elle permet au
+appelant à faire ce qu&rsquo;il veut sans traiter les détails inutiles.
+Dans cet exemple, r appartient à l&rsquo;interface car il spécifie le cercle à dessiner. n est
+moins approprié car cela concerne les détails de la façon dont le cercle doit être rendu.
+Plutôt que d&rsquo;encombrer l&rsquo;interface, il est préférable de choisir une valeur appropriée de n en fonction de la circonférence:</p>
+<pre><code class="python">def circle(t, r):
+    circumference = 2 * math.pi * r
+    n = int(circumference / 3) + 3
+    length = circumference / n
+    polygon(t, n, length)
+</code></pre>
+
+<p>Maintenant, le nombre de segments est un entier proche de la circumference/3, donc la longueur de chaque
+le segment est d&rsquo;environ 3, ce qui est assez petit pour que les cercles semblent bons, mais gros
+suffisamment pour être efficace et acceptable pour tout cercle de taille.
+L&rsquo;ajout de 3 à n garantit que le polygone a au moins 3 côtés.</p>
+<h3>4.7 Refactoring</h3>
+<p>Lorsque j&rsquo;ai écrit le cercle, j&rsquo;ai pu réutiliser un polygone car un polygone à plusieurs côtés est un bon
+approximation d&rsquo;un cercle. Mais l&rsquo;arc n&rsquo;est pas aussi coopératif; nous ne pouvons pas utiliser polygone ou cercle pour
+dessine un arc.
+Une alternative consiste à commencer par une copie du polygone et à le transformer en arc. Le résultat
+pourrait ressembler à ceci:</p>
+<pre><code class="python">def arc(t, r, angle):
+    arc_length = 2 * math.pi * r * angle / 360
+    n = int(arc_length / 3) + 1
+    step_length = arc_length / n
+    step_angle = angle / n
+
+    for i in range(n):
+        t.fd(step_length)
+        t.lt(step_angle)
+</code></pre>
+
+<p>La seconde moitié de cette fonction ressemble à un polygone, mais nous ne pouvons pas réutiliser un polygone sans
+changer l&rsquo;interface. On pourrait généraliser le polygone pour prendre un angle comme troisième argument,
+mais alors le polygone ne serait plus un nom approprié! Au lieu de cela, appelons le plus
+fonction générale polyligne:</p>
+<pre><code class="python">def polyline(t, n, length, angle):
+    for i in range(n):
+        t.fd(length)
+        t.lt(angle)
+</code></pre>
+
+<p>Maintenant, nous pouvons réécrire le polygone et l&rsquo;arc pour utiliser la polyligne:</p>
+<pre><code class="python">def polygon(t, n, length):
+    angle = 360.0 / n
+    polyline(t, n, length, angle)
+
+def arc(t, r, angle):
+    arc_length = 2 * math.pi * r * angle / 360
+    n = int(arc_length / 3) + 1
+    step_length = arc_length / n
+    step_angle = float(angle) / n
+    polyline(t, n, step_length, step_angle)
+</code></pre>
+
+<p>Enfin, nous pouvons réécrire le cercle pour utiliser l&rsquo;arc:</p>
+<pre><code class="python">def circle(t, r):
+    arc(t, r, 360)
+</code></pre>
+
+<p>Ce processus de réorganisation d&rsquo;un programme pour améliorer les interfaces et faciliter la réutilisation du code est
+appelé refactoring. Dans ce cas, nous avons remarqué qu&rsquo;il y avait un code similaire en arc et en polygone,
+donc nous avons &ldquo;factorisé&rdquo; en polyligne.
+Si nous avions prévu à l’avance, nous aurions peut-être écrit la polyligne d’abord et évité la refactorisation,
+mais souvent vous ne savez pas assez au début d&rsquo;un projet pour concevoir toutes les interfaces.
+Une fois que vous commencez à coder, vous comprenez mieux le problème. Parfois, le refactoring est un signe
+que vous avez appris quelque chose.</p>
+<h3>4.8 Un plan de développement</h3>
+<p>Un plan de développement est un processus d’écriture de programmes. Le processus utilisé dans ce cas
+l&rsquo;étude d&rsquo; &ldquo;encapsulation et généralisation&rdquo;. Les étapes de ce processus sont les suivantes:</p>
+<ol>
+<li>
+<p>Commencez par écrire un petit programme sans définition de fonction.</p>
+</li>
+<li>
+<p>Une fois que le programme fonctionne, identifiez-en un élément cohérent, encapsulez le
+pièce dans une fonction et lui donner un nom.</p>
+</li>
+<li>
+<p>Généraliser la fonction en ajoutant les paramètres appropriés.</p>
+</li>
+<li>
+<p>Répétez les étapes 1 à 3 jusqu&rsquo;à ce que vous ayez un ensemble de fonctions de travail. Copiez et collez le
+code pour éviter de retaper (et re-déboguer).</p>
+</li>
+<li>
+<p>Recherchez les possibilités d’améliorer le programme en procédant à un remaniement. Par exemple, si vous
+avez un code similaire à plusieurs endroits, envisagez de le prendre en compte avec une
+fonction générale.</p>
+</li>
+</ol>
+<p>Ce processus a quelques inconvénients - nous verrons des alternatives plus tard - mais cela peut être utile si
+vous ne savez pas à l&rsquo;avance comment diviser le programme en fonctions. Cette approche
+vous permet de concevoir au fur et à mesure.</p>
+<h3>4.9 docstring</h3>
+<p>Un docstring est une chaîne au début d&rsquo;une fonction qui explique l&rsquo;interface (&ldquo;doc&rdquo; est
+abréviation de &ldquo;documentation&rdquo;). Voici un exemple:</p>
+<pre><code class="python">def polyline(t, n, length, angle):
+    &quot;&quot;&quot;Draws n line segments with the given length and
+    angle (in degrees) between them.  t is a turtle.
+    &quot;&quot;&quot;    
+    for i in range(n):
+        t.fd(length)
+        t.lt(angle)
+</code></pre>
+
+<p>Par convention, toutes les chaînes de caractères sont des chaînes entre guillemets, également appelées chaînes multilignes.
+car les triples guillemets permettent à la chaîne de s&rsquo;étendre sur plusieurs lignes.</p>
+<p>C&rsquo;est concis, mais il contient l&rsquo;information essentielle dont quelqu&rsquo;un aurait besoin pour utiliser cette fonction. Il explique de manière concise ce que la fonction fait (sans entrer dans les détails de la façon dont
+il le fait). Il explique quel effet chaque paramètre a sur le comportement de la fonction et
+quel type chaque paramètre devrait être (si ce n&rsquo;est pas évident).
+L&rsquo;écriture de ce type de documentation est une partie importante de la conception de l&rsquo;interface. Une interface bien conçue devrait être simple à expliquer; si vous avez du mal à en expliquer un
+de vos fonctions, peut-être l&rsquo;interface pourrait être améliorée.</p>
+<h3>4.10 Le débogage</h3>
+<p>Une interface est comme un contrat entre une fonction et un appelant. L&rsquo;appelant accepte de fournir
+certains paramètres et la fonction accepte de faire certains travaux.
+Par exemple, polyligne nécessite quatre arguments: t doit être une tortue; n doit être un entier;
+la longueur doit être un nombre positif; et l&rsquo;angle doit être un nombre, ce qui est compris
+être en degrés.
+Ces exigences sont appelées conditions préalables car elles sont supposées être vraies avant
+la fonction commence à s&rsquo;exécuter. Inversement, les conditions à la fin de la fonction sont des conditions postconduites. Les post-conditions incluent l’effet prévu de la fonction (comme dessiner une ligne
+segments) et tout effet secondaire (comme déplacer la tortue ou apporter d’autres modifications).
+Les conditions préalables sont la responsabilité de l&rsquo;appelant. Si l&rsquo;appelant viole une condition préalable (correctement documentée!) Et que la fonction ne fonctionne pas correctement, le bogue se trouve dans l&rsquo;appelant, pas
+la fonction.
+Si les conditions préalables sont satisfaites et que les conditions de postconditions ne le sont pas, le bogue est dans la fonction.
+Si vos conditions préalables et postérieures sont claires, elles peuvent aider au débogage.</p>
+<h3>4.11 Glossaire</h3>
+<ul>
+<li>
+<p><strong>method:</strong> Fonction associée à un objet et appelée à l&rsquo;aide de la notation par points.</p>
+</li>
+<li>
+<p><strong>loop:</strong> Partie d&rsquo;un programme pouvant être exécutée à plusieurs reprises.</p>
+</li>
+<li>
+<p><strong>encapsulation:</strong> processus de transformation d&rsquo;une séquence d&rsquo;instructions en une définition de fonction.</p>
+</li>
+<li>
+<p><strong>généralisation:</strong> processus de remplacement de quelque chose d&rsquo;inutile (comme un nombre)
+avec quelque chose de façon générale (comme une variable ou un paramètre).</p>
+</li>
+<li>
+<p><strong>keyword argument:</strong> argument qui inclut le nom du paramètre en tant que &ldquo;mot-clé&rdquo;.</p>
+</li>
+<li>
+<p><strong>interface:</strong> description de l&rsquo;utilisation d&rsquo;une fonction, y compris le nom et les descriptions de
+les arguments et la valeur de retour.</p>
+</li>
+<li>
+<p><strong>refactoring:</strong> Processus de modification d&rsquo;un programme de travail pour améliorer les interfaces de fonction
+et d&rsquo;autres qualités du code.</p>
+</li>
+<li>
+<p><strong>plan de développement:</strong> Un processus pour écrire des programmes.</p>
+</li>
+<li>
+<p><strong>docstring:</strong> Chaîne qui apparaît en haut d&rsquo;une définition de fonction pour documenter l&rsquo;interface de la fonction.</p>
+</li>
+<li>
+<p><strong>condition préalable:</strong> exigence qui doit être satisfaite par l&rsquo;appelant avant le démarrage d&rsquo;une fonction.</p>
+</li>
+<li>
+<p><strong>postcondition:</strong> Une exigence qui devrait être satisfaite par la fonction avant sa fin.</p>
+</li>
+</ul>
+<h3>4.12 Exercices</h3>
+<p><strong>Exercice 1</strong> </p>
+<p><em>Téléchargez le code dans ce chapitre à partir de <a href="http://thinkpython2.com/code/polygon.py">http://thinkpython2.com/code/polygon.py</a>.</em></p>
+<ol>
+<li>
+<p><em>Dessinez un diagramme de pile qui montre l’état du programme pendant l’exécution du cercle (bob,
+rayon). Vous pouvez faire l&rsquo;arithmétique à la main ou ajouter des instructions d&rsquo;impression au code.</em></p>
+</li>
+<li>
+<p><em>La version de l&rsquo;arc de la section 4.7 n&rsquo;est pas très précise car l&rsquo;approximation linéaire de
+cercle est toujours en dehors du vrai cercle. En conséquence, la tortue se retrouve à quelques pixels de
+la bonne destination. Ma solution montre un moyen de réduire l&rsquo;effet de cette erreur. Lis le
+code et voir si cela a du sens pour vous. Si vous dessinez un diagramme, vous pourriez voir comment cela fonctionne.</em> </p>
+</li>
+</ol>
+<p><img alt="fig4.1" src="assets/tp4.1.png"></p>
+<p><strong>Exercice 2</strong> </p>
+<p>Écrivez un ensemble de fonctions qui peut dessiner des fleurs comme dans la figure 4.1.
+Solution: <a href="http://thinkpython2.com/code/flower.py">http://thinkpython2.com/code/flower.py</a>,
+nécessite également <a href="http://thinkpython2.com/code/polygon.py">http://thinkpython2.com/code/polygon.py</a>.</p>
+<p><img alt="fig4.2" src="assets/tp4.2.png"></p>
+<p><strong>Exercice 3.</strong></p>
+<p>Ecrivez un ensemble de fonctions qui peut dessiner des formes comme dans la Figure 4.2.
+Solution: <a href="http://thinkpython2.com/code/pie.py">http://thinkpython2.com/code/pie.py</a>.</p>
+<p><strong>Exercice 4.</strong></p>
+<p>Les lettres de l&rsquo;alphabet peuvent être construites à partir d&rsquo;un nombre modéré d&rsquo;éléments de base, tels que des lignes verticales et horizontales et quelques courbes. Concevoir un alphabet qui peut être dessiné
+avec un nombre minimal d&rsquo;éléments de base, puis écrivez les fonctions qui dessinent les lettres.
+Vous devriez écrire une fonction pour chaque lettre, avec les noms draw_a, draw_b, etc., et mettre votre
+fonctions dans un fichier nommé letters.py. Vous pouvez télécharger une &ldquo;machine à écrire tortue&rdquo; sur <a href="http://thinkpython2.com/code/typewriter.py">http://thinkpython2.com/code/typewriter.py</a> pour vous aider à tester votre code.</p>
+<p>Vous pouvez obtenir une solution à partir de <a href="http://thinkpython2.com/code/letters.py"> http://thinkpython2.com/code/letters.py</a>; il faut aussi avoir
+<a href="http://thinkpython2.com/code/polygon.py">http://thinkpython2.com/code/polygon.py</a>.</p>
+<p><strong>Exercice 5.</strong></p>
+<p>Lisez à propos des spirales sur <a href="http://en.wikipedia.org/wiki/Spiral">http://en.wikipedia.org/wiki/Spiral</a>; puis écrivez
+un programme qui dessine une spirale archimédienne (ou l&rsquo;une des autres sortes). Solution: <a href="http://thinkpython2.com/code/spiral.py">http://thinkpython2.com/code/spiral.py</a>.</p>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</div>
+</body>
+</html>

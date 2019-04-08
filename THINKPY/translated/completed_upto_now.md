@@ -592,7 +592,7 @@ _Pratique utilisant l'interpréteur Python comme calculatrice:_
 
 # Chapitre 3<a name="ch3"></a>
 
-## Le chemin de la programmation
+## Les fonctions
 <br><br>
 
 Dans le contexte de la programmation, une fonction est une séquence d'instructions nommée qui effectue un calcul. Lorsque vous définissez une fonction, vous spécifiez le nom et la séquence d'instructions. Plus tard, vous pourrez “appeler” la fonction par son nom.
