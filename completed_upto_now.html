@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="container">
-<div class="jumbotron">
+
 <h1>La Pensée Python, Comment raisonner comme un scientiste de l&rsquo;informatique</h1>
 <p>traduction du livre: </p>
 <h3>Think Python, How To Think Like A Computer Scientist</h3>
@@ -19,7 +19,6 @@
 <ul>
 <li>par Abdur-Rahmaan Janhangeer de l&rsquo;Ile Maurice </li>
 </ul>
-</div>
 <hr>
 
 <h1>Indexe</h1>
@@ -558,6 +557,2186 @@ Identifier les erreurs sémantiques peut être délicat, car cela nécessite de 
 <p><em>Si je quitte ma maison à 6h52 du matin et que je cours 1 mile à un rythme lent (8:15 par mile), puis 3 miles au tempo (7:12 par mile) et à un mile à nouveau, quelle heure puis-je rentrer à la maison pour le petit déjeuner?</em> </p>
 </li>
 </ol>
+<hr>
+
+<h1>Chapitre 3<a name="ch3"></a></h1>
+<h2>Les fonctions</h2>
+<p><br><br></p>
+<p>Dans le contexte de la programmation, une fonction est une séquence d&rsquo;instructions nommée qui effectue un calcul. Lorsque vous définissez une fonction, vous spécifiez le nom et la séquence d&rsquo;instructions. Plus tard, vous pourrez “appeler” la fonction par son nom.</p>
+<h3>3.1 Appels de fonction</h3>
+<p>Nous avons déjà vu un exemple d&rsquo;appel de fonction:</p>
+<pre><code class="python">&gt;&gt;&gt; type (42)
+&lt;classe 'int'&gt;
+</code></pre>
+
+<p>Le nom de la fonction est type. L&rsquo;expression entre parenthèses est appelée l&rsquo;argument de la fonction. Le résultat, pour cette fonction, est le type de l&rsquo;argument.</p>
+<p>Il est courant de dire qu&rsquo;une fonction &ldquo;prend&rdquo; un argument et &ldquo;renvoie&rdquo; un résultat. Le résultat s&rsquo;appelle également la valeur de retour.</p>
+<p>Python fournit des fonctions qui convertissent les valeurs d&rsquo;un type à un autre. La fonction int prend n&rsquo;importe quelle valeur et la convertit en un entier, si elle le peut, ou se plaint sinon:</p>
+<pre><code class="python">&gt;&gt;&gt; int('32')
+32
+&gt;&gt;&gt; int('Hello')
+ValueError: invalid literal for int(): Hello
+</code></pre>
+
+<p>int peut convertir les valeurs en virgule flottante en nombres entiers, mais cela n’arrondit pas; il coupe la partie fraction:</p>
+<pre><code class="python">&gt;&gt;&gt; int(3.99999)
+3
+&gt;&gt;&gt; int(-2.3)
+-2
+</code></pre>
+
+<p>float convertit les entiers et les chaînes en nombres à virgule flottante:</p>
+<pre><code class="python">&gt;&gt;&gt; float(32)
+32.0
+&gt;&gt;&gt; float('3.14159')
+3.14159
+</code></pre>
+
+<p>Enfin, str convertit son argument en chaîne:</p>
+<pre><code class="python">&gt;&gt;&gt; str(32)
+'32'
+&gt;&gt;&gt; str(3.14159)
+'3.14159'
+</code></pre>
+
+<h3>3.2 Fonctions mathématiques</h3>
+<p>Python a un module mathématique qui fournit la plupart des fonctions mathématiques habituelles. Un module est un fichier contenant une collection de fonctions connexes.</p>
+<p>Avant de pouvoir utiliser les fonctions d&rsquo;un module, nous devons l&rsquo;importer avec une instruction import:</p>
+<pre><code class="python">&gt;&gt;&gt; import math
+</code></pre>
+
+<p>Cette instruction crée un objet module nommé math. Si vous affichez l&rsquo;objet module, vous obtenez des informations à ce sujet:</p>
+<pre><code class="python">&gt;&gt;&gt; math
+&lt;module 'math' (built-in)&gt;
+</code></pre>
+
+<p>L&rsquo;objet module contient les fonctions et les variables définies dans le module. Pour accéder à l&rsquo;une des fonctions, vous devez spécifier le nom du module et le nom de la fonction, séparés par un point (également appelé période). Ce format s&rsquo;appelle la notation par point.</p>
+<pre><code class="python">&gt;&gt;&gt; ratio = signal_power / noise_power
+&gt;&gt;&gt; decibels = 10 * math.log10(ratio)
+
+&gt;&gt;&gt; radians = 0.7
+&gt;&gt;&gt; height = math.sin(radians)
+</code></pre>
+
+<p>Le premier exemple utilise math.log10 pour calculer un rapport signal sur bruit en décibels (en supposant que signal_power et noise_power soient définis). Le module mathématique fournit également un journal, qui calcule les logarithmes de base e.</p>
+<p>Le deuxième exemple trouve le sinus de radians. Le nom de la variable est un indice que péché et les autres fonctions trigonométriques (cos, tan, etc.) prennent des arguments en radians. Pour convertir des degrés en radians, divisez par 180 et multipliez par π:</p>
+<pre><code class="python">&gt;&gt;&gt; degrees = 45
+&gt;&gt;&gt; radians = degrees / 180.0 * math.pi
+&gt;&gt;&gt; math.sin(radians)
+0.707106781187
+</code></pre>
+
+<p>L&rsquo;expression math.pi obtient la variable pi du module mathématique. Sa valeur est une approximation à virgule flottante de π, précise à environ 15 chiffres.</p>
+<p>Si vous connaissez la trigonométrie, vous pouvez vérifier le résultat précédent en le comparant à la racine carrée de deux divisée par deux:</p>
+<pre><code class="python">&gt;&gt;&gt; math.sqrt(2) / 2.0
+0.707106781187
+</code></pre>
+
+<h3>3.3 Composition</h3>
+<p>Jusqu&rsquo;à présent, nous avons examiné les éléments d&rsquo;un programme - variables, expressions et déclarations - de manière isolée, sans parler de la façon de les combiner.</p>
+<p>Une des caractéristiques les plus utiles des langages de programmation est leur capacité à prendre et à composer de petits blocs de construction. Par exemple, l&rsquo;argument d&rsquo;une fonction peut être n&rsquo;importe quel type d&rsquo;expression, y compris les opérateurs arithmétiques:</p>
+<pre><code class="python">x = math.sin (degrés / 360.0 * 2 * math.pi)
+</code></pre>
+
+<p>Et même des appels de fonction:</p>
+<pre><code class="python">x = math.exp(math.log(x+1))
+</code></pre>
+
+<p>Presque n&rsquo;importe où vous pouvez mettre une valeur, vous pouvez mettre une expression arbitraire, à une exception près: le côté gauche d&rsquo;une instruction d&rsquo;affectation doit être un nom de variable. Toute autre expression à gauche est une erreur de syntaxe (nous verrons des exceptions à cette règle plus tard).</p>
+<pre><code class="python">&gt;&gt;&gt; minutes = hours * 60                 # right
+&gt;&gt;&gt; hours * 60 = minutes                 # wrong!
+SyntaxError: can't assign to operator
+</code></pre>
+
+<h3>3.4 Ajouter de nouvelles fonctions</h3>
+<p>Jusqu&rsquo;à présent, nous utilisions uniquement les fonctions fournies avec Python, mais il est également possible d&rsquo;ajouter de nouvelles fonctions. Une définition de fonction spécifie le nom d&rsquo;une nouvelle fonction et la séquence d&rsquo;instructions qui s&rsquo;exécutent lorsque la fonction est appelée.</p>
+<p>Voici un exemple:</p>
+<pre><code class="python">def print_lyrics():
+    print(&quot;I'm a lumberjack, and I'm okay.&quot;)
+    print(&quot;I sleep all night and I work all day.&quot;)
+</code></pre>
+
+<p>def est un mot clé qui indique qu&rsquo;il s&rsquo;agit d&rsquo;une définition de fonction. Le nom de la fonction est print_lyrics. Les règles pour les noms de fonction sont les mêmes que pour les noms de variables: les lettres, les chiffres et les traits de soulignement sont légaux, mais le premier caractère ne peut pas être un nombre. Vous ne pouvez pas utiliser un mot-clé comme nom d&rsquo;une fonction et vous devez éviter d&rsquo;avoir une variable et une fonction du même nom.</p>
+<p>Les parenthèses vides après le nom indiquent que cette fonction ne prend aucun argument.</p>
+<p>La première ligne de la définition de fonction s&rsquo;appelle l&rsquo;en-tête. le reste s&rsquo;appelle le corps. L&rsquo;en-tête doit se terminer par un deux-points et le corps doit être mis en retrait. Par convention, l&rsquo;indentation est toujours de quatre espaces. Le corps peut contenir n&rsquo;importe quel nombre d&rsquo;énoncés.</p>
+<p>Les chaînes dans les instructions d&rsquo;impression sont placées entre guillemets. Les guillemets simples et les guillemets doubles font la même chose; la plupart des gens utilisent des guillemets simples, sauf dans les cas comme celui-ci où un guillemet simple (qui est aussi une apostrophe) apparaît dans la chaîne.</p>
+<p>Tous les guillemets (simples et doubles) doivent être des «guillemets droits», généralement situés à côté de la touche Entrée du clavier. Les «guillemets bouclés», comme ceux de cette phrase, ne sont pas légaux en Python.</p>
+<p>Si vous tapez une définition de fonction en mode interactif, l’interprète imprime des points (&hellip;) pour vous informer que la définition n’est pas complète:</p>
+<pre><code class="python">&gt;&gt;&gt; def print_lyrics():
+...     print(&quot;I'm a lumberjack, and I'm okay.&quot;)
+...     print(&quot;I sleep all night and I work all day.&quot;)
+...
+</code></pre>
+
+<p>Pour terminer la fonction, vous devez entrer une ligne vide.</p>
+<p>La définition d&rsquo;une fonction crée un objet de fonction, qui a le type fonction:</p>
+<pre><code class="python">&gt;&gt;&gt; print(print_lyrics)
+&lt;function print_lyrics at 0xb7e99e9c&gt;
+&gt;&gt;&gt; type(print_lyrics)
+&lt;class 'function'&gt;
+</code></pre>
+
+<p>La syntaxe pour appeler la nouvelle fonction est la même que pour les fonctions intégrées:</p>
+<pre><code class="python">&gt;&gt;&gt; print_lyrics()
+I'm a lumberjack, and I'm okay.
+I sleep all night and I work all day.
+</code></pre>
+
+<p>Une fois que vous avez défini une fonction, vous pouvez l’utiliser dans une autre fonction. Par exemple, pour répéter le refrain précédent, nous pourrions écrire une fonction appelée repeat_lyrics:</p>
+<pre><code class="python">def repeat_lyrics ():
+    print_lyrics ()
+    print_lyrics ()
+</code></pre>
+
+<p>Et ensuite, appelez repeat_lyrics:</p>
+<pre><code class="python">&gt;&gt;&gt; repeat_lyrics()
+I'm a lumberjack, and I'm okay.
+I sleep all night and I work all day.
+I'm a lumberjack, and I'm okay.
+I sleep all night and I work all day.
+</code></pre>
+
+<p>Mais ce n’est pas vraiment comme ça que la chanson se passe.</p>
+<h3>3.5 Définitions et utilisations</h3>
+<p>En rassemblant les fragments de code de la section précédente, l&rsquo;ensemble du programme se présente comme suit:</p>
+<pre><code class="python">def print_lyrics():
+    print(&quot;I'm a lumberjack, and I'm okay.&quot;)
+    print(&quot;I sleep all night and I work all day.&quot;)
+
+def repeat_lyrics():
+    print_lyrics()
+    print_lyrics()
+
+repeat_lyrics()
+</code></pre>
+
+<p>Ce programme contient deux définitions de fonction: print_lyrics et repeat_lyrics. Les définitions de fonctions sont exécutées exactement comme les autres instructions, mais l’effet consiste à créer des objets de fonction. Les instructions à l&rsquo;intérieur de la fonction ne sont exécutées que lorsque la fonction est appelée et que la définition de la fonction ne génère aucune sortie.</p>
+<p>Comme vous vous en doutez, vous devez créer une fonction avant de pouvoir l&rsquo;exécuter. En d&rsquo;autres termes, la définition de la fonction doit être exécutée avant que la fonction ne soit appelée.</p>
+<p>En tant qu&rsquo;exercice, déplacez la dernière ligne de ce programme vers le haut pour que l&rsquo;appel de fonction apparaisse avant les définitions. Exécutez le programme et voyez quel message d&rsquo;erreur vous obtenez.</p>
+<p>Déplacez maintenant l&rsquo;appel de fonction vers le bas et déplacez la définition de print_lyrics après la définition de repeat_lyrics. Que se passe-t-il lorsque vous exécutez ce programme?</p>
+<h3>3.6 Flux d&rsquo;exécution</h3>
+<p>Pour vous assurer qu&rsquo;une fonction est définie avant sa première utilisation, vous devez connaître le déroulement des instructions, appelé flux d&rsquo;exécution.</p>
+<p>L&rsquo;exécution commence toujours à la première déclaration du programme. Les instructions sont exécutées une par une, de haut en bas.</p>
+<p>Les définitions de fonction ne modifient pas le flux d’exécution du programme, mais rappelez-vous que les instructions contenues dans la fonction ne sont exécutées que lorsque la fonction est appelée.</p>
+<p>Un appel de fonction est comme un détour dans le flux d&rsquo;exécution. Au lieu de passer à l&rsquo;instruction suivante, le flux saute dans le corps de la fonction, y exécute les instructions, puis revient à la position où elle s&rsquo;est arrêtée.</p>
+<p>Cela semble assez simple, jusqu&rsquo;à ce que vous vous souveniez qu&rsquo;une fonction peut en appeler une autre. Au milieu d&rsquo;une fonction, le programme peut devoir exécuter les instructions dans une autre fonction. Ensuite, lors de l’exécution de cette nouvelle fonction, le programme devra peut-être exécuter une autre fonction encore!</p>
+<p>Heureusement, Python sait bien où il se trouve. Ainsi, chaque fois qu&rsquo;une fonction est terminée, le programme reprend là où il l&rsquo;avait laissé dans la fonction qui l&rsquo;a appelée. Quand il arrive à la fin du programme, il se termine.</p>
+<p>En résumé, lorsque vous lisez un programme, vous ne voulez pas toujours lire de haut en bas. Parfois, il est plus logique de suivre le déroulement de l’exécution.</p>
+<h3>3.7 Paramètres et arguments</h3>
+<p>Certaines des fonctions que nous avons vues nécessitent des arguments. Par exemple, lorsque vous appelez math.sin, vous passez un nombre en argument. Certaines fonctions prennent plus d&rsquo;un argument: math.pow en prend deux, la base et l&rsquo;exposant.</p>
+<p>Dans la fonction, les arguments sont affectés à des variables appelées paramètres. Voici une définition pour une fonction qui prend un argument:</p>
+<pre><code class="python">def print_twice(bruce):
+    print(bruce)
+    print(bruce)
+</code></pre>
+
+<p>Cette fonction assigne l&rsquo;argument à un paramètre nommé bruce. Lorsque la fonction est appelée, elle affiche deux fois la valeur du paramètre (quel qu’il soit).</p>
+<p>Cette fonction fonctionne avec toutes les valeurs pouvant être imprimées.</p>
+<pre><code class="python">&gt;&gt;&gt; print_twice('Spam')
+Spam
+Spam
+&gt;&gt;&gt; print_twice(42)
+42
+42
+&gt;&gt;&gt; print_twice(math.pi)
+3.14159265359
+3.14159265359
+</code></pre>
+
+<p>Les mêmes règles de composition qui s&rsquo;appliquent aux fonctions intégrées s&rsquo;appliquent également aux fonctions définies par le programmeur. Nous pouvons donc utiliser n&rsquo;importe quel type d&rsquo;expression comme argument pour print_twice:</p>
+<pre><code class="python">&gt;&gt;&gt; print_twice('Spam '*4)
+Spam Spam Spam Spam
+Spam Spam Spam Spam
+&gt;&gt;&gt; print_twice(math.cos(math.pi))
+-1.0
+-1.0
+</code></pre>
+
+<p>L&rsquo;argument est évalué avant l&rsquo;appel de la fonction. Ainsi, dans les exemples, les expressions &lsquo;Spam&rsquo; * 4 et math.cos (math.pi) ne sont évaluées qu&rsquo;une seule fois.</p>
+<p>Vous pouvez également utiliser une variable comme argument:</p>
+<pre><code class="python">&gt;&gt;&gt; michael = 'Eric, the half a bee.'
+&gt;&gt;&gt; print_twice(michael)
+Eric, the half a bee.
+Eric, the half a bee.
+</code></pre>
+
+<p>Le nom de la variable que nous passons en tant qu&rsquo;argument (michael) n&rsquo;a rien à voir avec le nom du paramètre (bruce). Peu importe que la valeur ait été appelée à la maison (dans l&rsquo;appelant); ici à print_twice, nous appelons tout le monde bruce.</p>
+<h3>3.8 Les variables et les paramètres sont locaux</h3>
+<p>Lorsque vous créez une variable dans une fonction, elle est locale, ce qui signifie qu&rsquo;elle n&rsquo;existe que dans la fonction. Par exemple:</p>
+<pre><code class="python">def cat_twice(part1, part2):
+    cat = part1 + part2
+    print_twice(cat)
+</code></pre>
+
+<p>Cette fonction prend deux arguments, les concatène et affiche le résultat deux fois. Voici un exemple qui l&rsquo;utilise:</p>
+<pre><code class="python">&gt;&gt;&gt; line1 = 'Bing tiddle '
+&gt;&gt;&gt; line2 = 'tiddle bang.'
+&gt;&gt;&gt; cat_twice(line1, line2)
+Bing tiddle tiddle bang.
+Bing tiddle tiddle bang.
+</code></pre>
+
+<p>Lorsque cat_twice se termine, la variable cat est détruite. Si nous essayons de l&rsquo;imprimer, nous obtenons une exception:</p>
+<pre><code class="python">&gt;&gt;&gt; print(cat)
+NameError: name 'cat' is not defined
+</code></pre>
+
+<p>Les paramètres sont également locaux. Par exemple, en dehors de print_twice, il n’existe pas de bruce.</p>
+<h3>3.9 Diagrammes de pile</h3>
+<p>Pour savoir quelles variables peuvent être utilisées où, il est parfois utile de dessiner un diagramme de pile. Comme les diagrammes d&rsquo;état, les diagrammes de pile indiquent la valeur de chaque variable, mais ils indiquent également la fonction à laquelle appartient cette variable.</p>
+<p>Chaque fonction est représentée par un cadre. Un cadre est une boîte avec le nom d&rsquo;une fonction à côté, ainsi que les paramètres et les variables de la fonction qu&rsquo;il contient. Le diagramme de pile de l&rsquo;exemple précédent est présenté à la figure 3.1.</p>
+<p><img alt="fig3.1" src="assets/tp3.1.png"></p>
+<p>Figure 3.1: diagramme de pile.</p>
+<p>Les cadres sont disposés dans une pile qui indique quelle fonction est appelée, et ainsi de suite. Dans cet exemple, print_twice a été appelé par cat_twice et cat_twice par <strong>main</strong>, qui est un nom spécial pour la plus haute image. Lorsque vous créez une variable en dehors de toute fonction, elle appartient à <strong>main</strong>.</p>
+<p>Chaque paramètre fait référence à la même valeur que son argument correspondant. Ainsi, part1 a la même valeur que line1, part2 a la même valeur que line2 et bruce a la même valeur que cat.</p>
+<p>Si une erreur se produit pendant un appel de fonction, Python affiche le nom de la fonction, le nom de la fonction qui l’a appelée et le nom de la fonction qui l’a appelée, jusqu’à <strong>main</strong>.</p>
+<p>Par exemple, si vous essayez d&rsquo;accéder à cat depuis print_twice, vous obtenez une erreur NameError:</p>
+<pre><code class="python">Traceback (innermost last):
+  File &quot;test.py&quot;, line 13, in __main__
+    cat_twice(line1, line2)
+  File &quot;test.py&quot;, line 5, in cat_twice
+    print_twice(cat)
+  File &quot;test.py&quot;, line 9, in print_twice
+    print(cat)
+NameError: name 'cat' is not defined
+</code></pre>
+
+<p>Cette liste de fonctions s&rsquo;appelle un traceback. Il vous indique dans quel fichier de programme l&rsquo;erreur s&rsquo;est produite, dans quelle ligne et quelles fonctions étaient exécutées à ce moment-là. Il montre également la ligne de code qui a provoqué l&rsquo;erreur.</p>
+<p>L&rsquo;ordre des fonctions dans le suivi est le même que celui des images dans le diagramme de pile. La fonction en cours d&rsquo;exécution est en bas.</p>
+<h3>3.10 Fonctions fructueuses et fonctions vides</h3>
+<p>Certaines des fonctions que nous avons utilisées, telles que les fonctions mathématiques, renvoient des résultats; faute de meilleur nom, je les appelle des fonctions fructueuses. D&rsquo;autres fonctions, comme print_twice, effectuent une action mais ne renvoient pas de valeur. Ils s&rsquo;appellent des fonctions vides.</p>
+<p>Lorsque vous appelez une fonction fructueuse, vous voulez presque toujours faire quelque chose avec le résultat; Par exemple, vous pouvez l&rsquo;assigner à une variable ou l&rsquo;utiliser dans le cadre d&rsquo;une expression:</p>
+<pre><code class="python">x = math.cos(radians)
+golden = (math.sqrt(5) + 1) / 2
+</code></pre>
+
+<p>Lorsque vous appelez une fonction en mode interactif, Python affiche le résultat:</p>
+<pre><code class="python">&gt;&gt;&gt; math.sqrt(5)
+2.2360679774997898
+</code></pre>
+
+<p>Mais dans un script, si vous appelez une fonction fructueuse toute seule, la valeur de retour est perdue à jamais!</p>
+<pre><code class="python">math.sqrt(5)
+</code></pre>
+
+<p>Ce script calcule la racine carrée de 5, mais comme il ne stocke ni n’affiche le résultat, il n’est pas très utile.</p>
+<p>Les fonctions d&rsquo;annulation peuvent afficher quelque chose à l&rsquo;écran ou avoir un autre effet, mais elles n&rsquo;ont pas de valeur de retour. Si vous affectez le résultat à une variable, vous obtenez une valeur spéciale appelée Aucune.</p>
+<pre><code class="python">&gt;&gt;&gt; result = print_twice('Bing')
+Bing
+Bing
+&gt;&gt;&gt; print(result)
+None
+</code></pre>
+
+<p>La valeur None est différente de la chaîne &ldquo;None&rdquo;. C&rsquo;est une valeur spéciale qui a son propre type:</p>
+<pre><code class="python">&gt;&gt;&gt; type(None)
+&lt;class 'NoneType'&gt;
+</code></pre>
+
+<p>Les fonctions que nous avons écrites jusqu&rsquo;à présent sont toutes nulles. Nous allons commencer à écrire des fonctions fructueuses dans quelques chapitres.</p>
+<h3>3.11 Pourquoi les fonctions?</h3>
+<p>On ne comprend peut-être pas pourquoi il vaut la peine de diviser un programme en fonctions. Il existe plusieurs raisons:</p>
+<ul>
+<li>
+<p>La création d&rsquo;une nouvelle fonction vous permet de nommer un groupe d&rsquo;instructions, ce qui facilite la lecture et le débogage de votre programme.</p>
+</li>
+<li>
+<p>Les fonctions peuvent rendre un programme plus petit en éliminant le code répétitif. Plus tard, si vous effectuez un changement, vous ne devez le faire qu’à un seul endroit.</p>
+</li>
+<li>
+<p>Diviser un programme long en fonctions vous permet de déboguer les pièces une par une, puis de les assembler en un ensemble fonctionnel.</p>
+</li>
+<li>
+<p>Des fonctions bien conçues sont souvent utiles pour de nombreux programmes. Une fois que vous avez écrit et débogué, vous pouvez le réutiliser.</p>
+</li>
+</ul>
+<h3>3.12 Débogage</h3>
+<p>Une des compétences les plus importantes que vous allez acquérir est le débogage. Bien que cela puisse être frustrant, le débogage est l’une des parties de la programmation les plus riches, les plus stimulantes et les plus intéressantes sur le plan intellectuel.</p>
+<p>À certains égards, le débogage est comme un travail de détective. Vous êtes confronté à des indices et vous devez en déduire les processus et les événements qui ont conduit aux résultats que vous voyez.</p>
+<p>Le débogage est aussi une science expérimentale. Une fois que vous avez une idée de ce qui ne va pas, modifiez votre programme et essayez à nouveau. Si votre hypothèse était correcte, vous pouvez prédire le résultat de la modification et vous rapprocher d&rsquo;un programme opérationnel. Si votre hypothèse était fausse, vous devez en inventer une nouvelle. Comme Sherlock Holmes l&rsquo;a souligné, &ldquo;lorsque vous avez éliminé l&rsquo;impossible, tout ce qui reste, aussi invraisemblable soit-il, doit être la vérité.&rdquo; (A. Conan Doyle, <em>The Sign of Four</em>)</p>
+<p>Pour certaines personnes, la programmation et le débogage sont la même chose. C&rsquo;est-à-dire que la programmation est le processus de débogage progressif d&rsquo;un programme jusqu&rsquo;à ce qu&rsquo;il fasse ce que vous voulez. L&rsquo;idée est que vous devriez commencer avec un programme fonctionnel et apporter de petites modifications, en les corrigeant au fur et à mesure.</p>
+<p>Par exemple, Linux est un système d’exploitation qui contient des millions de lignes de code, mais c’était à l’origine un simple programme utilisé par Linus Torvalds pour explorer la puce Intel 80386. Selon Larry Greenfield, «L’un des projets précédents de Linus était un programme qui basculerait entre l’impression AAAA et BBBB. Ceci a ensuite évolué vers Linux. ”(<em>The Linux Users’ Guide</em> Beta Version 1).</p>
+<h3>3.13 Glossaire</h3>
+<ul>
+<li>
+<p><strong>une fonction:</strong> Une séquence d&rsquo;instructions nommée qui effectue une opération utile. Les fonctions peuvent ou non prendre des arguments et peuvent ou non produire un résultat.</p>
+</li>
+<li>
+<p><strong>définition de la fonction:</strong> Une instruction qui crée une nouvelle fonction, spécifiant son nom, ses paramètres et les instructions qu’elle contient.</p>
+</li>
+<li>
+<p><strong>objet de fonction:</strong> Une valeur créée par une définition de fonction. Le nom de la fonction est une variable qui fait référence à un objet fonction.</p>
+</li>
+<li>
+<p><strong>entête:</strong> La première ligne d&rsquo;une définition de fonction.</p>
+</li>
+<li>
+<p><strong>corps:</strong> La séquence d&rsquo;instructions à l&rsquo;intérieur d&rsquo;une définition de fonction.</p>
+</li>
+<li>
+<p><strong>paramètre:</strong> Un nom utilisé dans une fonction pour faire référence à la valeur transmise en tant qu&rsquo;argument.</p>
+</li>
+<li>
+<p><strong>appel de fonction:</strong> Une déclaration qui exécute une fonction. Il se compose du nom de la fonction suivi d&rsquo;une liste d&rsquo;arguments entre parenthèses.</p>
+</li>
+<li>
+<p><strong>argument:</strong> Une valeur fournie à une fonction lorsque cette fonction est appelée. Cette valeur est affectée au paramètre correspondant dans la fonction.</p>
+</li>
+<li>
+<p><strong>variable locale:</strong> Une variable définie dans une fonction. Une variable locale ne peut être utilisée que dans sa fonction.</p>
+</li>
+<li>
+<p><strong>valeur de retour:</strong> Le résultat d&rsquo;une fonction. Si un appel de fonction est utilisé comme expression, la valeur renvoyée est la valeur de l&rsquo;expression.</p>
+</li>
+<li>
+<p><strong>fonction fructueuse:</strong> Une fonction qui retourne une valeur.</p>
+</li>
+<li>
+<p><strong>fonction vide:</strong> Une fonction qui renvoie toujours None.</p>
+</li>
+<li>
+<p><strong>Aucun:</strong> Une valeur spéciale renvoyée par les fonctions void.</p>
+</li>
+<li>
+<p><strong>module:</strong> Un fichier qui contient une collection de fonctions connexes et d&rsquo;autres définitions.</p>
+</li>
+<li>
+<p><strong>déclaration d&rsquo;importation:</strong> Une instruction qui lit un fichier de module et crée un objet de module.</p>
+</li>
+<li>
+<p><strong>objet module:</strong> Une valeur créée par une instruction d&rsquo;importation qui donne accès aux valeurs définies dans un module.</p>
+</li>
+<li>
+<p><strong>notation par points:</strong> La syntaxe pour appeler une fonction dans un autre module en spécifiant le nom du module suivi d&rsquo;un point (point) et du nom de la fonction.</p>
+</li>
+<li>
+<p><strong>composition:</strong> Utilisation d&rsquo;une expression dans le cadre d&rsquo;une expression plus grande ou d&rsquo;une instruction dans le cadre d&rsquo;une instruction plus grande</p>
+</li>
+<li>
+<p><strong>flux d&rsquo;exécution:</strong> Les instructions de commande sont exécutées.</p>
+</li>
+<li>
+<p><strong>diagramme de pile:</strong> Représentation graphique d&rsquo;une pile de fonctions, de leurs variables et des valeurs auxquelles elles se rapportent.</p>
+</li>
+<li>
+<p><strong>cadre:</strong> Un cadre dans un diagramme de pile qui représente un appel de fonction. Il contient les variables locales et les paramètres de la fonction.</p>
+</li>
+<li>
+<p><strong>traceback:</strong> Une liste des fonctions en cours d’exécution imprimées lorsqu’une exception se produit.</p>
+</li>
+</ul>
+<h3>3.14 exercices</h3>
+<p><strong> Exercice 1 </strong></p>
+<p><em>Ecrivez une fonction nommée right_justify qui prend une chaîne nommée s en tant que paramètre et imprime la chaîne avec suffisamment d&rsquo;espaces de début pour que la dernière lettre de la chaîne soit dans la colonne 70 de l&rsquo;affichage.</em></p>
+<pre><code class="python">&gt;&gt;&gt; right_justify('monty')
+                                                                 monty
+</code></pre>
+
+<p><em>Astuce: Utilisez la concaténation et la répétition de chaînes. En outre, Python fournit une fonction intégrée appelée len qui renvoie la longueur d&rsquo;une chaîne. La valeur de len (&lsquo;monty&rsquo;) est donc 5.</em></p>
+<p><strong> Exercice 2 </strong></p>
+<p><em>Un objet fonction est une valeur que vous pouvez affecter à une variable ou transmettre sous forme d&rsquo;argument. Par exemple, do_twice est une fonction qui prend un objet fonction en argument et l&rsquo;appelle deux fois:</em></p>
+<pre><code class="python">def do_twice(f):
+    f()
+    f()
+</code></pre>
+
+<p>Voici un exemple qui utilise do_twice pour appeler une fonction nommée print_spam deux fois.</p>
+<pre><code class="python">def print_spam():
+    print('spam')
+
+do_twice(print_spam)
+</code></pre>
+
+<ol>
+<li>
+<p><em>Tapez cet exemple dans un script et testez-le.</em></p>
+</li>
+<li>
+<p><em>Modifiez do_twice pour qu&rsquo;il prenne deux arguments, un objet fonction et une valeur, et appelle la fonction deux fois, en transmettant la valeur sous forme d&rsquo;argument.</em></p>
+</li>
+<li>
+<p><em>Copiez la définition de print_twice de ce chapitre dans votre script.</em> </p>
+</li>
+<li>
+<p><em>Utilisez la version modifiée de do_twice pour appeler print_twice deux fois, en transmettant &ldquo;spam&rdquo; en tant qu&rsquo;argument.</em></p>
+</li>
+<li>
+<p><em>Définissez une nouvelle fonction appelée do_four qui prend un objet fonction et une valeur et appelle la fonction quatre fois, en transmettant la valeur en tant que paramètre. Il ne devrait y avoir que deux déclarations dans le corps de cette fonction, pas quatre.
+Solution: <a href="http://thinkpython2.com/code/do_four.py">http://thinkpython2.com/code/do_four.py</a>.</em></p>
+</li>
+</ol>
+<p><strong> Exercice 3 </strong></p>
+<p><em>Remarque: Cet exercice doit être effectué à l&rsquo;aide des déclarations et autres fonctionnalités que nous avons apprises jusqu&rsquo;à présent.</em></p>
+<p><em>Ecrivez une fonction qui dessine une grille comme suit:</em></p>
+<pre><code>+ - - - - + - - - - +
+|         |         |
+|         |         |
+|         |         |
+|         |         |
++ - - - - + - - - - +
+|         |         |
+|         |         |
+|         |         |
+|         |         |
++ - - - - + - - - - +
+</code></pre>
+
+<p><em>Astuce: pour imprimer plusieurs valeurs sur une ligne, vous pouvez imprimer une séquence de valeurs séparées par des virgules:</em></p>
+<pre><code class="python">print ('+', '-')
+</code></pre>
+
+<p>Par défaut, print avance à la ligne suivante, mais vous pouvez remplacer ce comportement et mettre un espace à la fin, comme ceci:</p>
+<pre><code class="python">print('+', end=' ')
+print('-')
+</code></pre>
+
+<p><em>La sortie de ces instructions est &ldquo;+ -&rdquo; sur la même ligne. La sortie de la prochaine instruction print commencerait à la ligne suivante.</em></p>
+<p><em>Ecrivez une fonction qui dessine une grille similaire avec quatre lignes et quatre colonnes.
+Solution: <a href="http://thinkpython2.com/code/grid.py">http://thinkpython2.com/code/grid.py</a>. Crédit: Cet exercice est basé sur un exercice de Oualline, Practical C Programming, Third Edition, O’Reilly Media, 1997.</em></p>
+<h1>Chapitre 4<a name="ch3"></a></h1>
+<h2>Cas d&rsquo;étude: conception d&rsquo;interface</h2>
+<p><br><br></p>
+<p>Ce chapitre présente une cas d&rsquo;étude qui illustre un processus de conception de fonctions qui travaillent ensemble.</p>
+<p>Il présente la module tortue, qui vous permet de créer des images à l&rsquo;aide de graphiques tortue.
+La module tortue est inclus dans la plupart des installations Python, mais si vous utilisez Python
+en utilisant PythonAnywhere, vous ne pourrez pas exécuter les exemples de tortue (au moins vous ne pouviez pas quand j&rsquo;ai écrit ceci).
+Si vous avez déjà installé Python sur votre ordinateur, vous devriez pouvoir exécuter les
+exemples. Sinon, c&rsquo;est le bon moment pour l&rsquo;installer. J&rsquo;ai posté des instructions sur <a href="http://tinyurl.com/thinkpython2e">http://tinyurl.com/thinkpython2e</a>.
+Des exemples de code de ce chapitre sont disponibles sur <a href="http://thinkpython2.com/code/polygon.py">http://thinkpython2.com/code/polygon.py</a>.</p>
+<h3>4.1 La module tortue</h3>
+<p>Pour vérifier si vous avez la module tortue, ouvrez l&rsquo;interpréteur Python et tapez</p>
+<pre><code class="python">&gt;&gt;&gt; import turtle
+&gt;&gt;&gt; bob = turtle.Turtle()
+</code></pre>
+
+<p>Lorsque vous exécutez ce code, il doit créer une nouvelle fenêtre avec une petite flèche qui représente
+la tortue. Fermez la fenêtre.
+Créez un fichier nommé mypolygon.py et tapez le code suivant:</p>
+<pre><code class="python">import turtle
+
+bob = turtle.Turtle()
+print(bob)
+turtle.mainloop()
+</code></pre>
+
+<p>La module turtle (avec un &lsquo;t&rsquo; minuscule) fournit une fonction appelée Turtle (avec un &lsquo;T&rsquo; majuscule) qui crée un objet Turtle, que nous assignons à une variable nommée bob. print
+bob affiche quelque chose comme:</p>
+<pre><code>&lt;turtle.Turtle object at 0xb7bfbf4c&gt;
+</code></pre>
+
+<p>Cela signifie que bob fait référence à un objet de type Turtle tel que défini dans la tortue de module.</p>
+<p><code>mainloop</code> indique à la fenêtre d&rsquo;attendre que l&rsquo;utilisateur fasse quelque chose, bien que dans ce cas il n&rsquo;y a pas grand chose à faire pour l&rsquo;utilisateur, sauf fermer la fenêtre.
+Une fois que vous créez une tortue, vous pouvez appeler une méthode pour la déplacer dans la fenêtre. Une méthode est similaire à une fonction, mais utilise une syntaxe légèrement différente. Par exemple, pour déplacer la tortue
+vers l&rsquo;avant:</p>
+<pre><code class="python">bob.fd(100)
+</code></pre>
+
+<p>La méthode fd est associée à l&rsquo;objet tortue que nous appelons bob. L&rsquo;appel d&rsquo;une méthode est
+comme faire une demande: vous demandez à Bob d&rsquo;avancer.
+L&rsquo;argument de fd étant une distance en pixels, la taille réelle dépend de votre affichage.
+Les autres méthodes que vous pouvez appeler sur une tortue sont bk pour reculer, lt pour tourner à gauche et rt virage à droite. L&rsquo;argument pour lt et rt est un angle en degrés.
+En outre, chaque tortue tient un stylo, qui est soit en bas soit en haut; si le stylo touche la page, la tortue laisse une trace quand il bouge. Les méthodes <code>pu</code> et <code>pd</code> représentent &ldquo;pen up&rdquo; et &ldquo;pen down&rdquo;.
+Pour dessiner un angle droit, ajoutez ces lignes au programme (après avoir créé bob et avant d&rsquo;appeler la
+boucle principale):</p>
+<pre><code class="python">bob.fd(100)
+bob.lt(90)
+bob.fd(100)
+</code></pre>
+
+<p>Lorsque vous exécutez ce programme, vous devriez voir Bob se déplacer vers l’est puis vers le nord, laissant deux
+segments de ligne derrière.
+Modifiez maintenant le programme pour dessiner un carré. Ne continuez pas tant que vous ne l&rsquo;avez pas fait fonctionner!</p>
+<h3>4.2 Répétition simple</h3>
+<p>Les chances sont que vous avez écrit quelque chose comme ceci:</p>
+<pre><code class="python">bob.fd(100)
+bob.lt(90)
+
+bob.fd(100)
+bob.lt(90)
+
+bob.fd(100)
+bob.lt(90)
+
+bob.fd(100)
+</code></pre>
+
+<p>Nous pouvons faire la même chose de manière plus concise avec une déclaration. Ajouter cet exemple à
+mypolygon.py et lancez-le à nouveau:</p>
+<pre><code class="python">for i in range(4):
+    print('Hello!')
+</code></pre>
+
+<p>Vous devriez voir quelque chose comme ceci:</p>
+<pre><code>Hello!
+Hello!
+Hello!
+Hello!
+</code></pre>
+
+<p>C&rsquo;est l&rsquo;utilisation la plus simple de la déclaration for; nous verrons plus tard. Mais cela devrait être
+de quoi vous permettre de réécrire votre programme de dessin en carré. Ne continuez pas jusqu&rsquo;à ce que vous fassiez.
+Voici une déclaration qui dessine un carré:</p>
+<pre><code class="python">for i in range(4):
+    bob.fd(100)
+    bob.lt(90)
+</code></pre>
+
+<p>La syntaxe d&rsquo;une instruction for est similaire à une définition de fonction. Il a un en-tête qui se termine avec un colon et un corps en retrait. Le corps peut contenir n&rsquo;importe quel nombre d&rsquo;instructions.</p>
+<p>Un déclaration for est également appelé une boucle parce que le flux d&rsquo;exécution traverse le corps
+puis retourne au sommet. Dans ce cas, il court le corps quatre fois.
+Cette version est en fait un peu différente du précédent code de dessin car
+fait un autre tour après avoir dessiné le dernier côté de la place. Le tour supplémentaire prend plus
+temps, mais cela simplifie le code si nous faisons la même chose à chaque fois dans la boucle. Ce
+version la a également pour effet de laisser la tortue dans la position de départ, face à la
+direction de départ.</p>
+<h3>4.3 Exercices</h3>
+<p>Ce qui suit est une série d&rsquo;exercices utilisant TurtleWorld. Ils sont censés êtres amusants, mais ils
+ont un point aussi. Pendant que vous y travaillez, réfléchissez à la question.
+Les sections suivantes proposent des solutions aux exercices, ne regardez donc pas avant d&rsquo;avoir terminé
+(ou au moins essayé).</p>
+<ol>
+<li>
+<p>Ecrivez une fonction appelée carré qui prend un paramètre nommé t, qui est une tortue. Il
+doit utiliser la tortue pour dessiner un carré.
+Écrivez un appel de fonction qui passe Bob en argument à square, puis exécutez le
+programme à nouveau.</p>
+</li>
+<li>
+<p>Ajoutez un autre paramètre, nommé length, au carré. Modifier le corps si long de la
+les côtés est la longueur, puis modifiez l&rsquo;appel de la fonction pour fournir un second argument. Executer
+le programme à nouveau. Testez votre programme avec une plage de valeurs de longueur.</p>
+</li>
+<li>
+<p>Faites une copie du carré et changez le nom en polygone. Ajouter un autre paramètre
+nommée n et modifie le corps pour dessiner un polygone régulier à n côtés. Indice: le
+les angles extérieurs d&rsquo;un polygone régulier à n côtés sont de <code>360 ​​/ n</code> degrés.</p>
+</li>
+<li>
+<p>Écrivez une fonction appelée cercle qui prend comme paramètres une tortue, t et rayon, et
+qui trace un cercle approximatif en appelant le polygone avec une longueur appropriée et
+nombre de côtés. Testez votre fonction avec une plage de valeurs de r.
+Astuce: déterminez la circonférence du cercle et assurez-vous que cette <code>longueur * n =
+circonference</code>.</p>
+</li>
+<li>
+<p>Faire une version plus générale du cercle appelé arc qui prend un paramètre supplémentaire
+angle, qui détermine quelle fraction de cercle dessiner. l&rsquo;angle est en unités de degrés,
+Ainsi, lorsque angle = 360, l&rsquo;arc doit dessiner un cercle complet.</p>
+</li>
+</ol>
+<h3>4.4 Encapsulation</h3>
+<p>Le premier exercice vous demande de mettre votre code de dessin carré dans une définition de fonction et
+puis appelez la fonction, en passant la tortue en paramètre. Voici une solution:</p>
+<pre><code class="python">def square(t):
+    for i in range(4):
+        t.fd(100)
+        t.lt(90)
+
+square(bob)
+</code></pre>
+
+<p>Les instructions les plus internes, fd et lt, sont en retrait deux fois pour montrer qu&rsquo;elles sont à l&rsquo;intérieur du
+for loop, qui se trouve dans la définition de la fonction. La ligne suivante, square(bob), est alignée avec la marge de gauche, qui indique la fin de la boucle for et la définition de la fonction.
+À l’intérieur de la fonction, t fait référence au même bob tortue, donc <code>t.lt(90)</code> a le même effet que
+<code>bob.lt(90)</code>. Dans ce cas, pourquoi ne pas appeler le paramètre bob? L&rsquo;idée est que t peut être n&rsquo;importe quel
+tortue, pas seulement bob, vous pouvez donc créer une deuxième tortue et la passer en argument</p>
+<pre><code class="python">alice = turtle.Turtle()
+square(alice)
+</code></pre>
+
+<p>L&rsquo;encapsulation d&rsquo;un morceau de code dans une fonction est appelée encapsulation. Un des avantages de
+l&rsquo;encapsulation consiste à attacher un nom au code, qui sert de type de documentation. Un autre avantage est que si vous réutilisez le code, il est plus concis d&rsquo;appeler une fonction
+deux fois que de copier et coller le corps!</p>
+<h3>4.5 Généralisation</h3>
+<p>L&rsquo;étape suivante consiste à ajouter un paramètre de longueur à square. Voici une solution:</p>
+<pre><code class="python">def square(t, length):
+    for i in range(4):
+        t.fd(length)
+        t.lt(90)
+
+square(bob, 100)
+</code></pre>
+
+<p>L&rsquo;ajout d&rsquo;un paramètre à une fonction s&rsquo;appelle la généralisation car elle fait la fonction
+plus général: dans la version précédente, le carré a toujours la même taille; dans cette version c&rsquo;est
+peut être n&rsquo;importe quelle taille.
+L&rsquo;étape suivante est également une généralisation. Au lieu de dessiner des carrés, le polygone dessine des
+polygones régulière avec un nombre quelconque de côtés. Voici une solution:</p>
+<pre><code class="python">def polygon(t, n, length):
+    angle = 360 / n
+    for i in range(n):
+        t.fd(length)
+        t.lt(angle)
+
+polygon(bob, 7, 70)
+</code></pre>
+
+<p>Cet exemple dessine un polygone à sept côtés avec une longueur de côté 70.
+Si vous utilisez Python 2, la valeur de l&rsquo;angle peut être désactivée en raison de la division entière. Une
+solution simple est de calculer <code>angle = 360.0 / n</code>. Le numérateur étant un nombre à virgule flottante, le résultat est un nombre à virgule flottante.
+Lorsqu&rsquo;une fonction a plus que quelques arguments numériques, il est facile d&rsquo;oublier ce qu&rsquo;ils sont,
+ou dans quel ordre ils devraient être. Dans ce cas, il est souvent utile d&rsquo;inclure les noms de
+les paramètres de la liste d&rsquo;arguments:</p>
+<p><code>polygon(bob, n=7, length=70)</code></p>
+<p>Ceux-ci sont appelés des arguments de mots-clés car ils incluent les noms de paramètres en tant que &ldquo;mots-clés&rdquo; (à ne pas confondre avec les mots-clés Python comme while et def).
+Cette syntaxe rend le programme plus lisible. C&rsquo;est aussi un rappel sur la façon dont les arguments
+et paramètres fonctionnent: lorsque vous appelez une fonction, les arguments sont affectés aux paramètres.</p>
+<h3>4.6 Design d&rsquo;interface</h3>
+<p>L&rsquo;étape suivante consiste à écrire le cercle, qui prend un rayon, r, en tant que paramètre. Voici un simple
+solution qui utilise un polygone pour dessiner un polygone à 50 côtés:</p>
+<pre><code class="python">import math
+
+def circle(t, r):
+    circumference = 2 * math.pi * r
+    n = 50
+    length = circumference / n
+    polygon(t, n, length)
+</code></pre>
+
+<p>La première ligne calcule la circonférence d&rsquo;un cercle de rayon r en utilisant la formule 2πr.
+Puisque nous utilisons math.pi, nous devons importer des mathématiques. Par convention, les instructions d&rsquo;importation sont
+généralement au début du script.</p>
+<p>n est le nombre de segments de droite dans notre approximation d&rsquo;un cercle, donc la longueur est la longueur
+de chaque segment. Ainsi, le polygone dessine un polygone à 50 côtés qui se rapproche d’un cercle avec
+rayon r.
+Une des limites de cette solution est que n est une constante, ce qui signifie que pour de très grands cercles,
+les segments de ligne sont trop longs et pour les petits cercles, nous perdons du temps à dessiner très petit
+segments. Une solution consisterait à généraliser la fonction en prenant n comme paramètre.
+Cela donnerait à l&rsquo;utilisateur (celui qui appelle le cercle) plus de contrôle, mais l&rsquo;interface serait
+moins propre.
+L&rsquo;interface d&rsquo;une fonction est un résumé de son utilisation: quels sont les paramètres? Quelle
+la fonction fait-elle? Et quelle est la valeur de retour? Une interface est &ldquo;propre&rdquo; si elle permet au
+appelant à faire ce qu&rsquo;il veut sans traiter les détails inutiles.
+Dans cet exemple, r appartient à l&rsquo;interface car il spécifie le cercle à dessiner. n est
+moins approprié car cela concerne les détails de la façon dont le cercle doit être rendu.
+Plutôt que d&rsquo;encombrer l&rsquo;interface, il est préférable de choisir une valeur appropriée de n en fonction de la circonférence:</p>
+<pre><code class="python">def circle(t, r):
+    circumference = 2 * math.pi * r
+    n = int(circumference / 3) + 3
+    length = circumference / n
+    polygon(t, n, length)
+</code></pre>
+
+<p>Maintenant, le nombre de segments est un entier proche de la circumference/3, donc la longueur de chaque
+le segment est d&rsquo;environ 3, ce qui est assez petit pour que les cercles semblent bons, mais gros
+suffisamment pour être efficace et acceptable pour tout cercle de taille.
+L&rsquo;ajout de 3 à n garantit que le polygone a au moins 3 côtés.</p>
+<h3>4.7 Refactoring</h3>
+<p>Lorsque j&rsquo;ai écrit le cercle, j&rsquo;ai pu réutiliser un polygone car un polygone à plusieurs côtés est un bon
+approximation d&rsquo;un cercle. Mais l&rsquo;arc n&rsquo;est pas aussi coopératif; nous ne pouvons pas utiliser polygone ou cercle pour
+dessine un arc.
+Une alternative consiste à commencer par une copie du polygone et à le transformer en arc. Le résultat
+pourrait ressembler à ceci:</p>
+<pre><code class="python">def arc(t, r, angle):
+    arc_length = 2 * math.pi * r * angle / 360
+    n = int(arc_length / 3) + 1
+    step_length = arc_length / n
+    step_angle = angle / n
+
+    for i in range(n):
+        t.fd(step_length)
+        t.lt(step_angle)
+</code></pre>
+
+<p>La seconde moitié de cette fonction ressemble à un polygone, mais nous ne pouvons pas réutiliser un polygone sans
+changer l&rsquo;interface. On pourrait généraliser le polygone pour prendre un angle comme troisième argument,
+mais alors le polygone ne serait plus un nom approprié! Au lieu de cela, appelons le plus
+fonction générale polyligne:</p>
+<pre><code class="python">def polyline(t, n, length, angle):
+    for i in range(n):
+        t.fd(length)
+        t.lt(angle)
+</code></pre>
+
+<p>Maintenant, nous pouvons réécrire le polygone et l&rsquo;arc pour utiliser la polyligne:</p>
+<pre><code class="python">def polygon(t, n, length):
+    angle = 360.0 / n
+    polyline(t, n, length, angle)
+
+def arc(t, r, angle):
+    arc_length = 2 * math.pi * r * angle / 360
+    n = int(arc_length / 3) + 1
+    step_length = arc_length / n
+    step_angle = float(angle) / n
+    polyline(t, n, step_length, step_angle)
+</code></pre>
+
+<p>Enfin, nous pouvons réécrire le cercle pour utiliser l&rsquo;arc:</p>
+<pre><code class="python">def circle(t, r):
+    arc(t, r, 360)
+</code></pre>
+
+<p>Ce processus de réorganisation d&rsquo;un programme pour améliorer les interfaces et faciliter la réutilisation du code est
+appelé refactoring. Dans ce cas, nous avons remarqué qu&rsquo;il y avait un code similaire en arc et en polygone,
+donc nous avons &ldquo;factorisé&rdquo; en polyligne.
+Si nous avions prévu à l’avance, nous aurions peut-être écrit la polyligne d’abord et évité la refactorisation,
+mais souvent vous ne savez pas assez au début d&rsquo;un projet pour concevoir toutes les interfaces.
+Une fois que vous commencez à coder, vous comprenez mieux le problème. Parfois, le refactoring est un signe
+que vous avez appris quelque chose.</p>
+<h3>4.8 Un plan de développement</h3>
+<p>Un plan de développement est un processus d’écriture de programmes. Le processus utilisé dans ce cas
+l&rsquo;étude d&rsquo; &ldquo;encapsulation et généralisation&rdquo;. Les étapes de ce processus sont les suivantes:</p>
+<ol>
+<li>
+<p>Commencez par écrire un petit programme sans définition de fonction.</p>
+</li>
+<li>
+<p>Une fois que le programme fonctionne, identifiez-en un élément cohérent, encapsulez le
+pièce dans une fonction et lui donner un nom.</p>
+</li>
+<li>
+<p>Généraliser la fonction en ajoutant les paramètres appropriés.</p>
+</li>
+<li>
+<p>Répétez les étapes 1 à 3 jusqu&rsquo;à ce que vous ayez un ensemble de fonctions de travail. Copiez et collez le
+code pour éviter de retaper (et re-déboguer).</p>
+</li>
+<li>
+<p>Recherchez les possibilités d’améliorer le programme en procédant à un remaniement. Par exemple, si vous
+avez un code similaire à plusieurs endroits, envisagez de le prendre en compte avec une
+fonction générale.</p>
+</li>
+</ol>
+<p>Ce processus a quelques inconvénients - nous verrons des alternatives plus tard - mais cela peut être utile si
+vous ne savez pas à l&rsquo;avance comment diviser le programme en fonctions. Cette approche
+vous permet de concevoir au fur et à mesure.</p>
+<h3>4.9 docstring</h3>
+<p>Un docstring est une chaîne au début d&rsquo;une fonction qui explique l&rsquo;interface (&ldquo;doc&rdquo; est
+abréviation de &ldquo;documentation&rdquo;). Voici un exemple:</p>
+<pre><code class="python">def polyline(t, n, length, angle):
+    &quot;&quot;&quot;Draws n line segments with the given length and
+    angle (in degrees) between them.  t is a turtle.
+    &quot;&quot;&quot;    
+    for i in range(n):
+        t.fd(length)
+        t.lt(angle)
+</code></pre>
+
+<p>Par convention, toutes les chaînes de caractères sont des chaînes entre guillemets, également appelées chaînes multilignes.
+car les triples guillemets permettent à la chaîne de s&rsquo;étendre sur plusieurs lignes.</p>
+<p>C&rsquo;est concis, mais il contient l&rsquo;information essentielle dont quelqu&rsquo;un aurait besoin pour utiliser cette fonction. Il explique de manière concise ce que la fonction fait (sans entrer dans les détails de la façon dont
+il le fait). Il explique quel effet chaque paramètre a sur le comportement de la fonction et
+quel type chaque paramètre devrait être (si ce n&rsquo;est pas évident).
+L&rsquo;écriture de ce type de documentation est une partie importante de la conception de l&rsquo;interface. Une interface bien conçue devrait être simple à expliquer; si vous avez du mal à en expliquer un
+de vos fonctions, peut-être l&rsquo;interface pourrait être améliorée.</p>
+<h3>4.10 Le débogage</h3>
+<p>Une interface est comme un contrat entre une fonction et un appelant. L&rsquo;appelant accepte de fournir
+certains paramètres et la fonction accepte de faire certains travaux.
+Par exemple, polyligne nécessite quatre arguments: t doit être une tortue; n doit être un entier;
+la longueur doit être un nombre positif; et l&rsquo;angle doit être un nombre, ce qui est compris
+être en degrés.
+Ces exigences sont appelées conditions préalables car elles sont supposées être vraies avant
+la fonction commence à s&rsquo;exécuter. Inversement, les conditions à la fin de la fonction sont des conditions postconduites. Les post-conditions incluent l’effet prévu de la fonction (comme dessiner une ligne
+segments) et tout effet secondaire (comme déplacer la tortue ou apporter d’autres modifications).
+Les conditions préalables sont la responsabilité de l&rsquo;appelant. Si l&rsquo;appelant viole une condition préalable (correctement documentée!) Et que la fonction ne fonctionne pas correctement, le bogue se trouve dans l&rsquo;appelant, pas
+la fonction.
+Si les conditions préalables sont satisfaites et que les conditions de postconditions ne le sont pas, le bogue est dans la fonction.
+Si vos conditions préalables et postérieures sont claires, elles peuvent aider au débogage.</p>
+<h3>4.11 Glossaire</h3>
+<ul>
+<li>
+<p><strong>method:</strong> Fonction associée à un objet et appelée à l&rsquo;aide de la notation par points.</p>
+</li>
+<li>
+<p><strong>loop:</strong> Partie d&rsquo;un programme pouvant être exécutée à plusieurs reprises.</p>
+</li>
+<li>
+<p><strong>encapsulation:</strong> processus de transformation d&rsquo;une séquence d&rsquo;instructions en une définition de fonction.</p>
+</li>
+<li>
+<p><strong>généralisation:</strong> processus de remplacement de quelque chose d&rsquo;inutile (comme un nombre)
+avec quelque chose de façon générale (comme une variable ou un paramètre).</p>
+</li>
+<li>
+<p><strong>keyword argument:</strong> argument qui inclut le nom du paramètre en tant que &ldquo;mot-clé&rdquo;.</p>
+</li>
+<li>
+<p><strong>interface:</strong> description de l&rsquo;utilisation d&rsquo;une fonction, y compris le nom et les descriptions de
+les arguments et la valeur de retour.</p>
+</li>
+<li>
+<p><strong>refactoring:</strong> Processus de modification d&rsquo;un programme de travail pour améliorer les interfaces de fonction
+et d&rsquo;autres qualités du code.</p>
+</li>
+<li>
+<p><strong>plan de développement:</strong> Un processus pour écrire des programmes.</p>
+</li>
+<li>
+<p><strong>docstring:</strong> Chaîne qui apparaît en haut d&rsquo;une définition de fonction pour documenter l&rsquo;interface de la fonction.</p>
+</li>
+<li>
+<p><strong>condition préalable:</strong> exigence qui doit être satisfaite par l&rsquo;appelant avant le démarrage d&rsquo;une fonction.</p>
+</li>
+<li>
+<p><strong>postcondition:</strong> Une exigence qui devrait être satisfaite par la fonction avant sa fin.</p>
+</li>
+</ul>
+<h3>4.12 Exercices</h3>
+<p><strong>Exercice 1</strong> </p>
+<p><em>Téléchargez le code dans ce chapitre à partir de <a href="http://thinkpython2.com/code/polygon.py">http://thinkpython2.com/code/polygon.py</a>.</em></p>
+<ol>
+<li>
+<p><em>Dessinez un diagramme de pile qui montre l’état du programme pendant l’exécution du cercle (bob,
+rayon). Vous pouvez faire l&rsquo;arithmétique à la main ou ajouter des instructions d&rsquo;impression au code.</em></p>
+</li>
+<li>
+<p><em>La version de l&rsquo;arc de la section 4.7 n&rsquo;est pas très précise car l&rsquo;approximation linéaire de
+cercle est toujours en dehors du vrai cercle. En conséquence, la tortue se retrouve à quelques pixels de
+la bonne destination. Ma solution montre un moyen de réduire l&rsquo;effet de cette erreur. Lis le
+code et voir si cela a du sens pour vous. Si vous dessinez un diagramme, vous pourriez voir comment cela fonctionne.</em> </p>
+</li>
+</ol>
+<p><img alt="fig4.1" src="assets/tp4.1.png"></p>
+<p><strong>Exercice 2</strong> </p>
+<p>Écrivez un ensemble de fonctions qui peut dessiner des fleurs comme dans la figure 4.1.
+Solution: <a href="http://thinkpython2.com/code/flower.py">http://thinkpython2.com/code/flower.py</a>,
+nécessite également <a href="http://thinkpython2.com/code/polygon.py">http://thinkpython2.com/code/polygon.py</a>.</p>
+<p><img alt="fig4.2" src="assets/tp4.2.png"></p>
+<p><strong>Exercice 3.</strong></p>
+<p>Ecrivez un ensemble de fonctions qui peut dessiner des formes comme dans la Figure 4.2.
+Solution: <a href="http://thinkpython2.com/code/pie.py">http://thinkpython2.com/code/pie.py</a>.</p>
+<p><strong>Exercice 4.</strong></p>
+<p>Les lettres de l&rsquo;alphabet peuvent être construites à partir d&rsquo;un nombre modéré d&rsquo;éléments de base, tels que des lignes verticales et horizontales et quelques courbes. Concevoir un alphabet qui peut être dessiné
+avec un nombre minimal d&rsquo;éléments de base, puis écrivez les fonctions qui dessinent les lettres.
+Vous devriez écrire une fonction pour chaque lettre, avec les noms draw_a, draw_b, etc., et mettre votre
+fonctions dans un fichier nommé letters.py. Vous pouvez télécharger une &ldquo;machine à écrire tortue&rdquo; sur <a href="http://thinkpython2.com/code/typewriter.py">http://thinkpython2.com/code/typewriter.py</a> pour vous aider à tester votre code.</p>
+<p>Vous pouvez obtenir une solution à partir de <a href="http://thinkpython2.com/code/letters.py"> http://thinkpython2.com/code/letters.py</a>; il faut aussi avoir
+<a href="http://thinkpython2.com/code/polygon.py">http://thinkpython2.com/code/polygon.py</a>.</p>
+<p><strong>Exercice 5.</strong></p>
+<p>Lisez à propos des spirales sur <a href="http://en.wikipedia.org/wiki/Spiral">http://en.wikipedia.org/wiki/Spiral</a>; puis écrivez
+un programme qui dessine une spirale archimédienne (ou l&rsquo;une des autres sortes). Solution: <a href="http://thinkpython2.com/code/spiral.py">http://thinkpython2.com/code/spiral.py</a>.</p>
+<h1>Chapitre 5<a name="ch5"></a></h1>
+<h2>Conditions et récursivité</h2>
+<p><br><br></p>
+<p>Le sujet principal de ce chapitre est l&rsquo;instruction if, qui exécute un code différent en fonction de l&rsquo;état du programme. Mais je veux d&rsquo;abord présenter deux nouveaux opérateurs: la division floor et le modulus.</p>
+<h3>5.1 Division et module de plancher</h3>
+<p>L&rsquo;opérateur de division floor, <code>//</code>, divise deux nombres et arrondit à un entier. Par exemple, supposons que le temps d&rsquo;exécution d&rsquo;un film est de 105 minutes. Vous voudrez peut-être savoir le temps en heures. La division conventionnelle renvoie un float:</p>
+<pre><code class="python">&gt;&gt;&gt; minutes = 105
+&gt;&gt;&gt; minutes / 60
+1.75
+</code></pre>
+
+<p>Mais normalement, nous n&rsquo;écrivons pas des heures avec des points décimaux. La division classique renvoie le nombre d&rsquo;heures en entier, en laissant tomber la fraction:</p>
+<pre><code class="python">&gt;&gt;&gt; minutes = 105
+&gt;&gt;&gt; hours = minutes // 60
+&gt;&gt;&gt; hours
+1
+</code></pre>
+
+<p>Pour obtenir le reste, vous pouvez soustraire une heure en minutes:</p>
+<pre><code class="python">&gt;&gt;&gt; remainder = minutes - hours * 60
+&gt;&gt;&gt; remainder
+45
+</code></pre>
+
+<p>Une alternative consiste à utiliser l&rsquo;opérateur de modulus,<code>%</code>, qui divise deux nombres et renvoie
+le reste.</p>
+<pre><code class="python">&gt;&gt;&gt; remainder = minutes % 60
+&gt;&gt;&gt; remainder
+45
+</code></pre>
+
+<p>L&rsquo;opérateur modulus est plus utile qu&rsquo;il n&rsquo;y paraît. Par exemple, vous pouvez vérifier si
+un nombre est divisible par un autre - si <code>x % y</code> est zéro, alors x est divisible par y.</p>
+<p>Vous pouvez également extraire le chiffre ou les chiffres les plus à droite d&rsquo;un nombre. Par exemple, <code>x % 10</code> donne le chiffre le plus à droite de x (en base 10). De même, <code>x % 100</code> fournit les deux derniers chiffres.</p>
+<p>Si vous utilisez Python 2, la division fonctionne différemment. L&rsquo;opérateur de division, /, effectue la division de plancher si les deux opérandes sont des nombres entiers, et la division en float si l&rsquo;un des opérandes est
+un float.</p>
+<h3>5.2 Expressions booléennes</h3>
+<p>Une expression booléenne est une expression vraie ou fausse. Les exemples suivants utilisent l&rsquo;opérateur <code>==</code>, qui compare deux opérandes et produit True s&rsquo;ils sont égaux et False sinon:</p>
+<pre><code class="python">&gt;&gt;&gt; 5 == 5
+True
+&gt;&gt;&gt; 5 == 6
+False
+</code></pre>
+
+<p>True et False sont des valeurs spéciales appartenant au type bool; ce ne sont pas des strings:</p>
+<pre><code>&gt;&gt;&gt; type(True)
+&lt;class 'bool'&gt;
+&gt;&gt;&gt; type(False)
+&lt;class 'bool'&gt;
+</code></pre>
+
+<p>L&rsquo;opérateur <code>==</code> est l&rsquo;un des opérateurs relationnels; les autres sont:</p>
+<pre><code>    x != y               # x is not equal to y
+    x &gt; y                # x is greater than y
+    x &lt; y                # x is less than y
+    x &gt;= y               # x is greater than or equal to y
+    x &lt;= y               # x is less than or equal to y
+</code></pre>
+
+<p>Bien que ces opérations vous soient probablement familières, les symboles Python sont différents des symboles mathématiques. Une erreur courante consiste à utiliser un seul signe égal (<code>=</code>) au lieu d&rsquo;un double signe égal (<code>==</code>). Rappelez-vous que <code>=</code> est un opérateur d&rsquo;affectation et <code>==</code> est un opérateur relationnel. Il n&rsquo;y a pas de chose comme <code>=&lt;</code> ou <code>=&gt;</code>.</p>
+<h3>5.3 Opérateurs logiques</h3>
+<p>Il existe trois opérateurs logiques: <code>and</code>, <code>or</code>, et <code>not</code>. La sémantique (signification) de ces
+opérateurs sont similaires à leur signification en anglais. Par exemple, <code>x&gt;0</code> et <code>x&lt;10</code> est vrai
+seulement si x est supérieur à 0 et inférieur à 10.</p>
+<p><code>n%2 == 0</code> ou <code>n%3 == 0</code> est vraie si l’une ou les deux conditions est vraie, c’est-à-dire si le nombre est divisible par 2 ou 3.</p>
+<p>Enfin, l’opérateur not nie une expression booléenne, donc <code>not (x &gt; y)</code> est vrai si <code>x &gt; y</code> est False, c&rsquo;est-à-dire si x est inférieur ou égal à y.</p>
+<p>Strictement parlant, les opérandes des opérateurs logiques doivent être des expressions booléennes, mais Python n&rsquo;est pas très strict. Tout nombre différent de zéro est interprété comme True:</p>
+<pre><code>&gt;&gt;&gt; 42 and True
+True
+</code></pre>
+
+<p>Cette flexibilité peut être utile, mais certaines subtilités peuvent être déroutantes.
+Vous voudrez peut-être l&rsquo;éviter (sauf si vous savez ce que vous faites).</p>
+<h3>5.4 Exécution conditionnelle</h3>
+<p>Pour écrire des programmes utiles, nous avons presque toujours besoin de pouvoir vérifier les conditions et modifier le comportement du programme en conséquence. Les déclarations conditionnelles nous donnent cette aptitude. La forme la plus simple est l&rsquo;instruction if:</p>
+<pre><code class="python">if x &gt; 0:
+    print('x is positive')
+</code></pre>
+
+<p>L&rsquo;expression booléenne après if s&rsquo;appelle la condition. Si c&rsquo;est vrai, la déclaration en retrait s&rsquo;exécute. Sinon, rien ne se passe.</p>
+<p>les instructions if ont la même structure que les définitions de fonctions: un en-tête suivi d&rsquo;un
+corps en retrait. Des déclarations comme celles-ci sont appelées des déclarations composées.</p>
+<p>Il n&rsquo;y a pas de limite au nombre de déclarations pouvant apparaître dans le corps, mais il doit y avoir au moins un. À l’occasion, il est utile d’avoir un corps sans déclaration (généralement placekeeper pour le code que vous n&rsquo;avez pas encore écrit). Dans ce cas, vous pouvez utiliser la déclaration de passage, qui ne fait rien.</p>
+<pre><code class="python">if x &lt; 0:
+    pass
+</code></pre>
+
+<h3>5.5 Exécution alternative</h3>
+<p>Une deuxième forme de l&rsquo;instruction if est &ldquo;exécution alternative&rdquo;, dans laquelle il existe deux possibilités et la condition détermine celle qui s&rsquo;exécute. La syntaxe ressemble à ceci:</p>
+<pre><code class="python">if x % 2 == 0:
+    print('x is even')
+else:
+    print('x is odd')
+</code></pre>
+
+<p>Si le restant lorsque x est divisé par 2 est 0, alors nous savons que x est pair, et le programme affiche un message approprié. Si la condition est fausse, la deuxième série de déclarations s&rsquo;exécute. Comme la condition doit être vraie ou fausse, l&rsquo;une des alternatives s&rsquo;exécutera .</p>
+<p>Les alternatives sont appelées branches, car elles sont des branches dans le flux d&rsquo;exécution.</p>
+<h3>5.6 Conditionnels en chaînes</h3>
+<p>Parfois, il y a plus de deux possibilités et nous avons besoin de plus de deux branches.
+Une façon d&rsquo;exprimer un calcul comme celui-là est un chaîne conditionnel:</p>
+<pre><code class="python">if x &lt; y:
+    print('x is less than y')
+elif x &gt; y:
+    print('x is greater than y')
+else:
+    print('x and y are equal')
+</code></pre>
+
+<p>elif est une abréviation de &ldquo;else if&rdquo;. Encore une fois, exactement une branche sera exécutée. Il n&rsquo;y a pas de limite sur
+le nombre de déclarations elif. S&rsquo;il y a une clause else, elle doit être à la fin, mais
+cela est facultatif.</p>
+<pre><code class="python">if choice == 'a':
+    draw_a()
+elif choice == 'b':
+    draw_b()
+elif choice == 'c':
+    draw_c()
+</code></pre>
+
+<p>Chaque condition est vérifiée dans l&rsquo;ordre. Si le premier est faux, le suivant est coché, et ainsi de suite. Si un d&rsquo;entre eux est vrai, la branche correspondante s&rsquo;exécute et l&rsquo;instruction se termine. Même si plus d&rsquo;une condition est vraie, seule la première branche vraie s&rsquo;exécute.</p>
+<h3>5.7 Conditionals imbriqués</h3>
+<p>Un conditionnel peut aussi être imbriqué dans un autre. Nous aurions pu écrire l&rsquo;exemple dans
+la section précédente comme ceci:</p>
+<pre><code class="python">if x == y:
+    print('x and y are equal')
+else:
+    if x &lt; y:
+        print('x is less than y')
+    else:
+        print('x is greater than y')
+</code></pre>
+
+<p>Le conditionnel externe contient deux branches. La première branche contient une simple déclaration. La seconde branche contient une autre instruction if, qui comporte deux branches. Ces deux branches sont toutes deux des déclarations simples, bien qu’elles aient pu être conditionnelles.</p>
+<p>Bien que l&rsquo;indentation des déclarations rendent la structure apparente, les conditionnels imbriqués deviennent difficiles à lire très rapidement. C&rsquo;est une bonne idée de les éviter quand vous
+pouvez.</p>
+<p>Les opérateurs logiques permettent souvent de simplifier les instructions conditionnelles imbriquées. Par exemple, nous pouvons réécrire le code suivant en utilisant un seul conditionnel:</p>
+<pre><code class="python">if 0 &lt; x:
+    if x &lt; 10:
+        print('x is a positive single-digit number.')
+</code></pre>
+
+<p>L&rsquo;instruction print ne s&rsquo;exécute que si nous passons les deux conditions, afin que nous puissions obtenir la même chose
+effet avec l&rsquo;opérateur et:</p>
+<pre><code class="python">if 0 &lt; x and x &lt; 10:
+    print('x is a positive single-digit number.')
+</code></pre>
+
+<p>Pour ce type de condition, Python fournit une option plus concise:</p>
+<pre><code class="python">if 0 &lt; x &lt; 10:
+    print('x is a positive single-digit number.')
+</code></pre>
+
+<h3>5.8 Récursivité</h3>
+<p>Il est légal qu&rsquo;une fonction appelle une autre; il est également légal qu&rsquo;une fonction s&rsquo;appelle elle-même. Cela pourrait ne pas être évident pourquoi c&rsquo;est une bonne chose, mais il s&rsquo;avère être l&rsquo;un des choses les plus magiques qu&rsquo;un programme puisse faire. Par exemple, regardez la fonction suivante:</p>
+<pre><code class="python">def countdown(n):
+    if n &lt;= 0:
+        print('Blastoff!')
+    else:
+        print(n)
+        countdown(n-1)
+</code></pre>
+
+<p>Si n est 0 ou négatif, il affiche le mot &ldquo;Blastoff!&rdquo; Sinon, il affiche n puis appelle une fonction nommée countdown (soi-même) en passant n-1 en argument.
+Que se passe-t-il si nous appelons cette fonction comme ceci?</p>
+<pre><code>&gt;&gt;&gt; countdown(3))
+</code></pre>
+
+<pre><code>The execution of countdown begins with n=3, and since n is greater than 0, it outputs the value 3, and then calls itself...
+
+    The execution of countdown begins with n=2, and since n is greater than 0, it outputs the value 2, and then calls itself...
+
+        The execution of countdown begins with n=1, and since n is greater than 0, it outputs the value 1, and then calls itself...
+
+            The execution of countdown begins with n=0, and since n is not greater than 0, it outputs the word, “Blastoff!” and then returns.
+
+        The countdown that got n=1 returns.
+
+    The countdown that got n=2 returns.
+
+The countdown that got n=3 returns.
+</code></pre>
+
+<p>Et puis vous êtes de retour dans <strong>main</strong>. Ainsi, la sortie totale ressemble à ceci:</p>
+<pre><code>3
+2
+1
+Blastoff!
+</code></pre>
+
+<p>Une fonction qui s&rsquo;appelle elle-même est récursive; le processus d&rsquo;exécution est appelé récursivité.
+Comme autre exemple, nous pouvons écrire une fonction qui imprime une chaîne n fois.</p>
+<pre><code class="python">def print_n(s, n):
+    if n &lt;= 0:
+        return
+    print(s)
+    print_n(s, n-1)
+</code></pre>
+
+<p>Si n &lt;= 0, l&rsquo;instruction de retour quitte la fonction. Le flux d&rsquo;exécution retourne immédiatement à l&rsquo;appelant et les lignes restantes de la fonction ne s&rsquo;exécutent pas.</p>
+<p>Le reste de la fonction est similaire au compte à rebours: il affiche s puis appelle lui-même pour afficher
+s <code>n - 1</code> fois supplémentaires. Donc, le nombre de lignes de sortie est <code>1 + (n - 1)</code>, ce qui totalise
+à n.</p>
+<p>Pour des exemples simples comme celui-ci, il est probablement plus facile d&rsquo;utiliser une boucle for. Mais on verra des
+exemples plus tard qui sont difficiles à écrire avec une boucle for et facile à écrire avec la récursivité, de sorte qu&rsquo;il est bon de commencer tôt.</p>
+<h3>5.9 Diagrammes de pile pour les fonctions récursives</h3>
+<p>Dans la section 3.9, nous avons utilisé un diagramme de pile pour représenter l&rsquo;état d&rsquo;un programme au cours d&rsquo;une fonction
+appel. Le même type de diagramme peut aider à interpréter une fonction récursive.</p>
+<p>Chaque fois qu’une fonction est appelée, Python crée un cadre pour contenir les variables et paramètres locaux de la fonction. Pour une fonction récursive, il peut y avoir plus d&rsquo;un frame sur la pile en même temps.</p>
+<p>La figure 5.1 montre un diagramme de pile pour le compte à rebours appelé avec <code>n = 3</code>.</p>
+<p><img alt="fig5.1" src="assets/tp5.1.png"></p>
+<p>Comme d&rsquo;habitude, le haut de la pile est dans le cadre de <strong>main</strong>. C&rsquo;est vide parce que nous n&rsquo;avons pas créer des variables dans <strong>main</strong> ou lui transmettre des arguments.</p>
+<p>Les quatres images du compte à rebours ont des valeurs différentes pour le paramètre n. Le fond de la pile, où n = 0, est appelé le cas de base. Il ne fait pas un appel récursif, donc il n&rsquo;y a plus de frame.</p>
+<p>Comme exercice, dessinez un diagramme de pile pour print_n appelé avec <code>s = 'Hello'</code> et <code>n = 2</code>. Alors écrivez une fonction appelée do_n qui prend un objet fonction et un nombre, n, comme arguments, et qui appelle la fonction donnée n fois.</p>
+<h3>5.10 Récursion infinie</h3>
+<p>Si une récursivité n&rsquo;atteint jamais un cas de base, elle continue à faire des appels récursifs pour toujours et le programme ne se termine jamais. Ceci est connu comme la récursion infinie, et ce n&rsquo;est généralement pas une
+bonne idée. Voici un programme minimal avec une récursion infinie:</p>
+<pre><code>  File &quot;&lt;stdin&gt;&quot;, line 2, in recurse
+  File &quot;&lt;stdin&gt;&quot;, line 2, in recurse
+  File &quot;&lt;stdin&gt;&quot;, line 2, in recurse
+                  .   
+                  .
+                  .
+  File &quot;&lt;stdin&gt;&quot;, line 2, in recurse
+RuntimeError: Maximum recursion depth exceeded
+</code></pre>
+
+<p>Ce traceback est un peu plus longue que celui dont nous avions vu dans le chapitre précédente. Quand l&rsquo;erreur apparait, il y a plus de 1000 frames dans le stack!</p>
+<p>Si vous rencontrez une recursion infinie par accident, revisez votre fonction pour comfirmer s&rsquo;il y a un cas de base qui ne prend pas un appel recursive. S&rsquo;il y en a, vérifiez si vous êtes assuré d&rsquo;y accéder.</p>
+<h3>5.11 La saisie au clavier</h3>
+<p>Les programmes que nous avons écrits jusqu&rsquo;à présent n&rsquo;acceptent aucune contribution de l&rsquo;utilisateur. Ils font juste la même chose à chaque fois.</p>
+<p>Python fournit une fonction intégrée appelée entrée qui arrête le programme et attend l&rsquo;utilisateur de taper quelque chose. Lorsque l&rsquo;utilisateur appuie sur Entrée ou Retour, le programme reprend et input renvoie ce que l&rsquo;utilisateur a tapé en tant que chaîne. Dans Python 2, la même fonction est appelée <code>raw_input</code>.</p>
+<pre><code class="python">&gt;&gt;&gt; text = input()
+'What are you waiting for?'
+&gt;&gt;&gt; text
+'What are you waiting for?'
+</code></pre>
+
+<p>Avant d’obtenir les commentaires de l’utilisateur, il est conseillé d’imprimer une quelquechose indiquant à l’utilisateur quoi typer. input peut prendre une invite en argument:</p>
+<pre><code class="python">&gt;&gt;&gt; name = input('What...is your name?\n')
+What...is your name?
+Arthur, King of the Britons!
+&gt;&gt;&gt; name
+'Arthur, King of the Britons!'
+</code></pre>
+
+<p>La séquence <code>\n</code> à la fin de l&rsquo;invite représente une nouvelle ligne, qui est un caractère spécial cela provoque un saut de ligne. C&rsquo;est pourquoi l&rsquo;entrée de l&rsquo;utilisateur apparaît sous l&rsquo;invite.</p>
+<p>Si vous vous attendez à ce que l&rsquo;utilisateur tape un entier, vous pouvez essayer de convertir la valeur de retour en int:</p>
+<pre><code class="python">&gt;&gt;&gt; prompt = 'What...is the airspeed velocity of an unladen swallow?\n'
+&gt;&gt;&gt; speed = input(prompt)
+What...is the airspeed velocity of an unladen swallow?
+42
+&gt;&gt;&gt; int(speed)
+42
+</code></pre>
+
+<p>Mais si l&rsquo;utilisateur tape autre chose qu&rsquo;une chaîne de chiffres, vous obtenez une erreur:</p>
+<pre><code class="python">&gt;&gt;&gt; speed = input(prompt)
+What...is the airspeed velocity of an unladen swallow?
+What do you mean, an African or a European swallow?
+&gt;&gt;&gt; int(speed)
+ValueError: invalid literal for int() with base 10
+</code></pre>
+
+<p>Nous verrons comment gérer ce type d&rsquo;erreur plus tard.</p>
+<h3>5.12 Le débogage</h3>
+<p>Lorsqu&rsquo;une erreur de syntaxe ou d&rsquo;exécution se produit, le message d&rsquo;erreur contient beaucoup d&rsquo;informations, mais cela peut être accablant. Les parties les plus utiles sont généralement les suivantes:</p>
+<ul>
+<li>Quel type d&rsquo;erreur était-ce et</li>
+<li>où il s&rsquo;est produit.</li>
+</ul>
+<p>Les erreurs de syntaxe sont généralement faciles à trouver, mais il y a quelques pièges. Les erreurs d&rsquo;espacement peuvent être difficile parce que les espaces et les onglets sont invisibles et nous sommes habitués à les ignorer.</p>
+<pre><code>&gt;&gt;&gt; x = 5
+&gt;&gt;&gt;  y = 6
+File &quot;&lt;stdin&gt;&quot;, line 1
+y = 6
+^
+IndentationError: unexpected indent
+</code></pre>
+
+<p>Dans cet exemple, le problème est que la deuxième ligne est en retrait d&rsquo;une espace. Mais l&rsquo;erreur dans le message indique y, ce qui est trompeur. En général, les messages d’erreur indiquent où le problème a été découvert, mais l&rsquo;erreur réelle peut être antérieure dans le code, parfois sur une ligne précédente.</p>
+<p>La même chose est vraie pour les erreurs d&rsquo;exécution. Supposons que vous essayiez de calculer un rapport signal / bruit en décibels. La formule est SNRdb = 10 log10 (Psignal / Pnoise) ). En python, vous pourriez écrire quelque chose comme ceci:</p>
+<pre><code class="python">import math
+signal_power = 9
+noise_power = 10
+ratio = signal_power // noise_power
+decibels = 10 * math.log10(ratio)
+print(decibels)
+</code></pre>
+
+<p>Lorsque vous exécutez ce programme, vous obtenez une exception:</p>
+<pre><code>Traceback (most recent call last):
+  File &quot;snr.py&quot;, line 5, in ?
+    decibels = 10 * math.log10(ratio)
+ValueError: math domain error
+</code></pre>
+
+<p>Le message d&rsquo;erreur indique la ligne 5, mais il n&rsquo;y a rien de mal avec cette ligne. Pour trouver l&rsquo;erreur réelle, il pourrait être utile d’imprimer la valeur du ratio, qui se révèle être 0. Le problème est à la ligne 4, qui utilise la division au sol au lieu de la division en float. Vous devriez prendre le temps de lire attentivement les messages d&rsquo;erreur, mais ne présumez pas que tout ils disent est correct.</p>
+<h3>5.13 Glossaire</h3>
+<ul>
+<li>
+<p><strong>Division de plancher / floor division:</strong> Un opérateur, noté //, qui divise deux nombres et arrondit à un entier inférieur (vers l&rsquo;infini négatif).</p>
+</li>
+<li>
+<p><strong>opérateur modulus / modulus operator:</strong> un opérateur, noté avec un signe de pourcentage (%), qui fonctionne sur des nombres entiers
+et renvoie le reste lorsqu&rsquo;un nombre est divisé par un autre.</p>
+</li>
+<li>
+<p><strong>expression booléenne:</strong> expression dont la valeur est True ou False.</p>
+</li>
+<li>
+<p><strong>opérateur relationnel:</strong> Un des opérateurs qui compare ses opérandes: <code>==</code>,<code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code> et <code>&lt;=</code>.</p>
+</li>
+<li>
+<p><strong>opérateur logique:</strong> un des opérateurs combinant des expressions booléennes: et, ou
+ne pas.</p>
+</li>
+<li>
+<p><strong>instruction conditionnelle:</strong> une instruction qui contrôle le flux d&rsquo;exécution en fonction de certains
+conditions.</p>
+</li>
+<li>
+<p><strong>condition:</strong> expression booléenne dans une instruction conditionnelle qui détermine une
+branche court.</p>
+</li>
+<li>
+<p><strong>déclaration composée:</strong> déclaration composée d&rsquo;un en-tête et d&rsquo;un corps. L&rsquo;en-tête se termine
+avec deux points (:). Le corps est en retrait par rapport à l&rsquo;en-tête.</p>
+</li>
+<li>
+<p><strong>branch:</strong> une des séquences alternatives d&rsquo;instructions dans une instruction conditionnelle.</p>
+</li>
+<li>
+<p><strong>conditionnel en chaînes:</strong> une instruction conditionnelle avec une série de branches alternatives.</p>
+</li>
+<li>
+<p><strong>conditionnel imbriqué:</strong> instruction conditionnelle qui apparaît dans l&rsquo;une des branches d&rsquo;une autre déclaration conditionnelle.</p>
+</li>
+<li>
+<p><strong>instruction de retour:</strong> instruction qui entraîne la fin immédiate d&rsquo;une fonction et le retour &gt;a&lt; l&rsquo;appeleur.</p>
+</li>
+<li>
+<p><strong>récursivité:</strong> processus d&rsquo;appel de la fonction en cours d&rsquo;exécution.</p>
+</li>
+<li>
+<p><strong>cas de base:</strong> branche conditionnelle dans une fonction récursive qui ne fait pas un appel récursif.</p>
+</li>
+<li>
+<p><strong>récursion infinie:</strong> récursivité qui n&rsquo;a pas de cas de base ou ne l&rsquo;atteint jamais. Finalement, une récursion infinie provoque une erreur d&rsquo;exécution.</p>
+</li>
+</ul>
+<h3>5.14 Exercices</h3>
+<p><strong>Exercice 1</strong></p>
+<p><em>La module time fournit une fonction, également nommée time, qui renvoie le Greenwich Mean Time en tant que &ldquo;epoch&rdquo;, qui est un temps arbitraire utilisé comme point de référence. Sur les Systèmes UNIX, epoch est le 1er janvier 1970.</em></p>
+<pre><code class="python">&gt;&gt;&gt; import time
+&gt;&gt;&gt; time.time()
+1437746094.5735958
+</code></pre>
+
+<p><em>Écrivez un script qui lit l&rsquo;heure actuelle et le convertit en heure, en minutes et en minutes.
+secondes, plus le nombre de jours écoulés depuis l&rsquo;époque.</em></p>
+<p><strong>Exercice 2</strong></p>
+<p><em>Le dernier théorème de Fermat dit qu&rsquo;il n&rsquo;y a pas d&rsquo;entiers positifs a, b et c tels que</em></p>
+<p>a<sup>n</sup> + b<sup>n</sup> = c<sup>n</sup></p>
+<p><em>pour toute valeur de n supérieure à 2.</em></p>
+<ul>
+<li>
+<ol>
+<li><em>Écrivez une fonction nommée check_fermat qui prend quatre paramètres- a, b, c et n -et
+vérifie si le théorème de Fermat est valide. Si n est supérieur à 2 et</em></li>
+</ol>
+</li>
+</ul>
+<p>a<sup>n</sup> + b<sup>n</sup> = c<sup>n</sup></p>
+<p><em>le programme devrait imprimer, &ldquo;Holy smokes, Fermat was wrong!&rdquo; Sinon, le programme devrait
+imprimer, &ldquo;No, that doesn’t work.&rdquo;</em></p>
+<ul>
+<li>
+<ol>
+<li><em>Écrivez une fonction qui invite l’utilisateur à saisir des valeurs pour a, b, c et n, les convertir en entiers, et utilise check_fermat pour vérifier s&rsquo;ils ne respectent pas le théorème de Fermat.</em></li>
+</ol>
+</li>
+</ul>
+<p><strong>Exercice 3</strong></p>
+<p><em>Si on vous donne trois bâtons, vous pouvez ou non être en mesure de les organiser en triangle.
+Par exemple, si l&rsquo;un des bâtons fait 12 pouces de long et que les deux autres ont un pouce de long, vous ne pourrez pas être en mesure de faire en sorte que les bâtons courts se rencontrent au milieu. Pour trois longueurs, il existe un test simple pour voir s&rsquo;il est possible de former un triangle:</em></p>
+<p><em>Si l&rsquo;une des trois longueurs est supérieure à la somme des deux autres, vous ne pouvez pas
+former un triangle. Sinon, vous pouvez. (Si la somme de deux longueurs est égale à la troisième, elles forme ce qu&rsquo;on appelle un triangle &ldquo;dégénéré&rdquo;.)</em></p>
+<ul>
+<li>
+<ol>
+<li><em>Écrivez une fonction nommée is_triangle qui prend trois nombres entiers comme arguments et qui imprime soit &ldquo;Yes&rdquo; ou &ldquo;No&rdquo;, selon que vous pouvez ou ne pouvez pas former un triangle à partir de bâtons avec les longueurs données.</em></li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Écrivez une fonction qui invite l’utilisateur à saisir trois longueurs de bâtons, à les convertir en nombres entiers,
+et utilise is_triangle pour vérifier si les bâtons de longueur donnée peuvent former un triangle.</em></li>
+</ol>
+</li>
+</ul>
+<p><strong>Exercice 4</strong> </p>
+<p>Quelle est la sortie du programme suivant? Dessine un diagramme de pile qui montre le
+état du programme lorsqu&rsquo;il imprime le résultat.</p>
+<pre><code>def recurse(n, s):
+    if n == 0:
+        print(s)
+    else:
+        recurse(n-1, n+s)
+
+recurse(3, 0)
+</code></pre>
+
+<ul>
+<li>
+<ol>
+<li><em>Que se passerait-il si vous appeliez cette fonction comme ceci: recurse (-1, 0)?</em></li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Ecrivez un docstring qui explique tout ce que quelqu&rsquo;un devrait savoir pour pouvoir utiliser cet fonction (et rien d&rsquo;autre).</em></li>
+</ol>
+</li>
+</ul>
+<p>Les exercices suivants utilisent le module tortue, décrit au chapitre 4:</p>
+<p><strong>Exercice 5</strong> </p>
+<p><em>Lisez la fonction suivante et voyez si vous pouvez comprendre ce qu’elle fait (voir les exemples du chapitre 4). Puis lancez-le et voyez si vous avez bien compris.</em></p>
+<pre><code class="python">def draw(t, length, n):
+    if n == 0:
+        return
+    angle = 50
+    t.fd(length*n)
+    t.lt(angle)
+    draw(t, length, n-1)
+    t.rt(2*angle)
+    draw(t, length, n-1)
+    t.lt(angle)
+    t.bk(length*n)
+</code></pre>
+
+<p><img alt="fig5.2" src="assets/tp5.2.png"></p>
+<p>La courbe de Koch est une fractale qui ressemble à la figure 5.2. Dessiner un Koch
+courbe avec longueur x, tout ce que vous avez à faire est de</p>
+<ul>
+<li>
+<ol>
+<li><em>Tracez une courbe de Koch avec une longueur x / 3.</em></li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tourner à gauche de 60 degrés.</em></li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tracez une courbe de Koch avec une longueur x / 3.</em> </li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tournez à droite de 120 degrés.</em> </li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tracez une courbe de Koch avec une longueur x / 3.</em> </li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tournez à gauche de 60 degrés.</em> </li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Tracez une courbe de Koch avec une longueur x / 3.</em> </li>
+</ol>
+</li>
+</ul>
+<p><em>L&rsquo;exception est si x est inférieur à 3: dans ce cas, vous pouvez simplement tracer une ligne de longueur x.</em></p>
+<ul>
+<li>
+<ol>
+<li><em>Écrivez une fonction appelée koch qui prend une tortue et une longueur comme paramètres, et qui utilise la tortue pour dessiner une courbe de Koch avec la longueur donnée.</em></li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>Écrivez une fonction appelée flocon de neige qui dessine trois courbes de Koch pour dessiner le contour d&rsquo;un flocon de neige.</em>
+Solution: <a href="http://thinkpython2.com/code/koch.py">http://thinkpython2.com/code/koch.py</a>.</li>
+</ol>
+</li>
+<li>
+<ol>
+<li><em>La courbe de Koch peut être généralisée de plusieurs manières. Voir <a href="http://en.wikipedia.org/wiki/Koch_snowflake">http://en.wikipedia.org/wiki/Koch_snowflake</a> pour des exemples et implémentez votre favori.</em></li>
+</ol>
+</li>
+</ul>
+<h1>Chapitre 6<a name="ch6"></a></h1>
+<h2>Fonctions fructueuses</h2>
+<p><br><br></p>
+<p>Beaucoup de fonctions Python que nous avons utilisées, telles que les fonctions mathématiques, produisent des valeurs de
+retour. Mais les fonctions que nous avons écrites sont toutes vides: elles ont un effet, comme imprimer un
+valeur ou le déplacement d&rsquo;une tortue, mais ils n&rsquo;ont pas de valeur de retour. Dans ce chapitre, vous apprendrez à
+écrire des fonctions fructueuses.</p>
+<h3>6.1 Valeurs de retour</h3>
+<p>L&rsquo;appel de la fonction génère une valeur de retour, que nous l&rsquo;affectons généralement à une variable ou à une utilisation.
+dans le cadre d&rsquo;une expression.</p>
+<pre><code>e = math.exp (1.0)
+height = radius * math.sin (radians)
+</code></pre>
+
+<p>Les fonctions que nous avons écrites jusqu&rsquo;à présent sont nulles. Parlant avec désinvolture, ils n&rsquo;ont aucun valeur de
+retour; plus précisément, leur valeur de retour est None.
+Dans ce chapitre, nous allons (enfin) écrire des fonctions fructueuses. Le premier exemple est la zone,
+qui renvoie l&rsquo;aire d&rsquo;un cercle du rayon donné:</p>
+<pre><code>def area(radius):
+    a = math.pi * radius**2
+    return a
+</code></pre>
+
+<p>Nous avons vu la déclaration de retour avant, mais dans une fonction fructueuse la déclaration de retour
+comprend une expression. Cette déclaration signifie: &ldquo;Retourner immédiatement de cette fonction
+et utilisez l&rsquo;expression suivante comme valeur de retour. &ldquo;L&rsquo;expression peut être arbitrairement
+compliqué, nous aurions pu écrire cette fonction de manière plus concise:</p>
+<pre><code>def area(radius):
+    return math.pi * radius**2
+</code></pre>
+
+<p>En revanche, des variables temporaires telles que a peuvent faciliter le débogage.
+Parfois, il est utile d&rsquo;avoir plusieurs instructions de retour, une dans chaque branche d&rsquo;un conditionnel:</p>
+<pre><code>def absolute_value(x):
+    if x &lt; 0:
+        return -x
+    else:
+        return x
+</code></pre>
+
+<p>Comme ces instructions de retour sont dans une autre condition, une seule est exécutée.
+Dès qu&rsquo;une instruction de retour s&rsquo;exécute, la fonction se termine sans exécuter les instructions suivantes. Partie de code qui apparaît après une déclaration de retour, ou tout autre endroit que le flux
+de l&rsquo;exécution ne peut jamais atteindre, s&rsquo;appelle le code mort.
+Dans une fonction fructueuse, il est conseillé de s’assurer que chaque chemin possible du programme rencontre une déclaration de retour. Par exemple:</p>
+<pre><code>def absolute_value(x):
+    if x &lt; 0:
+        return -x
+    if x &gt; 0:
+        return x
+</code></pre>
+
+<p>Cette fonction est incorrecte car si x se trouve être 0, ni la condition est vraie, et le
+fonction se termine sans frapper une déclaration de retour. Si le flux d&rsquo;exécution arrive à la fin
+d&rsquo;une fonction, la valeur de retour est None, ce qui n&rsquo;est pas la valeur absolue de 0.</p>
+<pre><code>&gt;&gt;&gt; print(absolute_value(0))
+None
+</code></pre>
+
+<p>Par ailleurs, Python fournit une fonction intégrée appelée abs qui calcule des valeurs absolues.
+Comme exercice, écrire une fonction de comparaison prend deux valeurs, x et y, et renvoie 1 si x &gt; y,
+0 si x == y et -1 si x &lt; y.</p>
+<h3>6.2 Développement incrémental</h3>
+<p>Au fur et à mesure que vous écrivez des fonctions plus grandes, vous risquez de devoir passer plus de temps à déboguer.
+Pour gérer des programmes de plus en plus complexes, vous pouvez essayer un processus appelé développement incrémentiel. Le développement incrémentiel a pour but d&rsquo;éviter le débogage de long
+sessions en ajoutant et en testant seulement une petite quantité de code à la fois.
+Par exemple, supposons que vous souhaitiez trouver la distance entre deux points, donnée par les
+coordonnées (x1, y1) et (x2, y2). Par le théorème de Pythagore, la distance est:</p>
+<p>distance = √(x2 − x1)<sup>2</sup> + (y2 − y1)<sup>2</sup></p>
+<p>La première étape consiste à examiner à quoi devrait ressembler une fonction de distance en Python. En d&rsquo;autre
+mots, quelles sont les entrées (paramètres) et quelle est la sortie (valeur de retour)?
+Dans ce cas, les entrées sont deux points que vous pouvez représenter en utilisant quatre chiffres. La
+valeur de retour est la distance représentée par une valeur à virgule flottante.
+Immédiatement, vous pouvez écrire un aperçu de la fonction:</p>
+<pre><code>def distance(x1, y1, x2, y2):
+    return 0.0
+</code></pre>
+
+<p>Evidemment, cette version ne calcule pas les distances; il retourne toujours zéro. Mais il est syntaxiquement correct et fonctionne, ce qui signifie que vous pouvez le tester avant de le rendre plus
+compliqué.
+Pour tester la nouvelle fonction, appelez-la avec des exemples d&rsquo;arguments:</p>
+<pre><code>&gt;&gt;&gt; distance(1, 2, 4, 6)
+0.0
+</code></pre>
+
+<p>J&rsquo;ai choisi ces valeurs pour que la distance horizontale soit de 3 et la distance verticale de 4; 
+ainsi, le résultat est 5, l&rsquo;hypoténuse d&rsquo;un triangle 3-4-5. Lors du test d&rsquo;une fonction, il est utile de
+connaître la bonne réponse.
+A ce stade, nous avons confirmé que la fonction est syntaxiquement correcte, et nous pouvons commencer
+ajouter du code au corps. Une prochaine étape raisonnable consiste à trouver les différences x2 - x1 et
+y2 - y1. La prochaine version stocke ces valeurs dans des variables temporaires et les imprime.
+def distance(x1, y1, x2, y2):</p>
+<pre><code>def distance(x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+    print('dx is', dx)
+    print('dy is', dy)
+    return 0.0
+</code></pre>
+
+<p>Si la fonction fonctionne, elle devrait afficher dx  3 et dy  4. Si oui, nous savons que le
+la fonction consiste à obtenir les bons arguments et à effectuer le premier calcul correctement. Si
+non, il n&rsquo;y a que quelques lignes à vérifier.
+Ensuite, nous calculons la somme des carrés de dx et dy:
+def distance(x1, y1, x2, y2):</p>
+<pre><code>def distance(x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+    dsquared = dx**2 + dy**2
+    print('dsquared is: ', dsquared)
+    return 0.0
+</code></pre>
+
+<p>Encore une fois, vous devez exécuter le programme à ce stade et vérifier le résultat (qui doit être
+25). Enfin, vous pouvez utiliser math.sqrt pour calculer et renvoyer le résultat:</p>
+<pre><code>def distance(x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+    dsquared = dx**2 + dy**2
+    result = math.sqrt(dsquared)
+    return result
+</code></pre>
+
+<p>Si cela fonctionne correctement, vous avez terminé. Sinon, vous pouvez imprimer la valeur du
+résultat avant la déclaration de retour.
+La version finale de la fonction n&rsquo;affiche rien quand elle s&rsquo;exécute; il ne fait que retourner
+une valeur. Les instructions d&rsquo;impression que nous avons écrites sont utiles pour le débogage, mais une fois que vous obtenez le
+fonction de travail, vous devez les supprimer. Les codes comme cela s&rsquo;appellent échafaudage car ils
+sont utiles pour construire le programme mais ne fait pas partie du produit final.
+Lorsque vous commencez, vous ne devez ajouter qu&rsquo;une ligne ou deux de code à la fois. Comme vous gagnez plus
+d&rsquo;expérience, vous pourriez vous retrouver à écrire et à déboguer de plus gros morceaux. D&rsquo;une manière ou d&rsquo;une autre,
+le développement incrémentiel peut vous faire économiser beaucoup de temps de débogage.
+Les aspects clés du processus sont les suivants:</p>
+<ol>
+<li>
+<p>Commencez par un programme de travail et apportez de petites modifications incrémentielles. A tout moment, si
+il y a une erreur, vous devriez avoir une bonne idée de la situation.</p>
+</li>
+<li>
+<p>Utilisez des variables pour contenir des valeurs intermédiaires afin de pouvoir les afficher et les vérifier.</p>
+</li>
+<li>
+<p>Une fois que le programme fonctionne, vous pouvez supprimer une partie de l’échafaudage ou
+consolider plusieurs instructions dans des expressions composées, mais seulement si elles ne le font pas
+rendre le programme difficile à lire.</p>
+</li>
+</ol>
+<p>Comme exercice, utilisez le développement incrémental pour écrire une fonction appelée hypoténuse qui
+renvoie la longueur de l&rsquo;hypoténuse d&rsquo;un triangle rectangle étant donné la longueur des deux autres
+jambes comme arguments. Enregistrez chaque étape du processus de développement au fur et à mesure.</p>
+<h3>6.3 Composition</h3>
+<p>Comme vous vous en doutez, vous pouvez appeler une fonction depuis une autre. Par exemple, nous allons écrire une fonction qui prend deux points, le centre du cercle et un point sur le
+périmètre, et calcule l&rsquo;aire du cercle.
+Supposons que le point central est stocké dans les variables xc et yc et que le point de périmètre est
+dans xp et yp. La première étape consiste à trouver le rayon du cercle, qui est la distance entre
+les deux points. Nous venons écrire une fonction, distance, qui fait cela:</p>
+<pre><code>radius = distance(xc, yc, xp, yp)
+</code></pre>
+
+<p>L&rsquo;étape suivante consiste à trouver l&rsquo;aire d&rsquo;un cercle avec ce rayon; nous venons d&rsquo;écrire cela aussi:</p>
+<pre><code>result = area(radius)
+</code></pre>
+
+<p>En encapsulant ces étapes dans une fonction, nous obtenons:</p>
+<pre><code>def circle_area(xc, yc, xp, yp):
+    radius = distance(xc, yc, xp, yp)
+    result = area(radius)
+    return result
+</code></pre>
+
+<p>Les variables temporaires radius et result sont utiles pour le développement et le débogage,
+mais une fois que le programme fonctionne, nous pouvons le rendre plus concis en composant les fonctions d&rsquo;appels:</p>
+<pre><code>def circle_area(xc, yc, xp, yp):
+    return area(distance(xc, yc, xp, yp))
+</code></pre>
+
+<h3>6.4 Fonctions booléennes</h3>
+<p>Les fonctions peuvent renvoyer des valeurs booléennes, ce qui est souvent pratique pour cacher des tests compliqués à l&rsquo;intérieur de fonctions. Par exemple:</p>
+<pre><code>def is_divisible(x, y):
+    if x % y == 0:
+        return True
+    else:
+        return False
+</code></pre>
+
+<p>Il est courant de donner des noms de fonctions booléens qui sonnent comme des questions oui / non;
+is_divisible renvoie True ou False pour indiquer si x est divisible par y.
+Voici un exemple:</p>
+<pre><code>&gt;&gt;&gt; is_divisible(6, 4)
+False
+&gt;&gt;&gt; is_divisible(6, 3)
+True
+</code></pre>
+
+<p>Le résultat de l&rsquo;opérateur == est un booléen, de sorte que nous pouvons écrire la fonction de manière plus concise en
+le retournant directement:</p>
+<pre><code>def is_divisible(x, y):
+    return x % y == 0
+</code></pre>
+
+<p>Les fonctions booléennes sont souvent utilisées dans les instructions conditionnelles:</p>
+<pre><code>if is_divisible(x, y):
+    print('x is divisible by y')
+</code></pre>
+
+<p>Il pourrait être tentant d&rsquo;écrire quelque chose comme:</p>
+<pre><code>if is_divisible(x, y) == True:
+    print('x is divisible by y')
+</code></pre>
+
+<p>Mais la comparaison supplémentaire est inutile.
+En tant qu&rsquo;exercice, écrivez une fonction <code>is_between (x, y, z)</code> qui renvoie <code>True</code> si <code>x ≤ y ≤ z</code> ou
+<code>False</code> sinon.</p>
+<h3>6.5 Plus de récursivité</h3>
+<p>Nous avons seulement couvert un petit sous-ensemble de Python, mais vous pourriez être intéressé de savoir que
+ce sous-ensemble est un langage de programmation complet, ce qui signifie que tout ce qui peut être
+calculé peut être exprimé dans cette langue. Tout programme jamais écrit pourrait être réécrit
+en utilisant uniquement les fonctionnalités de langue que vous avez apprises jusqu&rsquo;à présent (en fait, vous auriez besoin de quelques
+commandes pour contrôler les périphériques comme la souris, les disques, etc., mais c&rsquo;est tout).
+Prouver que cette affirmation n&rsquo;est pas banale, voici un exercice accompli d’abord par Alan Turing, un des
+premiers informaticiens (certains diront qu’il était mathématicien, mais beaucoup
+d&rsquo;informaticiens ont commencé comme mathématiciens). En conséquence, il est connu sous le nom du Thèse Turing. 
+Pour une discussion plus complète (et précise) de la thèse de Turing, je vous recommande
+le livre de Michael Sipser Introduction to the Theory of Computation.
+Pour vous donner une idée de ce que vous pouvez faire avec les outils que vous avez appris jusqu&rsquo;à présent, nous évaluerons quelques fonctions mathématiques définies récursivement. Une définition récursive est similaire à
+une définition circulaire, en ce sens que la définition contient une référence à la chose
+défini. Une définition vraiment circulaire n&rsquo;est pas très utile:</p>
+<p>vorpal: un adjectif utilisé pour décrire quelque chose qui est vorpal.</p>
+<p>Si vous avez vu cette définition dans le dictionnaire, vous pourriez être ennuyé. D&rsquo;autre part,
+si vous avez regardé la définition de la fonction factorielle, notée avec le symbole!, vous
+pourrait obtenir quelque chose comme ça:</p>
+<pre><code>0! = 1
+n! = n (n - 1)!
+</code></pre>
+
+<p>Cette définition dit que la factorielle de 0 est 1 et que la factorielle de toute autre valeur, n, est n
+multiplié par la factorielle de n - 1.
+Donc 3! est 3 fois 2!, ce qui correspond à 2 fois 1!, soit 1 fois 0 !. Tout rassembler, 3! est égal à 3
+fois 2 fois 1 fois 1, soit 6.
+Si vous pouvez écrire une définition récursive de quelque chose, vous pouvez écrire un programme Python sur
+l&rsquo;évaluez La première étape consiste à décider quels devraient être les paramètres. Dans ce cas, il devrait
+être clair que factorial prend un entier:</p>
+<pre><code>def factorial(n):
+</code></pre>
+
+<p>Si l&rsquo;argument arrive à 0, il suffit de retourner 1:</p>
+<pre><code>def factorial(n):
+    if n == 0:
+        return 1
+</code></pre>
+
+<p>Sinon, et ceci est la partie intéressante, nous devons faire un appel récursif pour trouver le
+factorielle de n - 1 puis multiplie-la par n:</p>
+<pre><code>def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        recurse = factorial(n-1)
+        result = n * recurse
+        return result
+</code></pre>
+
+<p>Le flux d&rsquo;exécution de ce programme est similaire au flux de compte à rebours de la section 5.8. Si
+nous appelons factorial avec la valeur 3:
+Puisque 3 n&rsquo;est pas 0, nous prenons la deuxième branche et calculons la factorielle de n-1 &hellip;
+Puisque 2 n&rsquo;est pas 0, nous prenons la deuxième branche et calculons la factorielle de n-1 &hellip;
+Puisque 1 n&rsquo;est pas 0, nous prenons la deuxième branche et calculons la factorielle
+de n-1 &hellip;
+Puisque 0 est égal à 0, nous prenons la première branche et retournons 1 sans
+faire plus d&rsquo;appels récursifs.
+La valeur de retour, 1, est multipliée par n, qui est 1, et le résultat est
+revenu.
+La valeur de retour, 1, est multipliée par n, qui est 2, et le résultat est renvoyé.
+La valeur de retour (2) est multipliée par n, qui est 3, et le résultat 6 devient le retour
+valeur de l&rsquo;appel de fonction qui a démarré tout le processus.
+La figure 6.1 montre à quoi ressemble le diagramme de la pile pour cette séquence d&rsquo;appels de fonction.
+Les valeurs de retour sont affichées lors de la remontée de la pile. Dans chaque cadre, le retour
+valeur est la valeur du résultat, qui est le produit de n et recurse.
+Dans la dernière exemple, les variables locales recurse et result n&rsquo;existent pas, car la branche
+qui les a crée ne fonctionne pas.</p>
+<p><img alt="fig6.1" src="assets/tp6.1.png"></p>
+<h3>6.6 Acte de foi</h3>
+<p>Suivre le flux d’exécution est une façon de lire les programmes, mais elle peut rapidement devenir
+accablant. Une alternative est ce que j&rsquo;appelle le &ldquo;leap of faith&rdquo;. Quand vous arrivez à un
+fonction appel, au lieu de suivre le flux d&rsquo;exécution, vous supposez que la fonction fonctionne
+correctement et renvoie le bon résultat.
+En fait, vous pratiquez déjà cet acte de foi lorsque vous utilisez des fonctions intégrées. Quand
+vous appelez math.cos ou math.exp, vous n&rsquo;examinez pas les corps de ces fonctions. Nous
+supposons qu&rsquo;ils fonctionnent parce que les personnes qui ont écrit les fonctions intégrées étaient de bons
+programmeurs.
+La même chose est vraie lorsque vous appelez l&rsquo;une de vos propres fonctions. Par exemple, dans la section 6.4, nous
+avons écrit une fonction appelée is_divisible qui détermine si un nombre est divisible par
+un autre. Une fois que nous nous sommes convaincus que cette fonction est correcte, en examinant le
+code et test - nous pouvons utiliser la fonction sans regarder à nouveau le corps.
+La même chose est vraie pour les programmes récursifs. Lorsque vous arrivez à l&rsquo;appel récursif, au lieu de
+suivre le flux d&rsquo;exécution, vous devez supposer que l&rsquo;appel récursif fonctionne (retourne
+le résultat correct) et puis demandez-vous, &ldquo;En supposant que je peux trouver la factorielle de n - 1,
+puis-je calculer la factorielle de n? &ldquo;Il est clair que vous pouvez, en multipliant par n.
+Bien sûr, c&rsquo;est un peu étrange de supposer que la fonction fonctionne correctement lorsque vous n&rsquo;avez pas
+fini de l&rsquo;écrire, mais c&rsquo;est pourquoi on appelle cela un acte de foi!</p>
+<h3>6.7 Un autre exemple</h3>
+<p>Après factorielle, l&rsquo;exemple le plus commun d&rsquo;une fonction mathématique définie récursivement est fibonacci, qui a la définition suivante (voir <a href="http://en.wikipedia.org/wiki/Fibonacci_number">http://en.wikipedia.org/wiki/Fibonacci_number</a>):</p>
+<pre><code>
+     fibonacci(0) = 0 
+     fibonacci(1) = 1 
+     fibonacci(n) = fibonacci(n−1) + fibonacci(n−2)
+
+</code></pre>
+
+<p>Traduit en Python, il ressemble à ceci:</p>
+<pre><code>def fibonacci(n):
+    if n == 0:
+        return 0
+    elif  n == 1:
+        return 1
+    else:
+        return fibonacci(n-1) + fibonacci(n-2)
+</code></pre>
+
+<p>Si vous essayez de suivre le flux d&rsquo;exécution ici, même pour des valeurs assez petites de n, votre tête
+explose. Mais selon le saut de foi, si vous supposez que les deux appels récursifs fonctionnent
+correctement, il est clair que vous obtenez le bon résultat en les ajoutant ensemble.</p>
+<h3>6.8 Vérification des types</h3>
+<p>Que se passe-t-il si nous appelons factorial et lui donnons 1,5 comme argument?</p>
+<pre><code>&gt;&gt;&gt; factorial(1.5)
+RuntimeError: Maximum recursion depth exceeded
+</code></pre>
+
+<p>Cela ressemble à une récursion infinie. Comment ça peut survenir? La fonction a un cas de base lorsque n
+== 0. Mais si n n&rsquo;est pas un nombre entier, nous pouvons rater le cas de base et récurer pour toujours.
+Dans le premier appel récursif, la valeur de n est 0,5. Dans le prochain, c&rsquo;est -0.5. De là, ça devient
+plus petit (plus négatif), mais il ne sera jamais 0.
+Nous avons deux choix. Nous pouvons essayer de généraliser la fonction factorielle pour travailler avec
+les nombres à virgule flottante, ou nous pouvons faire factoriel vérifier le type de son argument. le
+La première option est appelée fonction gamma et dépasse un peu la portée de ce livre. Alors
+nous irons pour le second.
+Nous pouvons utiliser la fonction intégrée isinstance pour vérifier le type de l&rsquo;argument. Tandis que
+nous y sommes, nous pouvons également nous assurer que l&rsquo;argument est positif:</p>
+<pre><code>def factorial(n):
+    if not isinstance(n, int):
+        print('Factorial is only defined for integers.')
+        return None
+    elif n &lt; 0:
+        print('Factorial is not defined for negative integers.')
+        return None
+    elif n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+</code></pre>
+
+<p>Le premier cas de base gère les non-entiers; le second traite les entiers négatifs. À la fois
+Dans certains cas, le programme imprime un message d&rsquo;erreur et renvoie None pour indiquer que quelque chose
+s&rsquo;est mal passé:</p>
+<pre><code>&gt;&gt;&gt; print(factorial('fred'))
+Factorial is only defined for integers.
+None
+&gt;&gt;&gt; print(factorial(-2))
+Factorial is not defined for negative integers.
+None
+</code></pre>
+
+<p>Si nous passons les deux vérifications, nous savons que n est positif ou nul, nous pouvons donc prouver que le
+la récursivité se termine.
+Ce programme montre un modèle parfois appelé un tuteur. Les deux premières conditions agissent comme des gardiens, protégeant le code qui découle des valeurs susceptibles de provoquer
+Erreur. Les gardiens permettent de prouver l&rsquo;exactitude du code.
+Dans la section 11.4, nous verrons une alternative plus flexible à l’impression d’un message d’erreur:
+une exception.</p>
+<h3>6.9 Le débogage</h3>
+<p>Briser un grand programme en fonctions plus petites crée des points de contrôle naturels pour le débogage.
+Si une fonction ne fonctionne pas, vous avez trois possibilités:</p>
+<ul>
+<li>
+<p>Il y a quelque chose qui ne va pas dans les arguments obtenus par la fonction. une condition préalable
+est violé.</p>
+</li>
+<li>
+<p>Il y a quelque chose qui ne va pas dans la fonction; une post-condition est violée.</p>
+</li>
+<li>
+<p>Il y a un problème avec la valeur de retour ou la manière dont elle est utilisée.</p>
+</li>
+</ul>
+<p>Pour exclure la première possibilité, vous pouvez ajouter un relevé d&rsquo;impression au début du
+fonction et afficher les valeurs des paramètres (et peut-être leurs types). Ou vous pouvez
+écrire le code qui vérifie explicitement les conditions préalables.
+Si les paramètres sont corrects, ajoutez une instruction print avant chaque instruction de retour et
+afficher la valeur de retour. Si possible, vérifiez le résultat à la main. Envisagez d&rsquo;appeler la fonction
+avec des valeurs facilitant la vérification du résultat (comme dans la section 6.2).
+Si la fonction semble fonctionner, regardez l&rsquo;appel de fonction pour vous assurer que la valeur de retour
+est utilisé correctement (ou utilisé du tout!).
+L&rsquo;ajout d&rsquo;instructions d&rsquo;impression au début et à la fin d&rsquo;une fonction peut aider à
+exécution plus visible. Par exemple, voici une version de factorial avec des instructions d&rsquo;impression:</p>
+<pre><code>def factorial(n):
+    space = ' ' * (4 * n)
+    print(space, 'factorial', n)
+    if n == 0:
+        print(space, 'returning 1')
+        return 1
+    else:
+        recurse = factorial(n-1)
+        result = n * recurse
+        print(space, 'returning', result)
+        return result
+</code></pre>
+
+<p>L&rsquo;espace est une chaîne de caractères d&rsquo;espace qui contrôle l&rsquo;indentation de la sortie. Voici la
+résultat de la factorielle (4):</p>
+<pre><code>                 factorial 4
+             factorial 3
+         factorial 2
+     factorial 1
+ factorial 0
+ returning 1
+     returning 1
+         returning 2
+             returning 6
+                 returning 24
+</code></pre>
+
+<p>Si vous ne comprenez pas le déroulement de l&rsquo;exécution, ce type de résultat peut être utile. Ça prend
+un peu de temps pour développer des échafaudages efficaces, mais un petit échafaudage peut économiser beaucoup de
+débogage.</p>
+<h3>6.10 Glossaire</h3>
+<ul>
+<li>
+<p><strong>variable temporaire:</strong> variable utilisée pour stocker une valeur intermédiaire dans un calcul complexe.</p>
+</li>
+<li>
+<p><strong>code mort:</strong> partie d&rsquo;un programme qui ne peut jamais s&rsquo;exécuter, souvent parce qu&rsquo;il apparaît après un déclaration de
+retour.</p>
+</li>
+<li>
+<p><strong>développement incrémental:</strong> Un plan de développement de programme destiné à éviter le débogage par
+ajouter et tester seulement une petite quantité de code à la fois.</p>
+</li>
+<li>
+<p><strong>échafaudage:</strong> code utilisé lors du développement du programme mais ne faisant pas partie de la finale
+version.</p>
+</li>
+<li>
+<p><strong>guardian:</strong> Un modèle de programmation qui utilise une instruction conditionnelle pour rechercher et gérer des circonstances pouvant provoquer une erreur.</p>
+</li>
+</ul>
+<h3>6.11 Exercices</h3>
+<p><strong>Exercice 1</strong></p>
+<p><em>Dessinez un diagramme de pile pour le programme suivant. Qu&rsquo;est-ce que le programme imprime?</em></p>
+<pre><code>def b(z):
+    prod = a(z, z)
+    print(z, prod)
+    return prod
+
+def a(x, y):
+    x = x + 1
+    return x * y
+
+def c(x, y, z):
+    total = x + y + z
+    square = b(total)**2
+    return square
+
+x = 1
+y = x + 1
+print(c(x, y+3, x+y))
+</code></pre>
+
+<p><strong>Exercise 2</strong> </p>
+<p>La fonction Ackermann, A(m, n) est définie comme suit:</p>
+<pre><code>A(m, n) =
+
+⎧
+⎪           n+1 if  m = 0 
+⎨       A(m−1, 1)   if  m &gt; 0  and  n = 0 
+⎪   A(m−1, A(m, n−1))   if  m &gt; 0  and  n &gt; 0.
+⎩
+</code></pre>
+
+<p><em>Voir <a href="http://en.wikipedia.org/wiki/Ackermann_function">http://en.wikipedia.org/wiki/Ackermann_function</a>. Ecrivez une fonction nommée ack
+qui évalue la fonction Ackermann. Utilisez votre fonction pour évaluer <code>ack(3, 4)</code>, qui devrait être 125. Que se passe-t-il pour les plus grandes valeurs de m et n? Solution: <a href="http://thinkpython2.com/code/ackermann.py">http://thinkpython2.com/code/ackermann.py</a>.</em></p>
+<p><strong>Exercice 3</strong> </p>
+<p><em>Un palindrome est un mot qui est orthographié de la même façon de gauche à droite et de droite à gauche, comme &ldquo;noon&rdquo; et &ldquo;redivider&rdquo;. Récursivement, un mot est un palindrome si les première et dernière lettres sont identiques et
+le milieu est un palindrome.
+Les fonctions suivantes prennent un argument de type string et renvoient les lettres du premier, du dernier et du milieu:</em></p>
+<pre><code>def first(word):
+    return word[0]
+
+def last(word):
+    return word[-1]
+
+def middle(word):
+    return word[1:-1]
+</code></pre>
+
+<p><em>Nous verrons comment ils fonctionnent dans le chapitre 8.</em></p>
+<ol>
+<li>
+<p><em>Saisissez ces fonctions dans un fichier nommé palindrome.py et testez-les. Ce qui se passe si
+vous appelez le milieu avec une chaîne avec deux lettres? Une lettre? Qu&rsquo;en est-il de la chaîne vide,
+qui est écrit &lsquo;&rsquo; et ne contient pas de lettres?</em></p>
+</li>
+<li>
+<p><em>Écrivez une fonction appelée is_palindrome qui prend un argument de chaîne et renvoie True si elle
+est un palindrome et faux autrement. Rappelez-vous que vous pouvez utiliser la fonction intégrée len
+pour vérifier la longueur d&rsquo;une chaîne.
+Solution: <a href="http://thinkpython2.com/code/palindrome_soln.py">http://thinkpython2.com/code/palindrome_soln.py</a>.</em></p>
+</li>
+</ol>
+<p><strong>Exercice 4</strong> </p>
+<p><em>Un nombre, a, est une puissance de b s&rsquo;il est divisible par b et a / b est une puissance de b. Écrire un
+fonction appelée is_power qui prend les paramètres a et b et renvoie True si a est une puissance de b. Remarque:
+vous devrez penser au cas de base.</em></p>
+<p><strong>Exercice 6.5</strong></p>
+<p><em>Le plus grand diviseur commun (GDC) de a et b est le plus grand nombre qui divise
+les deux sans reste.Une façon de trouver le GDC de deux nombres est basée sur l’observation que si r est le reste
+a est divisé par b, alors gcd(a, b) = gcd (b, r). En tant que cas de base, nous pouvons utiliser gcd (a, 0) = a.
+Ecrivez une fonction appelée gdc qui prend les paramètres a et b et retourne leur plus grand commun diviseur.</em></p>
+<p><em>Crédit: Cet exercice est basé sur un exemple tiré de <strong>Structure and Interpretation of Computer Programs</strong> d’Abelson et Sussman.</em></p>
+<h1>Chapitre 7<a name="ch7"></a></h1>
+<h2>Itération</h2>
+<p><br><br>
+Ce chapitre concerne l&rsquo;itération, qui permet d&rsquo;exécuter un bloc d&rsquo;instructions à plusieurs reprises.
+Nous avons vu une sorte d&rsquo;itération, en utilisant la récursivité, dans la section 5.8. Nous avons aussi vu un autre type, en utilisant un
+boucle for, dans la section 4.2. Dans ce chapitre, nous verrons un autre type, en utilisant une instruction while.
+Mais je veux d&rsquo;abord en dire un peu plus sur l&rsquo;affectation de variables.</p>
+<h2>7.1 Réaffectation</h2>
+<p>Comme vous avez pu le constater, il est légal de confier plusieurs affectations à la même
+variable. Une nouvelle affectation fait qu&rsquo;une variable existante se réfère à une nouvelle valeur (et arrête
+de faire référence à l&rsquo;ancienne valeur).</p>
+<pre><code class="python">&gt;&gt;&gt; x = 5
+&gt;&gt;&gt; x
+5
+&gt;&gt;&gt; x = 7
+&gt;&gt;&gt; x
+7
+</code></pre>
+
+<p>La première fois que nous affichons x, sa valeur est 5; la deuxième fois, sa valeur est 7.</p>
+<p>Le dessin 7.1 montre à quoi ressemble la réaffectation dans un diagramme d&rsquo;état.</p>
+<p>À ce stade, je veux aborder une source commune de confusion. Parce que Python utilise le
+signe égal (=) pour l&rsquo;affectation, il est tentant d&rsquo;interpréter un énoncé comme a = b comme une proposition mathématique d&rsquo;égalité; c&rsquo;est-à-dire que a et b sont égaux. Mais cette interprétation est fausse.
+Tout d&rsquo;abord, l&rsquo;égalité est une relation symétrique et l&rsquo;affectation ne l&rsquo;est pas. Par exemple, en mathématiques, si a = 7 alors 7 = a. Mais en Python, l&rsquo;instruction a = 7 est légale de 7 = a
+est faux.
+De plus, en mathématiques, une proposition d’égalité est vraie ou faux pour tous les temps. Si a =
+b maintenant, alors b sera toujours égal à a. En Python, une instruction d&rsquo;affectation peut faire deux
+variables égales, mais ils ne doivent pas rester comme ça:</p>
+<pre><code class="python">&gt;&gt;&gt; a = 5
+&gt;&gt;&gt; b = a    # a and b are now equal
+&gt;&gt;&gt; a = 3    # a and b are no longer equal
+&gt;&gt;&gt; b
+5
+</code></pre>
+
+<p>La troisième ligne change la valeur de a mais ne change pas la valeur de b, donc elles ne sont pas
+plus égal
+La réaffectation des variables est souvent utile, mais vous devez l&rsquo;utiliser avec prudence. Si les valeurs des
+variables changent fréquemment, cela peut rendre le code difficile à lire et à déboguer.</p>
+<p><img alt="fig7.1" src="assets/tp7.1.png"></p>
+<p>Figure 7.1: Diagramme d&rsquo;état.</p>
+<h2>7.2 Mise à jour des variables</h2>
+<p>Un type courant de réaffectation est une mise à jour, où la nouvelle valeur de la variable dépend
+sur l&rsquo;ancien</p>
+<pre><code class="python">&gt;&gt;&gt; x = x + 1
+</code></pre>
+
+<p>Cela signifie &ldquo;obtenir la valeur actuelle de x, ajouter un, puis mettre à jour x avec la nouvelle valeur.&rdquo;
+Si vous essayez de mettre à jour une variable qui n’existe pas, vous obtenez une erreur, car Python évalue
+le côté droit avant d&rsquo;assigner une valeur à x:</p>
+<pre><code class="python">&gt;&gt;&gt; x = x + 1
+NameError: name 'x' is not defined
+</code></pre>
+
+<p>Avant de pouvoir mettre à jour une variable, vous devez l&rsquo;initialiser, généralement avec une affectation simple:</p>
+<pre><code class="python">&gt;&gt;&gt; x = 0
+&gt;&gt;&gt; x = x + 1
+</code></pre>
+
+<p>La mise à jour d&rsquo;une variable en ajoutant 1 est appelée un incrément; soustraire 1 est appelé décrément.</p>
+<h2>7.3 La boucle while</h2>
+<p>Les ordinateurs sont souvent utilisés pour automatiser des tâches répétitives. Répéter des tâches identiques ou similaires
+sans faire d&rsquo;erreurs est quelque chose que les ordinateurs font bien et que les gens font mal. Dans un
+programme informatique, la répétition est aussi appelée itération.
+Nous avons déjà vu deux fonctions, countdown et print_n, qui itèrent en utilisant la récursivité.
+Comme l&rsquo;itération est si courante, Python fournit des fonctionnalités de langage pour le rendre plus facile. Un
+est la déclaration for que nous avons vue à la section 4.2. Nous y reviendrons plus tard.
+Une autre est la boucle while. Voici une version du compte à rebours qui utilise une instruction while:</p>
+<pre><code class="python">def countdown(n):
+    while n &gt; 0:
+        print(n)
+        n = n - 1
+    print('Blastoff!')
+</code></pre>
+
+<p>Vous pouvez presque lire la déclaration while comme si c&rsquo;était l&rsquo;anglais. Cela signifie que &ldquo;Alors que n est plus grand
+que 0, affiche la valeur de n puis décrémente n. Lorsque vous arrivez à 0, affichez le mot
+blastoff&rdquo;</p>
+<p>Plus formellement, voici le déroulement de l’exécution:
+1. Déterminez si la condition est vraie ou fausse.
+2. Si la valeur est false, quittez l&rsquo;instruction while et continuez l&rsquo;exécution à l&rsquo;instruction suivante.
+3. Si la condition est vraie, lancez le corps et retournez à l&rsquo;étape 1.</p>
+<p>Ce type de flux est appelé une boucle car la troisième étape est bouclée vers le haut.
+Le corps de la boucle devrait changer la valeur d&rsquo;une ou plusieurs variables pour que la condition
+devient finalement faux et la boucle se termine. Sinon, la boucle se répètera pour toujours,
+qui s&rsquo;appelle une boucle infinie. Une source d&rsquo;amusement sans fin pour les informaticiens
+est l&rsquo;observation que les instructions sur le shampooing, &ldquo;Lather, rinse, repeat&rdquo;, est une boucle
+infinie.
+Dans le cas du compte à rebours, on peut prouver que la boucle se termine: si n est zéro ou négatif, le
+boucle ne fonctionne jamais. Sinon, n diminue chaque fois à travers la boucle, donc finalement nous
+doivent arriver à 0.
+Pour d&rsquo;autres boucles, ce n&rsquo;est pas si facile à dire. Par exemple:</p>
+<pre><code class="python">def sequence(n):
+    while n != 1:
+        print(n)
+        if n % 2 == 0:        # n is even
+            n = n / 2
+        else:                 # n is odd
+            n = n * 3 + 1
+</code></pre>
+
+<p>La condition pour cette boucle est n! = 1, donc la boucle continuera jusqu&rsquo;à ce que n soit 1, ce qui rend
+la condition fausse.
+À chaque fois dans la boucle, le programme affiche la valeur de n et vérifie ensuite si
+c&rsquo;est pair ou impair. Si c&rsquo;est pair, n est divisé par 2. S&rsquo;il est impair, la valeur de n est remplacée par
+n * 3 + 1. Par exemple, si l&rsquo;argument passé à la séquence est 3, les valeurs résultantes de n
+sont 3, 10, 5, 16, 8, 4, 2, 1.
+Comme n augmente et diminue parfois, il n’ya pas de preuve évidente que n
+atteindra 1, ou que le programme se termine. Pour certaines valeurs particulières de n, nous pouvons prouver
+la términaison. Par exemple, si la valeur de départ est une puissance de deux, n sera pair à
+chaque fois dans la boucle jusqu&rsquo;à ce qu&rsquo;il atteigne 1. L&rsquo;exemple précédent se termine par une telle séquence,
+à partir de 16.
+La question difficile est de savoir si nous pouvons prouver que ce programme se termine pour toutes les valeurs positives de n. Jusqu&rsquo;à présent, personne n&rsquo;a été capable de le prouver ou de le réfuter! Voyez <a href="http://en.wikipedia.org/wiki/Collatz_conjecture.">collatz conjecture</a>)</p>
+<p>En guise d’exercice, réécrivez la fonction print_n de la section 5.8 en utilisant l’itération au lieu de
+récursivité.</p>
+<h2>7.4 Break</h2>
+<p>Parfois, vous ne savez pas qu&rsquo;il est temps de terminer une boucle jusqu&rsquo;à ce que vous atteigniez la moitié du corps.
+Dans ce cas, vous pouvez utiliser l&rsquo;instruction break pour sortir de la boucle.
+Par exemple, supposons que vous souhaitiez saisir les informations de l&rsquo;utilisateur jusqu&rsquo;à ce qu&rsquo;elles soient saisies. Vous pourriez
+écrire:</p>
+<pre><code class="python">while True:
+    line = input('&gt; ')
+    if line == 'done':
+        break
+    print(line)
+
+print('Done!')
+</code></pre>
+
+<p>La condition de la boucle est True, ce qui est toujours vrai, donc la boucle s&rsquo;exécute jusqu&rsquo;à ce qu&rsquo;elle atteigne la déclaration de
+rupture.
+À chaque fois, l&rsquo;utilisateur est invité à choisir une option. Si l&rsquo;utilisateur type &lsquo;done&rsquo; (terminé), l&rsquo;
+instruction break quitte la boucle. Sinon, le programme reimprime ce que l&rsquo;utilisateur type et
+retourne au sommet de la boucle. Voici un exemple:</p>
+<pre><code>&gt; not done
+not done
+&gt; done
+Done!
+</code></pre>
+
+<p>Cette façon d&rsquo;écrire des boucles est commune car vous pouvez vérifier la condition n&rsquo;importe où
+dans la boucle (pas seulement en haut) et vous pouvez exprimer la condition d&rsquo;arrêt de manière affirmative (&ldquo;arretez
+quand cela se produit &ldquo;) plutôt que négativement (&rdquo; continuez jusqu&rsquo;à ce que cela arrive &ldquo;).</p>
+<h2>7.5 Racines carrées</h2>
+<p>Les boucles sont souvent utilisées dans les programmes qui calculent des résultats numériques en commençant par une réponse approximative et en l&rsquo;améliorant de manière itérative.
+Par exemple, une méthode de calcul des racines carrées est la méthode de Newton. Supposons que vous
+voulez savoir la racine carrée de a. Si vous commencez avec presque n&rsquo;importe quelle estimation, x, vous pouvez calculer une meilleure estimation avec la formule suivante:</p>
+<pre><code>y = (x + a/x) / 2
+</code></pre>
+
+<p>Par exemple, si a est 4 et que x est 3:</p>
+<pre><code class="python">&gt;&gt;&gt; a = 4
+&gt;&gt;&gt; x = 3
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.16666666667
+</code></pre>
+
+<p>Le résultat est plus proche de la réponse correcte (4 = 2). Si nous répétons le processus avec le nouveau
+estimation, il devient encore plus proche:</p>
+<pre><code class="python">&gt;&gt;&gt; x = y
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.00641025641
+</code></pre>
+
+<p>Après quelques mises à jour supplémentaires, l&rsquo;estimation est presque exacte:</p>
+<pre><code class="python">&gt;&gt;&gt; x = y
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.00001024003
+&gt;&gt;&gt; x = y
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.00000000003
+</code></pre>
+
+<p>En général, nous ne savons pas combien de temps il faut pour arriver à la bonne réponse,
+mais on sait quand on arrive là-bas car le devis cesse de changer:</p>
+<pre><code class="python">&gt;&gt;&gt; x = y
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.0
+&gt;&gt;&gt; x = y
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.0
+</code></pre>
+
+<p>Lorsque y == x, on peut s&rsquo;arrêter. Voici une boucle qui commence par une estimation initiale, x, et l&rsquo;améliore jusqu&rsquo;à ce qu&rsquo;elle cesse de changer:</p>
+<pre><code class="python">while True:
+    print(x)
+    y = (x + a/x) / 2
+    if y == x:
+        break
+    x = y
+</code></pre>
+
+<p>Pour la plupart des valeurs de a, cela fonctionne bien, mais en général, il est dangereux de tester l&rsquo;égalité des flottants.
+Les valeurs à virgule flottante sont approximativement correctes: la plupart des nombres rationnels, comme 1/3, et
+les nombres irrationnels, comme 2, ne peuvent pas être représentés exactement avec un flottant.
+Plutôt que de vérifier si x et y sont exactement égaux, il est préférable d&rsquo;utiliser la fonction intégrée abs pour calculer la valeur absolue, ou l&rsquo;ampleur, de la différence entre eux:</p>
+<p>if abs(y-x) &lt; epsilon:
+break
+Où epsilon a une valeur comme 0.0000001 qui détermine la proximité est assez proche.</p>
+<h2>7.6 Algorithmes</h2>
+<p>La méthode de Newton est un exemple d&rsquo;algorithme: c&rsquo;est un processus mécanique pour résoudre un
+catégorie de problèmes (dans ce cas, calcul des racines carrées).n</p>
+<p>Pour comprendre ce qu&rsquo;est un algorithme, il peut être utile de commencer par quelque chose qui n&rsquo;est pas un
+algorithme. Lorsque vous avez appris à multiplier des nombres à un chiffre, vous avez probablement mémorisé
+la table de multiplication. En effet, vous avez mémorisé 100 solutions spécifiques. Ce genre de
+connaissance n&rsquo;est pas algorithmique.
+Mais si vous étiez &ldquo;paresseux&rdquo;, vous avez peut-être appris quelques astuces. Par exemple, pour trouver le
+produit de n et 9, vous pouvez écrire n-1 comme premier chiffre et 10-n comme deuxième chiffre.
+Cette astuce est une solution générale pour multiplier un nombre à un chiffre par 9. C&rsquo;est un
+algorithme!
+De même, les techniques que vous avez apprises pour l&rsquo;addition avec transport, la soustraction avec emprunt et la division longue sont toutes des algorithmes. L&rsquo;une des caractéristiques des algorithmes est que
+ils n&rsquo;ont besoin d&rsquo;aucune intelligence pour effectuer. Ce sont des processus mécaniques où
+chaque étape découle de la dernière selon un ensemble simple de règles.
+L&rsquo;exécution d&rsquo;algorithmes est ennuyeuse, mais leur conception est intéressante, un défi intellectuel et constitue un élément central de l&rsquo;informatique.
+Certaines des choses que les gens font naturellement, sans difficulté, ni pensée consciente, sont:
+le plus difficile à exprimer algorithmiquement. Comprendre le langage naturel est un bon exemple.
+Nous le faisons tous, mais jusqu’à présent, personne n’a pu expliquer comment nous le faisons, du moins pas sous la forme
+d&rsquo;un algorithme.</p>
+<h2>7.7 Le débogage</h2>
+<p>Lorsque vous commencez à écrire de plus gros programmes, vous risquez de devoir passer plus de temps à déboguer. Plus de code signifie plus de chances de faire une erreur et plus d&rsquo;endroits où les bogues peuvent se cacher.
+Un moyen de réduire votre temps de débogage est le &ldquo;débogage par bissection&rdquo;. Par exemple, s&rsquo;il y a
+sont 100 lignes dans votre programme et vous les vérifiez un par un, cela prendrait 100 étapes.
+Au lieu de cela, essayez de briser le problème en deux. Regardez au milieu du programme, ou à proximité, pour
+une valeur intermédiaire que vous pouvez vérifier. Ajouter un relevé d&rsquo;impression (ou autre chose qui a un
+effet vérifiable) et exécuter le programme.
+Si la vérification à mi-parcours est incorrecte, il doit y avoir un problème dans la première moitié du programme.
+Si c&rsquo;est correct, le problème est dans la seconde moitié.
+Chaque fois que vous effectuez une vérification comme celle-ci, vous divisez par deux le nombre de lignes à rechercher.
+Après six étapes (moins de 100), vous seriez réduit à une ou deux lignes de code,
+au moins en théorie.
+En pratique, il n&rsquo;est pas toujours évident de savoir ce que le &ldquo;milieu du programme&rdquo; est et n&rsquo;est pas toujours possible de vérifier. Cela n&rsquo;a aucun sens de compter les lignes et de trouver le point médian exact. Au lieu,
+penser à des endroits du programme où il peut y avoir des erreurs et des endroits faciles à
+mettre un checkpoint. Ensuite, choisissez un endroit où vous pensez que les chances sont à peu près les mêmes
+le bug est avant ou après la vérification.</p>
+<h2>7.8 Glossaire</h2>
+<ul>
+<li>
+<p><strong>réaffectation:</strong> attribuer une nouvelle valeur à une variable qui existe déjà.</p>
+</li>
+<li>
+<p><strong>update:</strong> Affectation où la nouvelle valeur de la variable dépend de l&rsquo;ancienne.</p>
+</li>
+<li>
+<p><strong>initialization:</strong> une affectation qui donne une valeur initiale à une variable qui sera mise à jour.</p>
+</li>
+<li>
+<p><strong>increment:</strong> une mise à jour qui augmente la valeur d&rsquo;une variable (souvent par une seule).</p>
+</li>
+<li>
+<p><strong>décrément:</strong> une mise à jour qui diminue la valeur d&rsquo;une variable.</p>
+</li>
+<li>
+<p><strong>iteration:</strong> exécution répétée d&rsquo;un ensemble d&rsquo;instructions à l&rsquo;aide d&rsquo;un appel de fonction récursif
+ou une boucle.</p>
+</li>
+<li>
+<p><strong>boucle infinie:</strong> boucle dans laquelle la condition de terminaison n&rsquo;est jamais satisfaite.</p>
+</li>
+<li>
+<p><strong>algorithme:</strong> un processus général pour résoudre une catégorie de problèmes.</p>
+</li>
+</ul>
+<h2>7.9 Des exercices</h2>
+<p><strong>Exercice 1</strong></p>
+<p><em>Copiez la boucle de la section 7.5 et encapsulez-la dans une fonction appelée mysqrt
+prend un comme paramètre, choisit une valeur raisonnable de x et renvoie une estimation de la racine carrée de
+une.
+Pour le tester, écrivez une fonction nommée test_square_root qui imprime un tableau comme celui-ci:</em></p>
+<pre><code>a   mysqrt(a)     math.sqrt(a)  diff
+-   ---------     ------------  ----
+1.0 1.0           1.0           0.0
+2.0 1.41421356237 1.41421356237 2.22044604925e-16
+3.0 1.73205080757 1.73205080757 0.0
+4.0 2.0           2.0           0.0
+5.0 2.2360679775  2.2360679775  0.0
+6.0 2.44948974278 2.44948974278 0.0
+7.0 2.64575131106 2.64575131106 0.0
+8.0 2.82842712475 2.82842712475 4.4408920985e-16
+9.0 3.0           3.0           0.0
+</code></pre>
+
+<p><em>La première colonne est un nombre, a; la deuxième colonne est la racine carrée d&rsquo;un calcul avec mysqrt;
+la troisième colonne est la racine carrée calculée par math.sqrt; la quatrième colonne est la valeur absolue
+de la différence entre les deux estimations.</em></p>
+<p><strong>Exercice 2</strong> </p>
+<p>La fonction intégrée eval prend une chaîne et l&rsquo;évalue à l&rsquo;aide de l&rsquo;interpréteur Python. Par exemple:</p>
+<pre><code class="python">&gt;&gt;&gt; eval('1 + 2 * 3')
+7
+&gt;&gt;&gt; import math
+&gt;&gt;&gt; eval('math.sqrt(5)')
+2.2360679774997898
+&gt;&gt;&gt; eval('type(math.pi)')
+&lt;class 'float'&gt;
+</code></pre>
+
+<p><em>Ecrire une fonction appelée eval_loop qui invite de manière itérative l&rsquo;utilisateur, prend l&rsquo;entrée résultante et
+l&rsquo;évalue en utilisant eval et imprime le résultat.
+Il doit continuer jusqu&rsquo;à ce que l&rsquo;utilisateur entre &ldquo;done&rdquo;, puis renvoyer la valeur de la dernière expression
+évalué.</em></p>
+<p><strong>Exercice 3</strong></p>
+<p><em>Le mathématicien Srinivasa Ramanujan a trouvé une série infinie qui peut être utilisée pour
+générer une approximation numérique de 1 / π:</em></p>
+<pre><code>                  ∞
+1/π = 2√2 / 9801  ∑   (4k)!(1103+26390k) / (k!)4 3964k
+                 k=0  
+</code></pre>
+
+<p><em>Ecrivez une fonction appelée estimation_pi qui utilise cette formule pour calculer et renvoyer une estimation de
+π. Il devrait utiliser une boucle while pour calculer les termes de la sommation jusqu&rsquo;à ce que le dernier terme soit plus petit que
+1e-15 (qui est la notation Python pour 10-15). Vous pouvez vérifier le résultat en le comparant à math.pi.
+Solution: <a href="http://thinkpython2.com/code/pi.py">http://thinkpython2.com/code/pi.py</a></em></p>
 
 <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
