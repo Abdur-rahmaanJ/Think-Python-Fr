@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/atelier-forest-light.min.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="container">
+
+<h1>Chapitre 7<a name="ch7"></a></h1>
+<h2>Itération</h2>
+<p><br><br>
+Ce chapitre concerne l&rsquo;itération, qui permet d&rsquo;exécuter un bloc d&rsquo;instructions à plusieurs reprises.
+Nous avons vu une sorte d&rsquo;itération, en utilisant la récursivité, dans la section 5.8. Nous avons aussi vu un autre type, en utilisant un
+boucle for, dans la section 4.2. Dans ce chapitre, nous verrons un autre type, en utilisant une instruction while.
+Mais je veux d&rsquo;abord en dire un peu plus sur l&rsquo;affectation de variables.</p>
+<h2>7.1 Réaffectation</h2>
+<p>Comme vous avez pu le constater, il est légal de confier plusieurs affectations à la même
+variable. Une nouvelle affectation fait qu&rsquo;une variable existante se réfère à une nouvelle valeur (et arrête
+de faire référence à l&rsquo;ancienne valeur).</p>
+<pre><code class="python">&gt;&gt;&gt; x = 5
+&gt;&gt;&gt; x
+5
+&gt;&gt;&gt; x = 7
+&gt;&gt;&gt; x
+7
+</code></pre>
+
+<p>La première fois que nous affichons x, sa valeur est 5; la deuxième fois, sa valeur est 7.</p>
+<p>Le dessin 7.1 montre à quoi ressemble la réaffectation dans un diagramme d&rsquo;état.</p>
+<p>À ce stade, je veux aborder une source commune de confusion. Parce que Python utilise le
+signe égal (=) pour l&rsquo;affectation, il est tentant d&rsquo;interpréter un énoncé comme a = b comme une proposition mathématique d&rsquo;égalité; c&rsquo;est-à-dire que a et b sont égaux. Mais cette interprétation est fausse.
+Tout d&rsquo;abord, l&rsquo;égalité est une relation symétrique et l&rsquo;affectation ne l&rsquo;est pas. Par exemple, en mathématiques, si a = 7 alors 7 = a. Mais en Python, l&rsquo;instruction a = 7 est légale de 7 = a
+est faux.
+De plus, en mathématiques, une proposition d’égalité est vraie ou faux pour tous les temps. Si a =
+b maintenant, alors b sera toujours égal à a. En Python, une instruction d&rsquo;affectation peut faire deux
+variables égales, mais ils ne doivent pas rester comme ça:</p>
+<pre><code class="python">&gt;&gt;&gt; a = 5
+&gt;&gt;&gt; b = a    # a and b are now equal
+&gt;&gt;&gt; a = 3    # a and b are no longer equal
+&gt;&gt;&gt; b
+5
+</code></pre>
+
+<p>La troisième ligne change la valeur de a mais ne change pas la valeur de b, donc elles ne sont pas
+plus égal
+La réaffectation des variables est souvent utile, mais vous devez l&rsquo;utiliser avec prudence. Si les valeurs des
+variables changent fréquemment, cela peut rendre le code difficile à lire et à déboguer.</p>
+<p><img alt="fig7.1" src="assets/tp7.1.png"></p>
+<p>Figure 7.1: Diagramme d&rsquo;état.</p>
+<h2>7.2 Mise à jour des variables</h2>
+<p>Un type courant de réaffectation est une mise à jour, où la nouvelle valeur de la variable dépend
+sur l&rsquo;ancien</p>
+<pre><code class="python">&gt;&gt;&gt; x = x + 1
+</code></pre>
+
+<p>Cela signifie &ldquo;obtenir la valeur actuelle de x, ajouter un, puis mettre à jour x avec la nouvelle valeur.&rdquo;
+Si vous essayez de mettre à jour une variable qui n’existe pas, vous obtenez une erreur, car Python évalue
+le côté droit avant d&rsquo;assigner une valeur à x:</p>
+<pre><code class="python">&gt;&gt;&gt; x = x + 1
+NameError: name 'x' is not defined
+</code></pre>
+
+<p>Avant de pouvoir mettre à jour une variable, vous devez l&rsquo;initialiser, généralement avec une affectation simple:</p>
+<pre><code class="python">&gt;&gt;&gt; x = 0
+&gt;&gt;&gt; x = x + 1
+</code></pre>
+
+<p>La mise à jour d&rsquo;une variable en ajoutant 1 est appelée un incrément; soustraire 1 est appelé décrément.</p>
+<h2>7.3 La boucle while</h2>
+<p>Les ordinateurs sont souvent utilisés pour automatiser des tâches répétitives. Répéter des tâches identiques ou similaires
+sans faire d&rsquo;erreurs est quelque chose que les ordinateurs font bien et que les gens font mal. Dans un
+programme informatique, la répétition est aussi appelée itération.
+Nous avons déjà vu deux fonctions, countdown et print_n, qui itèrent en utilisant la récursivité.
+Comme l&rsquo;itération est si courante, Python fournit des fonctionnalités de langage pour le rendre plus facile. Un
+est la déclaration for que nous avons vue à la section 4.2. Nous y reviendrons plus tard.
+Une autre est la boucle while. Voici une version du compte à rebours qui utilise une instruction while:</p>
+<pre><code class="python">def countdown(n):
+    while n &gt; 0:
+        print(n)
+        n = n - 1
+    print('Blastoff!')
+</code></pre>
+
+<p>Vous pouvez presque lire la déclaration while comme si c&rsquo;était l&rsquo;anglais. Cela signifie que &ldquo;Alors que n est plus grand
+que 0, affiche la valeur de n puis décrémente n. Lorsque vous arrivez à 0, affichez le mot
+blastoff&rdquo;</p>
+<p>Plus formellement, voici le déroulement de l’exécution:
+1. Déterminez si la condition est vraie ou fausse.
+2. Si la valeur est false, quittez l&rsquo;instruction while et continuez l&rsquo;exécution à l&rsquo;instruction suivante.
+3. Si la condition est vraie, lancez le corps et retournez à l&rsquo;étape 1.</p>
+<p>Ce type de flux est appelé une boucle car la troisième étape est bouclée vers le haut.
+Le corps de la boucle devrait changer la valeur d&rsquo;une ou plusieurs variables pour que la condition
+devient finalement faux et la boucle se termine. Sinon, la boucle se répètera pour toujours,
+qui s&rsquo;appelle une boucle infinie. Une source d&rsquo;amusement sans fin pour les informaticiens
+est l&rsquo;observation que les instructions sur le shampooing, &ldquo;Lather, rinse, repeat&rdquo;, est une boucle
+infinie.
+Dans le cas du compte à rebours, on peut prouver que la boucle se termine: si n est zéro ou négatif, le
+boucle ne fonctionne jamais. Sinon, n diminue chaque fois à travers la boucle, donc finalement nous
+doivent arriver à 0.
+Pour d&rsquo;autres boucles, ce n&rsquo;est pas si facile à dire. Par exemple:</p>
+<pre><code class="python">def sequence(n):
+    while n != 1:
+        print(n)
+        if n % 2 == 0:        # n is even
+            n = n / 2
+        else:                 # n is odd
+            n = n * 3 + 1
+</code></pre>
+
+<p>La condition pour cette boucle est n! = 1, donc la boucle continuera jusqu&rsquo;à ce que n soit 1, ce qui rend
+la condition fausse.
+À chaque fois dans la boucle, le programme affiche la valeur de n et vérifie ensuite si
+c&rsquo;est pair ou impair. Si c&rsquo;est pair, n est divisé par 2. S&rsquo;il est impair, la valeur de n est remplacée par
+n * 3 + 1. Par exemple, si l&rsquo;argument passé à la séquence est 3, les valeurs résultantes de n
+sont 3, 10, 5, 16, 8, 4, 2, 1.
+Comme n augmente et diminue parfois, il n’ya pas de preuve évidente que n
+atteindra 1, ou que le programme se termine. Pour certaines valeurs particulières de n, nous pouvons prouver
+la términaison. Par exemple, si la valeur de départ est une puissance de deux, n sera pair à
+chaque fois dans la boucle jusqu&rsquo;à ce qu&rsquo;il atteigne 1. L&rsquo;exemple précédent se termine par une telle séquence,
+à partir de 16.
+La question difficile est de savoir si nous pouvons prouver que ce programme se termine pour toutes les valeurs positives de n. Jusqu&rsquo;à présent, personne n&rsquo;a été capable de le prouver ou de le réfuter! Voyez <a href="http://en.wikipedia.org/wiki/Collatz_conjecture.">collatz conjecture</a>)</p>
+<p>En guise d’exercice, réécrivez la fonction print_n de la section 5.8 en utilisant l’itération au lieu de
+récursivité.</p>
+<h2>7.4 Break</h2>
+<p>Parfois, vous ne savez pas qu&rsquo;il est temps de terminer une boucle jusqu&rsquo;à ce que vous atteigniez la moitié du corps.
+Dans ce cas, vous pouvez utiliser l&rsquo;instruction break pour sortir de la boucle.
+Par exemple, supposons que vous souhaitiez saisir les informations de l&rsquo;utilisateur jusqu&rsquo;à ce qu&rsquo;elles soient saisies. Vous pourriez
+écrire:</p>
+<pre><code class="python">while True:
+    line = input('&gt; ')
+    if line == 'done':
+        break
+    print(line)
+
+print('Done!')
+</code></pre>
+
+<p>La condition de la boucle est True, ce qui est toujours vrai, donc la boucle s&rsquo;exécute jusqu&rsquo;à ce qu&rsquo;elle atteigne la déclaration de
+rupture.
+À chaque fois, l&rsquo;utilisateur est invité à choisir une option. Si l&rsquo;utilisateur type &lsquo;done&rsquo; (terminé), l&rsquo;
+instruction break quitte la boucle. Sinon, le programme reimprime ce que l&rsquo;utilisateur type et
+retourne au sommet de la boucle. Voici un exemple:</p>
+<pre><code>&gt; not done
+not done
+&gt; done
+Done!
+</code></pre>
+
+<p>Cette façon d&rsquo;écrire des boucles est commune car vous pouvez vérifier la condition n&rsquo;importe où
+dans la boucle (pas seulement en haut) et vous pouvez exprimer la condition d&rsquo;arrêt de manière affirmative (&ldquo;arretez
+quand cela se produit &ldquo;) plutôt que négativement (&rdquo; continuez jusqu&rsquo;à ce que cela arrive &ldquo;).</p>
+<h2>7.5 Racines carrées</h2>
+<p>Les boucles sont souvent utilisées dans les programmes qui calculent des résultats numériques en commençant par une réponse approximative et en l&rsquo;améliorant de manière itérative.
+Par exemple, une méthode de calcul des racines carrées est la méthode de Newton. Supposons que vous
+voulez savoir la racine carrée de a. Si vous commencez avec presque n&rsquo;importe quelle estimation, x, vous pouvez calculer une meilleure estimation avec la formule suivante:</p>
+<pre><code>y = (x + a/x) / 2
+</code></pre>
+
+<p>Par exemple, si a est 4 et que x est 3:</p>
+<pre><code class="python">&gt;&gt;&gt; a = 4
+&gt;&gt;&gt; x = 3
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.16666666667
+</code></pre>
+
+<p>Le résultat est plus proche de la réponse correcte (4 = 2). Si nous répétons le processus avec le nouveau
+estimation, il devient encore plus proche:</p>
+<pre><code class="python">&gt;&gt;&gt; x = y
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.00641025641
+</code></pre>
+
+<p>Après quelques mises à jour supplémentaires, l&rsquo;estimation est presque exacte:</p>
+<pre><code class="python">&gt;&gt;&gt; x = y
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.00001024003
+&gt;&gt;&gt; x = y
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.00000000003
+</code></pre>
+
+<p>En général, nous ne savons pas combien de temps il faut pour arriver à la bonne réponse,
+mais on sait quand on arrive là-bas car le devis cesse de changer:</p>
+<pre><code class="python">&gt;&gt;&gt; x = y
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.0
+&gt;&gt;&gt; x = y
+&gt;&gt;&gt; y = (x + a / x) / 2
+&gt;&gt;&gt; y
+2.0
+</code></pre>
+
+<p>Lorsque y == x, on peut s&rsquo;arrêter. Voici une boucle qui commence par une estimation initiale, x, et l&rsquo;améliore jusqu&rsquo;à ce qu&rsquo;elle cesse de changer:</p>
+<pre><code class="python">while True:
+    print(x)
+    y = (x + a/x) / 2
+    if y == x:
+        break
+    x = y
+</code></pre>
+
+<p>Pour la plupart des valeurs de a, cela fonctionne bien, mais en général, il est dangereux de tester l&rsquo;égalité des flottants.
+Les valeurs à virgule flottante sont approximativement correctes: la plupart des nombres rationnels, comme 1/3, et
+les nombres irrationnels, comme 2, ne peuvent pas être représentés exactement avec un flottant.
+Plutôt que de vérifier si x et y sont exactement égaux, il est préférable d&rsquo;utiliser la fonction intégrée abs pour calculer la valeur absolue, ou l&rsquo;ampleur, de la différence entre eux:</p>
+<p>if abs(y-x) &lt; epsilon:
+break
+Où epsilon a une valeur comme 0.0000001 qui détermine la proximité est assez proche.</p>
+<h2>7.6 Algorithmes</h2>
+<p>La méthode de Newton est un exemple d&rsquo;algorithme: c&rsquo;est un processus mécanique pour résoudre un
+catégorie de problèmes (dans ce cas, calcul des racines carrées).n</p>
+<p>Pour comprendre ce qu&rsquo;est un algorithme, il peut être utile de commencer par quelque chose qui n&rsquo;est pas un
+algorithme. Lorsque vous avez appris à multiplier des nombres à un chiffre, vous avez probablement mémorisé
+la table de multiplication. En effet, vous avez mémorisé 100 solutions spécifiques. Ce genre de
+connaissance n&rsquo;est pas algorithmique.
+Mais si vous étiez &ldquo;paresseux&rdquo;, vous avez peut-être appris quelques astuces. Par exemple, pour trouver le
+produit de n et 9, vous pouvez écrire n-1 comme premier chiffre et 10-n comme deuxième chiffre.
+Cette astuce est une solution générale pour multiplier un nombre à un chiffre par 9. C&rsquo;est un
+algorithme!
+De même, les techniques que vous avez apprises pour l&rsquo;addition avec transport, la soustraction avec emprunt et la division longue sont toutes des algorithmes. L&rsquo;une des caractéristiques des algorithmes est que
+ils n&rsquo;ont besoin d&rsquo;aucune intelligence pour effectuer. Ce sont des processus mécaniques où
+chaque étape découle de la dernière selon un ensemble simple de règles.
+L&rsquo;exécution d&rsquo;algorithmes est ennuyeuse, mais leur conception est intéressante, un défi intellectuel et constitue un élément central de l&rsquo;informatique.
+Certaines des choses que les gens font naturellement, sans difficulté, ni pensée consciente, sont:
+le plus difficile à exprimer algorithmiquement. Comprendre le langage naturel est un bon exemple.
+Nous le faisons tous, mais jusqu’à présent, personne n’a pu expliquer comment nous le faisons, du moins pas sous la forme
+d&rsquo;un algorithme.</p>
+<h2>7.7 Le débogage</h2>
+<p>Lorsque vous commencez à écrire de plus gros programmes, vous risquez de devoir passer plus de temps à déboguer. Plus de code signifie plus de chances de faire une erreur et plus d&rsquo;endroits où les bogues peuvent se cacher.
+Un moyen de réduire votre temps de débogage est le &ldquo;débogage par bissection&rdquo;. Par exemple, s&rsquo;il y a
+sont 100 lignes dans votre programme et vous les vérifiez un par un, cela prendrait 100 étapes.
+Au lieu de cela, essayez de briser le problème en deux. Regardez au milieu du programme, ou à proximité, pour
+une valeur intermédiaire que vous pouvez vérifier. Ajouter un relevé d&rsquo;impression (ou autre chose qui a un
+effet vérifiable) et exécuter le programme.
+Si la vérification à mi-parcours est incorrecte, il doit y avoir un problème dans la première moitié du programme.
+Si c&rsquo;est correct, le problème est dans la seconde moitié.
+Chaque fois que vous effectuez une vérification comme celle-ci, vous divisez par deux le nombre de lignes à rechercher.
+Après six étapes (moins de 100), vous seriez réduit à une ou deux lignes de code,
+au moins en théorie.
+En pratique, il n&rsquo;est pas toujours évident de savoir ce que le &ldquo;milieu du programme&rdquo; est et n&rsquo;est pas toujours possible de vérifier. Cela n&rsquo;a aucun sens de compter les lignes et de trouver le point médian exact. Au lieu,
+penser à des endroits du programme où il peut y avoir des erreurs et des endroits faciles à
+mettre un checkpoint. Ensuite, choisissez un endroit où vous pensez que les chances sont à peu près les mêmes
+le bug est avant ou après la vérification.</p>
+<h2>7.8 Glossaire</h2>
+<ul>
+<li>
+<p><strong>réaffectation:</strong> attribuer une nouvelle valeur à une variable qui existe déjà.</p>
+</li>
+<li>
+<p><strong>update:</strong> Affectation où la nouvelle valeur de la variable dépend de l&rsquo;ancienne.</p>
+</li>
+<li>
+<p><strong>initialization:</strong> une affectation qui donne une valeur initiale à une variable qui sera mise à jour.</p>
+</li>
+<li>
+<p><strong>increment:</strong> une mise à jour qui augmente la valeur d&rsquo;une variable (souvent par une seule).</p>
+</li>
+<li>
+<p><strong>décrément:</strong> une mise à jour qui diminue la valeur d&rsquo;une variable.</p>
+</li>
+<li>
+<p><strong>iteration:</strong> exécution répétée d&rsquo;un ensemble d&rsquo;instructions à l&rsquo;aide d&rsquo;un appel de fonction récursif
+ou une boucle.</p>
+</li>
+<li>
+<p><strong>boucle infinie:</strong> boucle dans laquelle la condition de terminaison n&rsquo;est jamais satisfaite.</p>
+</li>
+<li>
+<p><strong>algorithme:</strong> un processus général pour résoudre une catégorie de problèmes.</p>
+</li>
+</ul>
+<h2>7.9 Des exercices</h2>
+<p><strong>Exercice 1</strong></p>
+<p><em>Copiez la boucle de la section 7.5 et encapsulez-la dans une fonction appelée mysqrt
+prend un comme paramètre, choisit une valeur raisonnable de x et renvoie une estimation de la racine carrée de
+une.
+Pour le tester, écrivez une fonction nommée test_square_root qui imprime un tableau comme celui-ci:</em></p>
+<pre><code>a   mysqrt(a)     math.sqrt(a)  diff
+-   ---------     ------------  ----
+1.0 1.0           1.0           0.0
+2.0 1.41421356237 1.41421356237 2.22044604925e-16
+3.0 1.73205080757 1.73205080757 0.0
+4.0 2.0           2.0           0.0
+5.0 2.2360679775  2.2360679775  0.0
+6.0 2.44948974278 2.44948974278 0.0
+7.0 2.64575131106 2.64575131106 0.0
+8.0 2.82842712475 2.82842712475 4.4408920985e-16
+9.0 3.0           3.0           0.0
+</code></pre>
+
+<p>La première colonne est un nombre, a; la deuxième colonne est la racine carrée d&rsquo;un calcul avec mysqrt;
+la troisième colonne est la racine carrée calculée par math.sqrt; la quatrième colonne est la valeur absolue
+de la différence entre les deux estimations.</p>
+<p><strong>Exercice 2</strong> </p>
+<p>La fonction intégrée eval prend une chaîne et l&rsquo;évalue à l&rsquo;aide de l&rsquo;interpréteur Python. Par exemple:</p>
+<pre><code class="python">&gt;&gt;&gt; eval('1 + 2 * 3')
+7
+&gt;&gt;&gt; import math
+&gt;&gt;&gt; eval('math.sqrt(5)')
+2.2360679774997898
+&gt;&gt;&gt; eval('type(math.pi)')
+&lt;class 'float'&gt;
+</code></pre>
+
+<p>Ecrire une fonction appelée eval_loop qui invite de manière itérative l&rsquo;utilisateur, prend l&rsquo;entrée résultante et
+l&rsquo;évalue en utilisant eval et imprime le résultat.
+Il doit continuer jusqu&rsquo;à ce que l&rsquo;utilisateur entre &ldquo;done&rdquo;, puis renvoyer la valeur de la dernière expression
+évalué.</p>
+<p><strong>Exercice 7.3.</strong></p>
+<p>Le mathématicien Srinivasa Ramanujan a trouvé une série infinie qui peut être utilisée pour
+générer une approximation numérique de 1 / π:</p>
+<pre><code>                  ∞
+1/π = 2√2 / 9801  ∑   (4k)!(1103+26390k) / (k!)4 3964k
+                 k=0  
+</code></pre>
+
+<p>Ecrivez une fonction appelée estimation_pi qui utilise cette formule pour calculer et renvoyer une estimation de
+π. Il devrait utiliser une boucle while pour calculer les termes de la sommation jusqu&rsquo;à ce que le dernier terme soit plus petit que
+1e-15 (qui est la notation Python pour 10-15). Vous pouvez vérifier le résultat en le comparant à math.pi.
+Solution: <a href="http://thinkpython2.com/code/pi.py">http://thinkpython2.com/code/pi.py</a></p>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</div>
+</body>
+</html>
