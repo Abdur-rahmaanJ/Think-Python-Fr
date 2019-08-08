@@ -2,7 +2,27 @@
 Official french translation of Think Python - How To Think Like A Computer Scientist
 
 # Contributing
-just push translated file in THINKPY/translated
+Translating from http://greenteapress.com/thinkpython2/html/index.html . To contribute, we need to 
+
+- reformat existing .txt to .md
+- translate the 3 sections of the preface (add them as .mds)
+
+See existing mds for conventions and styles namely
+
+use ```python
+
+for python codes
+
+at the begining of each chapter that's the md format
+
+```
+# Chapitre 4<a name="ch3"></a>
+
+## Cas d'étude: conception d'interface
+<br><br>
+```
+
+
 
 # Assignments
 ~~~
