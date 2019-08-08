@@ -2688,7 +2688,7 @@ ou une boucle.</p>
 <p><strong>algorithme:</strong> un processus général pour résoudre une catégorie de problèmes.</p>
 </li>
 </ul>
-<h2>7.9 Des exercices</h2>
+<h2>7.9 Exercices</h2>
 <p><strong>Exercice 1</strong></p>
 <p><em>Copiez la boucle de la section 7.5 et encapsulez-la dans une fonction appelée mysqrt
 prend un comme paramètre, choisit une valeur raisonnable de x et renvoie une estimation de la racine carrée de
@@ -2737,6 +2737,496 @@ générer une approximation numérique de 1 / π:</em></p>
 π. Il devrait utiliser une boucle while pour calculer les termes de la sommation jusqu&rsquo;à ce que le dernier terme soit plus petit que
 1e-15 (qui est la notation Python pour 10-15). Vous pouvez vérifier le résultat en le comparant à math.pi.
 Solution: <a href="http://thinkpython2.com/code/pi.py">http://thinkpython2.com/code/pi.py</a></em></p>
+<h1>Chapitre 8<a name="ch8"></a></h1>
+<h2>Les chaînes</h2>
+<p><br><br></p>
+<p>Les chaînes ne sont pas comme des entiers, des floats et des booléens. Une chaîne est une séquence, ce qui signifie qu&rsquo;elle est une collection ordonnée d&rsquo;autres valeurs. Dans ce chapitre, vous verrez comment accéder aux caractères qui constituent une chaîne, et vous apprendrez certaines des méthodes fournies par les chaînes.</p>
+<h2>8.1 Une chaîne est une séquence</h2>
+<p>Une chaîne est une séquence de caractères. Vous pouvez accéder aux personnages un par un avec le
+opérateur de support []:</p>
+<pre><code>&gt;&gt;&gt; fruit = 'banana'
+&gt;&gt;&gt; letter = fruit[1]
+</code></pre>
+
+<p>La deuxième instruction sélectionne le numéro 1 du fruit et l&rsquo;affecte à la lettre.
+L&rsquo;expression entre parenthèses s&rsquo;appelle un index. L&rsquo;index indique quel caractère dans le
+séquence vous voulez (d&rsquo;où le nom).
+Mais vous pourriez ne pas avoir ce que vous attendez:</p>
+<pre><code>&gt;&gt;&gt; letter
+'a'
+</code></pre>
+
+<p>Pour la plupart des gens, la première lettre de «banana» est b, pas a. Mais pour les informaticiens, l&rsquo;index est un décalage par rapport au début de la chaîne et le décalage de la première lettre est zéro.</p>
+<pre><code>&gt;&gt;&gt; letter = fruit[0]
+&gt;&gt;&gt; letter
+'b'
+</code></pre>
+
+<p>Donc b est la 0ème lettre (&ldquo;zero-eth&rdquo;) de &ldquo;banana&rdquo;, a est la 1ère lettre (&ldquo;one-eth&rdquo;), et n est le 2eme
+lettre (&ldquo;two-eth&rdquo;).
+En tant qu’index, vous pouvez utiliser une expression contenant des variables et des opérateurs:</p>
+<pre><code>&gt;&gt;&gt; i = 1
+&gt;&gt;&gt; fruit[i]
+'a'
+&gt;&gt;&gt; fruit[i+1]
+'n'
+</code></pre>
+
+<p>Mais la valeur de l&rsquo;index doit être un entier. Sinon, vous obtenez:</p>
+<pre><code>&gt;&gt;&gt; letter = fruit[1.5]
+TypeError: string indices must be integers
+</code></pre>
+
+<h2>8.2 len</h2>
+<p>len est une fonction intégrée qui renvoie le nombre de caractères d&rsquo;une chaîne:</p>
+<pre><code>&gt;&gt;&gt; fruit = 'banana'
+&gt;&gt;&gt; len(fruit)
+6
+</code></pre>
+
+<p>Pour obtenir la dernière lettre d&rsquo;une chaîne, vous pourriez être tenté d&rsquo;essayer quelque chose comme ceci:</p>
+<pre><code>&gt;&gt;&gt; length = len(fruit)
+&gt;&gt;&gt; last = fruit[length]
+IndexError: string index out of range
+</code></pre>
+
+<p>La raison de l’indexError est qu’il n’ya pas de lettre dans «banana» avec l’index 6.
+nous avons commencé à compter à zéro, les six lettres sont numérotées de 0 à 5. Pour obtenir le dernier caractère,
+vous devez soustraire 1 de la longueur:</p>
+<pre><code>&gt;&gt;&gt; last = fruit[length-1]
+&gt;&gt;&gt; last
+'a'
+</code></pre>
+
+<p>Ou vous pouvez utiliser des index négatifs, qui comptent à partir de la fin de la chaîne. le
+expression fruit [-1] donne la dernière lettre, fruit [-2] renvoie la seconde à la dernière, et ainsi de suite.</p>
+<h2>8.3 Traversal avec une boucle for</h2>
+<p>De nombreux calculs impliquent le traitement d&rsquo;une chaîne par caractère. Ils commencent souvent
+au début, sélectionnez chaque caractèr à son tour, faites-lui quelque chose et continuez jusqu&rsquo;à la
+fin. Ce modèle de traitement s&rsquo;appelle une traversée. Une façon d&rsquo;écrire une traversée est d&rsquo;utiliser un
+un boucle:</p>
+<pre><code class="python">index = 0
+while index &lt; len(fruit):
+    letter = fruit[index]
+    print(letter)
+    index = index + 1
+</code></pre>
+
+<p>Cette boucle traverse la chaîne et affiche chaque lettre sur une ligne. La condition de la boucle
+est index &lt; len(fruit), donc quand index est égal à la longueur de la chaîne, la condition est
+false et le corps de la boucle ne s&rsquo;exécute pas. Le dernier personnage accédé est celui avec l&rsquo;index len (fruit) -1, qui est le dernier caractère de la chaîne.
+En tant qu’exercice, écrivez une fonction qui prend une chaîne comme argument et affiche les lettres
+en arrière, un par ligne.
+Une autre façon d&rsquo;écrire une traversée consiste à utiliser une boucle for:</p>
+<pre><code class="python">for letter in fruit:
+    print(letter)
+</code></pre>
+
+<p>A chaque fois dans la boucle, le caractère suivant de la chaîne est assigné à la variable
+letter. La boucle continue jusqu&rsquo;à ce qu&rsquo;il ne reste plus aucun caractère.
+L&rsquo;exemple suivant montre comment utiliser la concaténation (ajout de chaîne) et une boucle for
+pour générer une série abécédaire (c&rsquo;est-à-dire par ordre alphabétique). Dans le livre de Robert McCloskey&rsquo;s
+Make Way for Ducklings, les noms des canetons sont Jack, Kack, Lack, Mack, Nack,
+Ouack, Pack et Quack. Cette boucle génère ces noms dans l&rsquo;ordre:</p>
+<pre><code class="python">prefixes = 'JKLMNOPQ'
+suffix = 'ack'
+
+for letter in prefixes:
+    print(letter + suffix)
+</code></pre>
+
+<p>The output is:</p>
+<pre><code>Jack
+Kack
+Lack
+Mack
+Nack
+Oack
+Pack
+Qack
+</code></pre>
+
+<p>Bien sûr, ce n&rsquo;est pas tout à fait correct, car &ldquo;Ouack&rdquo; et &ldquo;Quack&rdquo; sont mal orthographiés. En tant qu&rsquo;exercice, 
+modifiez le programme pour corriger cette erreur.</p>
+<h2>8.4 Tranches de chaîne</h2>
+<p>Un segment d&rsquo;une chaîne est appelé une tranche. La sélection d&rsquo;une tranche est similaire à la sélection d&rsquo;un caractère:</p>
+<pre><code>&gt;&gt;&gt; s = 'Monty Python'
+&gt;&gt;&gt; s [0: 5]
+'Monty'
+&gt;&gt;&gt; s [6:12]
+'Python'
+</code></pre>
+
+<p>L&rsquo;opérateur [n: m] renvoie la partie de la chaîne du caractère &ldquo;n-eth&rdquo; au &ldquo;m-eth&rdquo;
+, y compris le premier mais excluant le dernier. Ce comportement est contre-intuitif, mais
+il pourrait être utile d&rsquo;imaginer les indices pointant entre les caractères, comme dans la figure 8.1.</p>
+<p><img alt="fig8.1" src="assets/tp8.1.png"></p>
+<p>Si vous omettez le premier index (avant les deux points), la tranche commence au début de la chaîne.
+Si vous omettez le deuxième index, la tranche va à la fin de la chaîne:</p>
+<pre><code>&gt;&gt;&gt; fruit = 'banana'
+&gt;&gt;&gt; fruit[:3]
+'ban'
+&gt;&gt;&gt; fruit[3:]
+'ana'
+</code></pre>
+
+<p>Si le premier index est supérieur ou égal au second, le résultat est une chaîne vide, représentée par deux guillemets:</p>
+<pre><code>&gt;&gt;&gt; fruit = 'banana'
+&gt;&gt;&gt; fruit[3:3]
+''
+</code></pre>
+
+<p>Une chaîne vide ne contient aucun caractère et a la longueur 0, mais à part ça, c&rsquo;est la même chose
+comme toute autre chaîne.
+Poursuivant cet exemple, à votre avis, que veut dire fruit [:]? Essayez-le et voyez.</p>
+<h2>8.5 Les caractères sont immuables</h2>
+<p>Il est tentant d’utiliser l’opérateur [] à gauche d’une affectation, avec l’intention de
+changer un caractère dans une chaîne. Par exemple:</p>
+<pre><code>&gt;&gt;&gt; greeting = 'Hello, world!'
+&gt;&gt;&gt; greeting[0] = 'J'
+TypeError: 'str' object does not support item assignment
+</code></pre>
+
+<p>Le &ldquo;objet&rdquo; dans ce cas est la chaîne et &ldquo;l&rsquo;élément&rdquo; est le caractère que vous avez essayé d&rsquo;attribuer.
+Pour l&rsquo;instant, un objet est la même chose qu&rsquo;une valeur, mais nous affinerons cette définition ultérieurement
+(Section 10.10).
+La raison de l&rsquo;erreur est que les chaînes sont immuables, ce qui signifie que vous ne pouvez pas changer un
+chaîne existante. Le mieux que vous puissiez faire est de créer une nouvelle chaîne qui est une variante de l&rsquo;original:</p>
+<pre><code>&gt;&gt;&gt; greeting = 'Hello, world!'
+&gt;&gt;&gt; new_greeting = 'J' + greeting[1:]
+&gt;&gt;&gt; new_greeting
+'Jello, world!'
+</code></pre>
+
+<p>Cet exemple concatène une nouvelle première lettre sur une tranche de message d&rsquo;accueil. Cela n&rsquo;a aucun effet sur le
+chaîne originale.</p>
+<h2>8.6 Recherche</h2>
+<p>Que fait la fonction suivante?</p>
+<pre><code class="python">def find(word, letter):
+    index = 0
+    while index &lt; len(word):
+        if word[index] == letter:
+            return index
+        index = index + 1
+    return -1
+</code></pre>
+
+<p>En un sens, find est l&rsquo;inverse de l&rsquo;opérateur []. Au lieu de prendre un index et d’extraire
+le caractère correspondant, il prend un caractère et trouve l&rsquo;index où ce caractère
+apparaît. Si le caractère n&rsquo;est pas trouvé, la fonction renvoie -1.
+C&rsquo;est le premier exemple que nous avons vu d&rsquo;une déclaration de retour dans une boucle. Si mot [index]
+== lettre, la fonction sort de la boucle et revient immédiatement.
+Si le caractère n&rsquo;apparaît pas dans la chaîne, le programme quitte la boucle normalement et renvoie -1.
+Ce modèle de calcul-traversant une séquence et retournant quand on trouve ce que l&rsquo;on
+recherche-est appelé une recherche.
+En tant qu’exercice, modifiez la recherche pour qu’elle ait un troisième paramètre, l’index dans le mot où l&rsquo;on devrait commencer à regarder.</p>
+<h2>8.7 En boucle et compter</h2>
+<p>Le programme suivant compte le nombre de fois que la lettre a apparaît dans une chaîne:</p>
+<pre><code class="python">word = 'banana'
+count = 0
+for letter in word:
+    if letter == 'a':
+        count = count + 1
+        print(count)
+</code></pre>
+
+<p>Ce programme montre un autre modèle de calcul appelé compteur. La variable
+count est initialisé à 0 puis incrémenté chaque fois qu&rsquo;un a est trouvé. Lorsque la boucle se termine,
+count contient le résultat - le nombre total de a.
+En guise d’exercice, encapsulez ce code dans une fonction nommée count et généralisez-le pour qu&rsquo;il
+accepte la chaîne et la lettre comme arguments.
+Ensuite, réécrivez la fonction de sorte que, au lieu de parcourir la chaîne, elle utilise la version à trois paramètres de find de la section précédente.</p>
+<h2>8.8 Méthodes de chaîne</h2>
+<p>Les chaînes fournissent des méthodes permettant d&rsquo;effectuer diverses opérations utiles. Une méthode est similaire
+à une fonction, elle prend des arguments et retourne une valeur, mais la syntaxe est différente. Pour
+Par exemple, la méthode upper prend une chaîne et retourne une nouvelle chaîne avec toutes les majuscules
+des lettres.
+Au lieu de la syntaxe de fonction upper(mot), elle utilise la syntaxe de la méthode word.upper().</p>
+<pre><code>&gt;&gt;&gt; word = 'banana'
+&gt;&gt;&gt; new_word = word.upper()
+&gt;&gt;&gt; new_word
+'BANANA'
+</code></pre>
+
+<p>Cette forme de notation par points spécifie le nom de la méthode, supérieure et le nom de la
+chaîne pour appliquer la méthode à, mot. Les parenthèses vides indiquent que cette méthode
+ne prend aucun argument.
+Un appel de méthode est appelé une invocation; dans ce cas, nous dirions que nous invoquons
+supérieur sur le mot.
+Comme il se trouve, il existe une méthode de chaîne nommée find qui est remarquablement similaire à la
+fonction nous avons écrit:</p>
+<pre><code>&gt;&gt;&gt; word = 'banana'
+&gt;&gt;&gt; index = word.find('a')
+&gt;&gt;&gt; index
+1
+</code></pre>
+
+<p>Dans cet exemple, nous invoquons find sur word et transmettons la lettre que nous recherchons en tant que paramètre.
+En fait, la méthode de recherche est plus générale que notre fonction; il peut trouver des sous-chaînes, pas seulement
+personnages:</p>
+<pre><code>&gt;&gt;&gt; word.find ('na')
+2
+</code></pre>
+
+<p>Par défaut, find commence au début de la chaîne, mais il peut prendre un deuxième argument, l&rsquo;index où il devrait commencer:</p>
+<pre><code>&gt;&gt;&gt; word.find ('na', 3)
+4
+</code></pre>
+
+<p>Ceci est un exemple d&rsquo;un argument optionnel; find peut aussi prendre un troisième argument, l&rsquo;index
+où il devrait s&rsquo;arrêter:</p>
+<pre><code>&gt;&gt;&gt; name = 'bob'
+&gt;&gt;&gt; name.find ('b', 1, 2)
+-1
+</code></pre>
+
+<p>Cette recherche échoue car b n&rsquo;apparaît pas dans la plage d&rsquo;index de 1 à 2, sans inclure 2.
+Recherche jusqu&rsquo;au, mais non compris, le deuxième index rend la recherche cohérente avec l&rsquo;opérateur de
+tranche.</p>
+<h2>8.9 L&rsquo;opérateur in</h2>
+<p>Le mot in est un opérateur booléen qui prend deux chaînes et renvoie True si le premier apparaît comme une sous-chaîne dans le second:</p>
+<pre><code>&gt;&gt;&gt; 'a' in 'banana'
+True
+&gt;&gt;&gt; 'seed' in 'banana'
+False
+</code></pre>
+
+<p>Par exemple, la fonction suivante imprime toutes les lettres de word1 qui apparaissent également dans
+mot2:</p>
+<pre><code>def in_both(word1, word2):
+    for letter in word1:
+        if letter in word2:
+            print(letter)
+</code></pre>
+
+<p>Avec des noms de variables bien choisis, Python se lit parfois comme l&rsquo;anglais. Vous pouvez lire
+cette boucle, &ldquo;pour (chaque) lettre dans (le premier) mot, si (la) lettre (apparaît) dans (le second) mot,
+imprimer la lettre. &rdquo;
+Voici ce que vous obtenez si vous comparez des pommes et des oranges:</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>in_both(&lsquo;apples&rsquo;, &lsquo;oranges&rsquo;)
+a
+e
+s</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2>8.10 Comparaison de chaîne</h2>
+<p>Les opérateurs relationnels travaillent sur des chaînes. Pour voir si deux chaînes sont égales:</p>
+<pre><code>if word == 'banana':
+    print('All right, bananas.')
+</code></pre>
+
+<p>D&rsquo;autres opérations relationnelles sont utiles pour mettre les mots en ordre alphabétique:</p>
+<pre><code class="python">if word &lt; 'banana':
+    print('Your word, ' + word + ', comes before banana.')
+elif word &gt; 'banana':
+    print('Your word, ' + word + ', comes after banana.')
+else:
+    print('All right, bananas.')
+</code></pre>
+
+<p>Python ne gère pas les lettres majuscules et minuscules de la même manière que les gens. Tous les
+les lettres majuscules viennent avant toutes les lettres minuscules, donc:</p>
+<p>Votre mot, ananas, vient avant la banane.
+Une méthode courante pour résoudre ce problème consiste à convertir des chaînes en un format standard, tel que
+tout en minuscule, avant d&rsquo;effectuer la comparaison. Gardez cela à l&rsquo;esprit au cas où vous devriez
+Défendez-vous contre un homme armé d&rsquo;un Ananas.</p>
+<h2>8.11 Le débogage</h2>
+<p>Lorsque vous utilisez des indices pour parcourir les valeurs dans une séquence, il est difficile de bien cerner le commencement et la fin du parcours. Voici une fonction censée comparer deux mots
+et retourner True si l&rsquo;un des mots est l&rsquo;inverse de l&rsquo;autre, mais il contient deux erreurs:</p>
+<pre><code class="python">def is_reverse(word1, word2):
+    if len(word1) != len(word2):
+        return False
+
+    i = 0
+    j = len(word2)
+
+    while j &gt; 0:
+        if word1[i] != word2[j]:
+            return False
+        i = i+1
+        j = j-1
+
+    return True
+</code></pre>
+
+<p>La première instruction if vérifie si les mots ont la même longueur. Sinon, nous pouvons retourner
+False immédiatement Sinon, pour le reste de la fonction, on peut supposer que les mots
+sont la même longueur Ceci est un exemple du modèle de gardien dans la section 6.8.
+i et j sont des indices: i traverse mot1 en avant tandis que j traverse mot2 en arrière. Si nous
+trouver deux lettres qui ne correspondent pas, nous pouvons retourner False immédiatement. Si nous passons à travers la
+boucle entière et toutes les lettres correspondent, nous retournons True.
+Si nous testons cette fonction avec les mots &ldquo;pots&rdquo; et &ldquo;stop&rdquo;, nous attendons la valeur de retour True,
+mais nous obtenons un IndexError:</p>
+<pre><code>&gt;&gt;&gt; is_reverse('pots', 'stop')
+...
+  File &quot;reverse.py&quot;, line 15, in is_reverse
+    if word1[i] != word2[j]:
+IndexError: string index out of range
+</code></pre>
+
+<p>Pour déboguer ce genre d&rsquo;erreur, je commence par imprimer les valeurs des indices immédiatement avant la ligne où l&rsquo;erreur apparaît.</p>
+<pre><code class="python">while j &gt; 0:
+    print(i, j)        # print here
+
+    if word1[i] != word2[j]:
+        return False
+    i = i+1
+    j = j-1
+</code></pre>
+
+<p>Maintenant, lorsque je relance le programme, je reçois plus d&rsquo;informations:</p>
+<pre><code>&gt;&gt;&gt; is_reverse('pots', 'stop')
+0 4
+...
+IndexError: string index out of range
+</code></pre>
+
+<p>La première fois dans la boucle, la valeur de j est 4, ce qui est hors de portée pour le
+chaîne &lsquo;pots&rsquo;. L&rsquo;index du dernier caractère est 3, donc la valeur initiale de j devrait être
+len (word2) -1.
+Si je corrige cette erreur et lance à nouveau le programme, j&rsquo;obtiens:</p>
+<pre><code>&gt;&gt;&gt; is_reverse ('pots', 'stop')
+0 3
+1 2
+2 1
+True
+</code></pre>
+
+<p>Cette fois, nous obtenons la bonne réponse, mais il semble que la boucle ne soit exécutée que trois fois, ce qui est
+méfiant. Pour avoir une meilleure idée de ce qui se passe, il est utile de dessiner un diagramme d&rsquo;état.
+Au cours de la première itération, le cadre de is_reverse est illustré à la figure 8.2.</p>
+<p><img alt="fig8.2" src="assets/tp8.2.png"></p>
+<p>J&rsquo;ai pris une licence en organisant les variables dans le cadre et en ajoutant des lignes pointillées pour montrer
+que les valeurs de i et j indiquent des caractères dans word1 et word2.
+À partir de ce diagramme, lancez le programme sur papier en changeant les valeurs de i et j
+lors de chaque itération. Recherchez et corrigez la deuxième erreur dans cette fonction.</p>
+<h2>8.12. Glossaire</h2>
+<ul>
+<li>
+<p><strong>objet:</strong> quelque chose auquel une variable peut se référer. Pour l&rsquo;instant, vous pouvez utiliser &ldquo;objet&rdquo; et &ldquo;valeur&rdquo;
+indifféremment.</p>
+</li>
+<li>
+<p><strong>sequence:</strong> Collection ordonnée de valeurs où chaque valeur est identifiée par un entier
+indice.</p>
+</li>
+<li>
+<p><strong>item:</strong> Une des valeurs d&rsquo;une séquence.</p>
+</li>
+<li>
+<p><strong>index:</strong> valeur entière utilisée pour sélectionner un élément dans une séquence, tel qu&rsquo;un caractère dans une chaîne.
+Dans Python, les index commencent à 0.</p>
+</li>
+<li>
+<p><strong>slice:</strong> partie d&rsquo;une chaîne spécifiée par une plage d&rsquo;indices.</p>
+</li>
+<li>
+<p><strong>chaîne vide:</strong> Chaîne sans caractères et longueur 0, représentée par deux guillemets
+des notes.</p>
+</li>
+<li>
+<p><strong>immutable:</strong> La propriété d&rsquo;une séquence dont les éléments ne peuvent pas être modifiés.</p>
+</li>
+<li>
+<p><strong>traverse:</strong> pour parcourir les éléments d&rsquo;une séquence, en effectuant une opération similaire sur
+chaque.</p>
+</li>
+<li>
+<p><strong>search:</strong> Un modèle de parcours qui s&rsquo;arrête lorsqu&rsquo;il trouve ce qu&rsquo;il cherche.</p>
+</li>
+<li>
+<p><strong>counter:</strong> variable utilisée pour compter quelque chose, généralement initialisée à zéro puis incrémentée.</p>
+</li>
+<li>
+<p><strong>invocation:</strong> une instruction qui appelle une méthode.</p>
+</li>
+<li>
+<p><strong>argument optionnel:</strong> argument de fonction ou de méthode non requis.</p>
+</li>
+</ul>
+<h2>8.13 Exercices</h2>
+<p><strong>Exercice 1</strong></p>
+<p><em>Lisez la documentation des méthodes de chaîne à l&rsquo;adresse <a href="http://docs.python.org/3/library/stdtypes.html#string-methods">http://docs.python.org/3/library/stdtypes.html#string-methods</a>. Vous pourriez vouloir expérimenter avec certains d&rsquo;entre eux
+pour vous assurer que vous comprenez comment ils fonctionnent. strip et replace sont particulièrement utiles.
+La documentation utilise une syntaxe qui peut être source de confusion.
+Par exemple, dans
+find (sub [, start [, end]]), les crochets indiquent des arguments facultatifs. Donc sub est requis, mais
+start est optionnel, et si vous incluez start, alors end est optionnel.</em></p>
+<p><strong>Exercice 2</strong> </p>
+<p><em>Il existe une méthode de chaîne appelée count qui est similaire à la fonction de la section 8.7.
+Lisez la documentation de cette méthode et écrivez une invocation qui compte le nombre de
+&lsquo;banane&rsquo;.</em></p>
+<p><strong>Exercice 3</strong> </p>
+<p><em>Une tranche de chaîne peut prendre un troisième index qui spécifie la &ldquo;taille de pas&rdquo;; c&rsquo;est-à-dire le nombre
+des espaces entre les caractères successifs. Un pas de 2 signifie tous les autres caractères; 3 signifie tous les
+troisième, etc.</em></p>
+<pre><code>&gt;&gt;&gt; fruit = 'banana'
+&gt;&gt;&gt; fruit[0:5:2]
+'bnn'
+</code></pre>
+
+<p><em>Une taille de pas de -1 traverse le mot en arrière, de sorte que la tranche [:: - 1] génère une chaîne inversée.
+Utilisez cet idiome pour écrire une version d&rsquo;une ligne de is_palindrome à partir de l&rsquo;exercice 6.3.</em></p>
+<p><strong>Exercice 4</strong></p>
+<p><em>Les fonctions suivantes sont toutes destinées à vérifier si une chaîne contient des
+lettres minuscules, mais au moins certaines d&rsquo;entre elles sont fausses. Pour chaque fonction, décrivez ce que la fonction
+fait (en supposant que le paramètre est une chaîne).</em></p>
+<pre><code class="python">def any_lowercase1(s):
+    for c in s:
+        if c.islower():
+            return True
+        else:
+            return False
+
+def any_lowercase2(s):
+    for c in s:
+        if 'c'.islower():
+            return 'True'
+        else:
+            return 'False'
+
+def any_lowercase3(s):
+    for c in s:
+        flag = c.islower()
+    return flag
+
+def any_lowercase4(s):
+    flag = False
+    for c in s:
+        flag = flag or c.islower()
+    return flag
+
+def any_lowercase5(s):
+    for c in s:
+        if not c.islower():
+            return False
+    return True
+</code></pre>
+
+<p><strong>Exercice 5</strong></p>
+<p><em>Un cryptage César est une forme de cryptage faible qui consiste à &ldquo;faire tourner&rdquo; chaque lettre de
+un nombre fixe de places. Faire pivoter une lettre signifie la déplacer dans l’alphabet
+au début si nécessaire, &lsquo;A&rsquo; pivoté de 3 est &lsquo;D&rsquo; et &lsquo;Z&rsquo; tourné de 1 est &lsquo;A&rsquo;.
+Pour faire pivoter un mot, faites pivoter chaque lettre du même montant. Par exemple, &ldquo;cheer&rdquo; pivoté de 7 est &ldquo;jolly&rdquo;
+et &ldquo;melon&rdquo; tourné de -10 est &ldquo;cubed&rdquo;. Dans le film 2001: Odyssée de l&rsquo;espace, l&rsquo;ordinateur de bord
+est appelée HAL, qui est tournée de -1 par IBM.
+Ecrire une fonction appelée rotate_word qui prend une chaîne et un entier comme paramètres et renvoie
+une nouvelle chaîne contenant les lettres de la chaîne d&rsquo;origine pivotée par la quantité donnée.
+Vous voudrez peut-être utiliser la fonction intégrée ord, qui convertit un caractère en code numérique, et 
+chr, qui convertit les codes numériques en caractères. Les lettres de l&rsquo;alphabet sont codées par ordre alphabétique
+ordre, par exemple:</em></p>
+<pre><code>&gt;&gt;&gt; ord ('c') - ord ('a')
+2
+</code></pre>
+
+<p><em>Parce que &ldquo;c&rdquo; est la lettre de deux éthiques de l&rsquo;alphabet. Mais attention: les codes numériques pour les majuscules
+les minuscules sont différentes.</em></p>
+<p><em>Les blagues potentiellement choquantes sur Internet sont parfois encodées dans ROT13, qui est une César
+cypher avec rotation 13. Si vous n&rsquo;êtes pas facilement offensé, trouvez et décodez certains d&rsquo;entre eux. Solution: <a href="http://thinkpython2.com/code/rotate.py">http://thinkpython2.com/code/rotate.py</a>.</em></p>
 
 <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>

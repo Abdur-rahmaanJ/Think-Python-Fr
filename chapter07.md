@@ -305,7 +305,7 @@ ou une boucle.
 
 - **algorithme:** un processus général pour résoudre une catégorie de problèmes.
 
-## 7.9 Des exercices
+## 7.9 Exercices
 
 **Exercice 1**
 
